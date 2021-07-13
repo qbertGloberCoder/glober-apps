@@ -2,7 +2,7 @@ package me.qbert.skywatch.astro;
 
 import java.util.ArrayList;
 
-import me.qbert.skywatch.astro.CelestialObject;
+import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
 
 /*
@@ -21,17 +21,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class ObserverLocation extends GeoLocation {
-	private ArrayList<CelestialObject> listeners = new ArrayList<CelestialObject>();
+	private ArrayList<ObjectStateChangeListener> listeners = new ArrayList<ObjectStateChangeListener>();
 	
 	@Override
 	protected void settingsChanged() {
-		for (CelestialObject listener : listeners) {
-			listener.recompute();
+		for (ObjectStateChangeListener listener : listeners) {
+			listener.stateChanged(this, listener);
 		}
 	}
 	
-	public void addListener(CelestialObject celestialObject) {
-		if (! listeners.contains(celestialObject))
-			listeners.add(celestialObject);
+	public void addListener(ObjectStateChangeListener stateChangeListener) {
+		if (! listeners.contains(stateChangeListener))
+			listeners.add(stateChangeListener);
 	}
 }

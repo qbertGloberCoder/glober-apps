@@ -1,5 +1,12 @@
 package me.qbert.skywatch.astro.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import me.qbert.skywatch.astro.CelestialObjectBuilder;
+import me.qbert.skywatch.astro.ObservationTime;
+import me.qbert.skywatch.astro.ObserverLocation;
+import me.qbert.skywatch.astro.impl.StarObjectImpl.StarObjectBuilder;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.model.CelestialAddress;
 import me.qbert.skywatch.model.GeoLocation;
@@ -21,20 +28,43 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class SunObjectImpl extends AbstractCelestialObjectImpl {
+	private static final Logger logger = LogManager.getLogger(SunObjectImpl.class.getName());
+
+	public class SunObjectBuilder extends AbstractCelestialObjectBuilder {
+		public SunObjectBuilder() {
+		}
+
+		@Override
+		protected SunObjectImpl getInstance() {
+			return new SunObjectImpl();
+		}
+	}
 	private double hourAngle;
 	
 	private double declination;
+	
+	// Not entirely happy with this design
+	private SunObjectImpl() {
+	}
+
+	private SunObjectBuilder createBuilder() {
+		return new SunObjectBuilder();
+	}
+	
+	public static SunObjectBuilder create() {
+		return new SunObjectImpl().createBuilder();
+	}
 	
 	/*
 	 Taken from the "NOAA Solar Calculations" spreadsheet
 	 */
 	@Override
 	public void recompute() {
-		if (! isInitialized())
-			return;
-		
 		// F2
 		double julianDate = observationTime.getJulianDate();
+
+		logger.trace("Recompute Sun object for julian date: " + julianDate);
+
 		// G2
 		double julianCentury = observationTime.getJulianCentury();
 		// I2
@@ -115,18 +145,12 @@ public class SunObjectImpl extends AbstractCelestialObjectImpl {
 	}
 
 	@Override
-	public ObjectDirectionRaDec getCurrentDirection() throws UninitializedObject {
-		if (! isInitialized())
-			throw new UninitializedObject();
-		
+	public ObjectDirectionRaDec getCurrentDirection() {
 		return makeRaDec(hourAngle, declination);
 	}
 
 	@Override
-	public GeoLocation getEarthPositionOverhead() throws UninitializedObject {
-		if (! isInitialized())
-			throw new UninitializedObject();
-
+	public GeoLocation getEarthPositionOverhead() {
 		return makeGeoLocation(declination, location.getLongitude() - hourAngle);
 	}
 }

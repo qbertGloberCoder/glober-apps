@@ -1,6 +1,6 @@
 package me.qbert.skywatch.astro;
 
-import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
@@ -19,10 +19,8 @@ import me.qbert.skywatch.model.ObjectDirectionRaDec;
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public interface CelestialObject {
-	public CelestialObject setObserverTime(ObservationTime observerTime);
-	public CelestialObject setObserverLocation(ObserverLocation location);
+public interface CelestialObject extends ObjectStateChangeListener {
 	public void recompute();
-	public ObjectDirectionRaDec getCurrentDirection() throws UninitializedObject;
-	public GeoLocation getEarthPositionOverhead() throws UninitializedObject;
+	public ObjectDirectionRaDec getCurrentDirection();
+	public GeoLocation getEarthPositionOverhead();
 }

@@ -1,9 +1,12 @@
 package me.qbert.skywatch.astro.impl;
 
 import me.qbert.skywatch.astro.CelestialObject;
+import me.qbert.skywatch.astro.CelestialObjectBuilder;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
+import me.qbert.skywatch.astro.TransactionalStateChangeListener;
 import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
@@ -23,6 +26,43 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public abstract class AbstractCelestialObjectImpl implements CelestialObject {
+	public abstract class AbstractCelestialObjectBuilder implements CelestialObjectBuilder {
+		private ObjectStateChangeListener stateChangeListener = null;
+		
+		protected abstract AbstractCelestialObjectImpl getInstance();
+		
+		public AbstractCelestialObjectBuilder setObserverTime(ObservationTime observerTime) {
+			observationTime = observerTime;
+			return this;
+		}
+		
+		public AbstractCelestialObjectBuilder setObserverLocation(ObserverLocation observerLocation) {
+			location = observerLocation;
+			return this;
+		}
+
+		public AbstractCelestialObjectBuilder setStateChangeListener(ObjectStateChangeListener objectStateListener) {
+			stateChangeListener = objectStateListener;
+			return this;
+		}
+		
+		@Override
+		public CelestialObject build() throws UninitializedObject {
+			if ((location == null) || (observationTime == null))
+				throw new UninitializedObject();
+			
+			AbstractCelestialObjectImpl instance = getInstance();
+			instance.location = location;
+			instance.observationTime = observationTime;
+			if (stateChangeListener == null)
+				stateChangeListener = instance;
+			
+			instance.observationTime.addListener(stateChangeListener);
+			instance.location.addListener(stateChangeListener);
+			return instance;
+		}
+		
+	}
 	protected ObserverLocation location = null;
 	protected ObservationTime observationTime = null;
 	
@@ -31,27 +71,6 @@ public abstract class AbstractCelestialObjectImpl implements CelestialObject {
 		if (value < 0.0)
 			value += max;
 		return value;
-	}
-	
-	protected boolean isInitialized() {
-		if ((location == null) || (observationTime == null))
-			return false;
-		
-		return true;
-	}
-	
-	@Override
-	public CelestialObject setObserverTime(ObservationTime observerTime) {
-		this.observationTime = observerTime;
-		observerTime.addListener(this);
-		return this;
-	}
-	
-	@Override
-	public AbstractCelestialObjectImpl setObserverLocation(ObserverLocation location) {
-		this.location = location;
-		location.addListener(this);
-		return this;
 	}
 	
 	protected ObjectDirectionRaDec makeRaDec(double rightAscension, double declination) {
@@ -66,5 +85,10 @@ public abstract class AbstractCelestialObjectImpl implements CelestialObject {
 		location.setLatitude(latitude);
 		location.setLongitude(longitude);
 		return location;
+	}
+
+	@Override
+	public void stateChanged(Object source, ObjectStateChangeListener listener) {
+		recompute();
 	}
 }
