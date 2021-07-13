@@ -42,6 +42,13 @@ public class ObservationTime {
 		recompute();
 	}
 	
+	public void setCurrentTime() throws UninitializedObject {
+		Calendar calendar = Calendar.getInstance();
+		
+		this.time.setTimeInMillis(calendar.getTimeInMillis());
+		recompute();
+	}
+	
 	public void setLocalTime(int year, int month, int day, int hour, int minute, int second) throws UninitializedObject {
 		long lastUnixTime = time.getTimeInMillis()/1000;
 		
