@@ -3,12 +3,6 @@ package me.qbert.skywatch.astro.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import me.qbert.skywatch.astro.CelestialObjectBuilder;
-import me.qbert.skywatch.astro.ObservationTime;
-import me.qbert.skywatch.astro.ObserverLocation;
-import me.qbert.skywatch.astro.impl.StarObjectImpl.StarObjectBuilder;
-import me.qbert.skywatch.exception.UninitializedObject;
-import me.qbert.skywatch.model.CelestialAddress;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
@@ -27,16 +21,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class SunObjectImpl extends AbstractCelestialObjectImpl {
-	private static final Logger logger = LogManager.getLogger(SunObjectImpl.class.getName());
+public class SunObject extends AbstractCelestialObject {
+	private static final Logger logger = LogManager.getLogger(SunObject.class.getName());
 
 	public class SunObjectBuilder extends AbstractCelestialObjectBuilder {
 		public SunObjectBuilder() {
 		}
 
 		@Override
-		protected SunObjectImpl getInstance() {
-			return new SunObjectImpl();
+		protected SunObject getInstance() {
+			return new SunObject();
 		}
 	}
 	private double hourAngle;
@@ -44,7 +38,7 @@ public class SunObjectImpl extends AbstractCelestialObjectImpl {
 	private double declination;
 	
 	// Not entirely happy with this design
-	private SunObjectImpl() {
+	private SunObject() {
 	}
 
 	private SunObjectBuilder createBuilder() {
@@ -52,7 +46,7 @@ public class SunObjectImpl extends AbstractCelestialObjectImpl {
 	}
 	
 	public static SunObjectBuilder create() {
-		return new SunObjectImpl().createBuilder();
+		return new SunObject().createBuilder();
 	}
 	
 	/*
