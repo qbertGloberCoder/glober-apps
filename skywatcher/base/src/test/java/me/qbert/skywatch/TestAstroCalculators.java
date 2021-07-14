@@ -15,6 +15,7 @@ import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.astro.TransactionalStateChangeListener;
+import me.qbert.skywatch.astro.impl.MoonObject;
 import me.qbert.skywatch.astro.impl.StarObject;
 import me.qbert.skywatch.astro.impl.SunObject;
 import me.qbert.skywatch.exception.UninitializedObject;
@@ -106,13 +107,16 @@ public class TestAstroCalculators {
 		CelestialObject starObjOne = StarObject.create().setStarLocation(starOne).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 		CelestialObject starObjTwo = StarObject.create().setStarLocation(starTwo).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 		CelestialObject sun = SunObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+		CelestialObject moon = MoonObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 
 		transactionalListener.addListener(sun);
 		transactionalListener.addListener(starObjOne);
 		transactionalListener.addListener(starObjTwo);
+		transactionalListener.addListener(moon);
 		
 		//computePosition for: lat=10.0, lon=20.0,starRa=5.0,starDec=30.0,2021-07-11 12:31:05
 		//		 Sun = 86.37315977385742, 22.007390065626414
+		//		Moon = 65.4295572326447, 22.378638038111593
 		//		Star(+0.0, +0.0) = 192.57903308280873, 30.0
 		//		Star(+4.0, -6.0) = 188.57903308280873, 24.0
 		double lat = 10;
@@ -136,11 +140,14 @@ public class TestAstroCalculators {
 		
 		transactionalListener.commit();
 		
-		ObjectDirectionRaDec direction = sun.getCurrentDirection();
+		ObjectDirectionRaDec direction;
 		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon + ",starRa=" + starRa + ",starDec=" + starDec +
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
+		direction = sun.getCurrentDirection();
 		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 86.37315977385742, 22.007390065626414);
+		direction = moon.getCurrentDirection();
+		assertForTest("Moon RA is incorrect", "Moon Dec is incorrect", direction, 65.4295572326447, 22.378638038111593);
 		direction = starObjOne.getCurrentDirection();
 		System.out.println("	Star(+0.0, +0.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("Star 1 RA is incorrect", "Star 1 Dec is incorrect", direction, 192.57903308280873, 30.0);
@@ -153,6 +160,7 @@ public class TestAstroCalculators {
 		
 		//computePosition for: lat=-50.0, lon=-40.0,starRa=25.0,starDec=45.0,2020-07-11 12:31:05
 		//		 Sun = 26.366119731594154, 21.973453759061698
+		//	    Moon = 130.54004674997066, -2.52652071586174
 		//		Star(+0.0, +0.0) = 112.81889224944868, 45.0
 		//		Star(+4.0, -6.0) = 108.81889224944868, 39.0
 		lat=-50;
@@ -178,6 +186,8 @@ public class TestAstroCalculators {
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
 		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 26.366119731594154, 21.973453759061698);
+		direction = moon.getCurrentDirection();
+		assertForTest("Moon RA is incorrect", "Moon Dec is incorrect", direction, 130.54004674997066, -2.52652071586174);
 		direction = starObjOne.getCurrentDirection();
 		System.out.println("	Star(+0.0, +0.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("Star 1 RA is incorrect", "Star 1 Dec is incorrect", direction, 112.81889224944868, 45.0);
