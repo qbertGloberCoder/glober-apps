@@ -21,6 +21,7 @@ import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
 public interface CelestialObject extends ObjectStateChangeListener {
 	public void recompute();
+	public ObjectDirectionRaDec getCelestialSphereLocation();
 	public ObjectDirectionRaDec getCurrentDirection();
 	public GeoLocation getEarthPositionOverhead();
 }

@@ -2,19 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
  
-    <!--The identifier of the parent POM-->
-    <parent>
-        <groupId>me.qbert.skywatch</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.0</version>
-    </parent>
-
     <groupId>me.qbert.skywatch</groupId>
-    <artifactId>skywatcher</artifactId>
+    <artifactId>parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
  
-    <name>QBert's set of skywatcher stuff</name>
+    <name>QBert's set of stuff</name>
     <url>http://maven.apache.org</url>
  
     <properties>
@@ -23,6 +16,6 @@
  
     <modules>
 	<module>base</module>
-	<module>app</module>
+	<module>skywatcher</module>
     </modules>
 </project>

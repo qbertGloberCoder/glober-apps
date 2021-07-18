@@ -48,6 +48,8 @@ public class MoonObject extends AbstractCelestialObject {
 	private double alpha_hour;
 	private double delta_deg;
 	
+	private double rightAscension;
+	
 	// Not entirely happy with this design
 	private MoonObject() {
 	}
@@ -140,12 +142,18 @@ public class MoonObject extends AbstractCelestialObject {
 		double theta0 = modulus(280.46061837 + 360.98564736629*(julianDate-2451545.0) + 0.000387933*t*t - t*t*t/38710000.0, 360.0); // degrees 
 		double theta = theta0 + location.getLongitude();
 
+		rightAscension = L;
 		alpha_hour = modulus(theta - (RA*15.) + 180.0, 360.0) - 180.0;
 		delta_deg = delta;
 	}
 
     private static double frac(double a) {
         return a % 1.0;
+    }
+    
+    @Override
+    public ObjectDirectionRaDec getCelestialSphereLocation() {
+    	return makeRaDec(rightAscension, delta_deg);
     }
 
 	@Override

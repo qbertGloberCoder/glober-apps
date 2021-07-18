@@ -35,6 +35,7 @@ public class SunObject extends AbstractCelestialObject {
 	}
 	private double hourAngle;
 	
+	private double rightAscension;
 	private double declination;
 	
 	// Not entirely happy with this design
@@ -84,6 +85,7 @@ public class SunObject extends AbstractCelestialObject {
 		double obliqueCorrected = meanObliqEcliptic+0.00256*Math.cos(Math.toRadians(125.04-1934.136*julianCentury));
 		// S2
 		double sunRightAscension = Math.toDegrees(Math.atan2(Math.cos(Math.toRadians(obliqueCorrected))*Math.sin(Math.toRadians(sunAppLong)), Math.cos(Math.toRadians(sunAppLong))));
+		this.rightAscension = sunRightAscension;
 		// T2
 		double sunDeclination = Math.toDegrees(Math.asin(Math.sin(Math.toRadians(obliqueCorrected))*Math.sin(Math.toRadians(sunAppLong))));
 		this.declination = sunDeclination;
@@ -136,6 +138,11 @@ public class SunObject extends AbstractCelestialObject {
 			azimuth = modulus(Math.toDegrees(Math.acos(((Math.sin(Math.toRadians(location.getLatitude()))*Math.cos(Math.toRadians(solarZenith)))-Math.sin(Math.toRadians(sunDeclination)))/(Math.cos(Math.toRadians(location.getLatitude()))*Math.sin(Math.toRadians(solarZenith)))))+180,360);
 		else
 			azimuth = modulus(540-Math.toDegrees(Math.acos(((Math.sin(Math.toRadians(location.getLatitude()))*Math.cos(Math.toRadians(solarZenith)))-Math.sin(Math.toRadians(sunDeclination)))/(Math.cos(Math.toRadians(location.getLatitude()))*Math.sin(Math.toRadians(solarZenith))))),360);
+	}
+	
+	@Override
+	public ObjectDirectionRaDec getCelestialSphereLocation() {
+		return makeRaDec(rightAscension, declination);
 	}
 
 	@Override

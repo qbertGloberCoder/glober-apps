@@ -49,6 +49,16 @@ public class ObservationTime {
 		recompute();
 	}
 	
+	public void addTime(long seconds) throws UninitializedObject {
+		this.time.setTimeInMillis(this.time.getTimeInMillis() + (seconds * 1000L));
+		recompute();
+	}
+	
+	public void setUnixTime(long unixTimestamp) throws UninitializedObject {
+		this.time.setTimeInMillis(unixTimestamp);
+		recompute();
+	}
+	
 	public void setLocalTime(int year, int month, int day, int hour, int minute, int second) throws UninitializedObject {
 		long lastUnixTime = time.getTimeInMillis()/1000;
 		
