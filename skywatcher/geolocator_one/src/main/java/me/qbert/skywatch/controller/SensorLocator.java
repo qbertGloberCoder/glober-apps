@@ -75,8 +75,6 @@ public class SensorLocator {
 	
 	public void reset() {
 		pointingToSun = false;
-		sunOriginAltitude = 0.0;
-		sunOriginAzimuth = 0.0;
 	}
 	
 	public boolean isPointingToSun() {
