@@ -24,5 +24,6 @@
     <modules>
 	<module>base</module>
 	<module>app</module>
+	<module>geolocator_one</module>
     </modules>
 </project>
