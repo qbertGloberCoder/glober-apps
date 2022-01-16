@@ -2,6 +2,7 @@ package me.qbert.cbtools.ui.component;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,6 +29,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class Canvas extends JPanel {
+	private class StackedImageCoordinates {
+		Point originalImageTopLeft;
+		Point modifiedImageTopLeft;
+		int imageWidth;
+		int imageHeight;
+	}
+	
 	/**
 	 * 
 	 */
@@ -39,6 +47,8 @@ public class Canvas extends JPanel {
 	
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
+        
+        
 
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -48,7 +58,14 @@ public class Canvas extends JPanel {
 
         g2d.setRenderingHints(rh);
         
-        g2d.drawImage(originalImage, 0, 0, getWidth(), getHeight(), 0, 0, originalImage.getWidth(), originalImage.getHeight(), null);
+        StackedImageCoordinates stackedCoords = getStackedImageCoordinates();
+        
+        g2d.drawImage(originalImage, stackedCoords.originalImageTopLeft.x, stackedCoords.originalImageTopLeft.y,
+        		stackedCoords.originalImageTopLeft.x + stackedCoords.imageWidth, stackedCoords.originalImageTopLeft.y + stackedCoords.imageHeight, 
+        		0, 0, originalImage.getWidth(), originalImage.getHeight(), null);
+        g2d.drawImage(image, stackedCoords.modifiedImageTopLeft.x, stackedCoords.modifiedImageTopLeft.y,
+        		stackedCoords.modifiedImageTopLeft.x + stackedCoords.imageWidth, stackedCoords.modifiedImageTopLeft.y + stackedCoords.imageHeight, 
+        		0, 0, originalImage.getWidth(), originalImage.getHeight(), null);
     }
 
     @Override
@@ -103,5 +120,96 @@ public class Canvas extends JPanel {
 	    g2d.dispose();
 	    return clone;
 	}
-    
+	
+	private StackedImageCoordinates getStackedImageCoordinates() {
+		int outputWidth = getWidth();
+		int outputHeight = getHeight();
+		
+		int originalWidth = originalImage.getWidth();
+		int originalHeight = originalImage.getHeight();
+		
+		int modifiedWidth = image.getWidth();
+		int modifiedHeight = image.getHeight();
+		
+		double outputAspect = (double)outputWidth / (double)outputHeight;
+		double originalAspect = (double)originalWidth / (double)originalHeight;
+		double modifiedAspect = (double)modifiedWidth / (double)modifiedHeight;
+		
+		StackedImageCoordinates coords = new StackedImageCoordinates();
+		
+		// if it's landscape, aspect ration will be >= 1.0
+		if (originalAspect >= 1.0) {
+			// stack them one above the other
+			// calculate required width for the given height
+			// if height is "getHeight() / 2", then
+			// sx / sy = dx / (getHeight() / 2)
+			// dx = (getHeight() / 2) * sx / sy
+			int requiredX = (int)(((double)outputHeight / 2.0) * originalAspect);
+			int requiredY = (int)(outputWidth / originalAspect);
+			
+			int x;
+			int y;
+			
+			if (requiredX > outputWidth) {
+				// we need to stack using the requiredY
+				coords.imageWidth = outputWidth;
+				coords.imageHeight = requiredY;
+				
+				x = 0;
+				y = (int)((double)outputHeight / 2.0) - requiredY;
+			} else {
+				// we stack using the requiredX
+				coords.imageWidth = requiredX;
+				coords.imageHeight = (int)((double)outputHeight / 2.0);
+				
+				x = (int)((double)(outputWidth - requiredX) / 2.0);
+				y = 0;
+			}
+			
+			coords.originalImageTopLeft = new Point();
+			coords.originalImageTopLeft.x = x;
+			coords.originalImageTopLeft.y = y;
+			
+			coords.modifiedImageTopLeft = new Point();
+			coords.modifiedImageTopLeft.x = x;
+			coords.modifiedImageTopLeft.y = y + coords.imageHeight;
+		} else {
+			// stack them side by side
+			// calculate required width for the given height
+			// if width is "getWidth() / 2", then
+			// sx / sy = (getWidth() / 2) / dy
+			// dx = (getHeight() / 2) * sx / sy
+			int requiredX = (int)(outputHeight * originalAspect);
+			int requiredY = (int)(((double)outputWidth / 2.0) / originalAspect);
+			
+			int x;
+			int y;
+			
+			if (requiredY > outputHeight) {
+				// we need to stack using the requiredX
+				coords.imageWidth = requiredX;
+				coords.imageHeight = outputHeight;
+				
+				x = (int)((double)outputWidth / 2.0) - requiredX;
+				y = 0;
+			} else {
+				// we stack using the requiredY
+				coords.imageWidth = (int)((double)outputWidth / 2.0);
+				coords.imageHeight = requiredY;
+
+				x = 0;
+				y = (int)((double)(outputHeight - requiredY)/ 2.0);
+			}
+			
+			coords.originalImageTopLeft = new Point();
+			coords.originalImageTopLeft.x = x;
+			coords.originalImageTopLeft.y = y;
+			
+			coords.modifiedImageTopLeft = new Point();
+			coords.modifiedImageTopLeft.x = x + coords.imageWidth;
+			coords.modifiedImageTopLeft.y = y;
+		}
+		
+		return coords;
+	}
 }
