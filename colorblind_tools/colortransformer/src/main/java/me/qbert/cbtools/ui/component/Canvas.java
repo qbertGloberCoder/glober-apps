@@ -71,6 +71,9 @@ public class Canvas extends JPanel {
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         
+        if (image == null)
+        	return;
+        
     	// Brute force?? Don't like the core java API
 		for (int h = 0;h < originalImage.getHeight();h ++) {
 			for (int w = 0;w < originalImage.getWidth();w ++) {
