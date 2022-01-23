@@ -20,30 +20,36 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class ColorMatrixTransformer implements ColorTransformerI {
-	private static final int MATRIX_X = 3;
-	private static final int MATRIX_Y = 3;
+	public static final int MATRIX_X = 3;
+	public static final int MATRIX_Y = 3;
+	private static final double [][] defaultMatrix = { {100, 0, 0},				{0, 100, 0},			{0, 0, 100} };
 	
 	private double [][] matrix = new double[MATRIX_Y][MATRIX_X];
+	
+	public ColorMatrixTransformer() throws Exception {
+		this(defaultMatrix, true);
+	}
 	
 	public ColorMatrixTransformer(double [][] colorMatrix, boolean expressedAsPercent) throws Exception {
 		if (colorMatrix.length != matrix.length)
 			throwUsageException();
 		
+		updateColorMatrix(colorMatrix, ((expressedAsPercent) ? 100.0 : 1.0));
+	}
+	
+	private static void throwUsageException() throws Exception {
+		throw new Exception("The color matrix must be " + MATRIX_X + " by "+ MATRIX_Y);
+	}
+	
+	public void updateColorMatrix(double [][] colorMatrix, double maximumValue) throws Exception {
 		for (int y = 0;y < matrix.length;y ++) {
 			if (colorMatrix[y].length != matrix[y].length)
 				throwUsageException();
 			
 			for (int x = 0;x < matrix[y].length;x ++) {
-				if (expressedAsPercent)
-					matrix[y][x] = colorMatrix[y][x] / 100.0;
-				else
-					matrix[y][x] = colorMatrix[y][x];
+				matrix[y][x] = colorMatrix[y][x] / maximumValue;
 			}
 		}
-	}
-	
-	private static void throwUsageException() throws Exception {
-		throw new Exception("The color matrix must be " + MATRIX_X + " by "+ MATRIX_Y);
 	}
 	
 	@Override

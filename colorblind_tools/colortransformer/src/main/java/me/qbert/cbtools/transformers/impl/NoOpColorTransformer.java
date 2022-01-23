@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 public class NoOpColorTransformer implements ColorTransformerI {
 
 	@Override
-	public Color transformColor(Color sourcePixel) {
-		return sourcePixel;
+	public Color transformColor(Color sourceColor) {
+		return sourceColor;
 	}
 
 }

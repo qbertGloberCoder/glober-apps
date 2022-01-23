@@ -6,18 +6,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
-import java.util.Timer;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import me.qbert.cbtools.transformers.ColorMatrixTransformerFactory;
 import me.qbert.cbtools.ui.component.Canvas;
+import me.qbert.cbtools.ui.dialogs.ColorMatrixDialog;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -34,7 +36,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ChangeListener {
 	/**
 	 * 
 	 */
@@ -44,7 +46,9 @@ public class MainFrame extends JFrame {
 	
 	private JTextArea console;
 	private StringBuffer consoleBuffer;
-
+	
+	private ColorMatrixDialog matrixDialog = null;
+	
 	public MainFrame() {
 		super("Colorblind color rotate utility");
 		
@@ -54,6 +58,49 @@ public class MainFrame extends JFrame {
         JMenuBar mb = new JMenuBar();
         JMenu m1 = new JMenu("File");
         mb.add(m1);
+        
+        JMenuItem item = new JMenuItem("open");
+        m1.add(item);
+    	item.addActionListener((ActionEvent event) -> {
+		        try {
+		        	JFileChooser fileChooser = new JFileChooser();
+		        	String dir = System.getProperty("user.dir");
+		        	fileChooser.setCurrentDirectory(new File(dir));
+		        	int result = fileChooser.showOpenDialog(this);
+		        	if (result == JFileChooser.APPROVE_OPTION) {
+			            canvas.loadImage(fileChooser.getSelectedFile());
+						canvas.invalidate();
+				        validate();
+				        repaint();
+		        	}
+	            } catch (Exception e1) {
+	            	consoleBuffer.append(e1.getMessage());
+	            	console.setText(consoleBuffer.toString());
+	            }
+		});
+        
+        m1.addSeparator();
+        
+        item = new JMenuItem("clipboard");
+        m1.add(item);
+    	item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object src = e.getSource();
+		        try {
+		            canvas.getImageFromClipboard();
+					canvas.invalidate();
+			        validate();
+			        repaint();
+	            } catch (Exception e1) {
+	            	consoleBuffer.append(e1.getMessage());
+	            	console.setText(consoleBuffer.toString());
+	            }
+			}
+		});
+        
+        m1.addSeparator();
+        
         JMenuItem m11 = new JMenuItem("Exit");
         m1.add(m11);
         
@@ -69,7 +116,7 @@ public class MainFrame extends JFrame {
         
         List<String> transformNames = ColorMatrixTransformerFactory.getTransformNames();
         for (String name : transformNames) {
-        	JMenuItem item = new JMenuItem(name);
+        	item = new JMenuItem(name);
         	m2.add(item);
         	item.addActionListener(new ActionListener() {
     			@Override
@@ -86,19 +133,36 @@ public class MainFrame extends JFrame {
     			}
     		});
         }
+        
+        JMenuItem transformWindow = new JMenuItem("Transform");
+        transformWindow.addActionListener((ActionEvent event) -> {
+			if (matrixDialog == null) {
+				matrixDialog = new ColorMatrixDialog(this, "Color transform matrix dialog");
+				matrixDialog.setChangeListener(this);
+			}
+			
+			matrixDialog.setVisible(true);
+        });
+
+        mb.add(transformWindow);
 
         canvas = new Canvas();
-        canvas.setPreferredSize(new Dimension(600, 600));
+        canvas.setPreferredSize(new Dimension(800, 600));
+        
+        JScrollPane canvasScroller = new JScrollPane(canvas);
+        canvasScroller.setPreferredSize(new Dimension(800, 600));
         
         console = new JTextArea();
-        console.setMinimumSize(new Dimension(600, 600));
+        console.setMinimumSize(new Dimension(600, 150));
         JScrollPane consoleScroller = new JScrollPane(console);
-        consoleScroller.setPreferredSize(new Dimension(600, 600));
+        consoleScroller.setPreferredSize(new Dimension(800, 150));
+        consoleScroller.setMaximumSize(new Dimension(800, 150));
 
+        
         //Adding Components to the frame.
         getContentPane().add(BorderLayout.NORTH, mb);
-        getContentPane().add(BorderLayout.WEST, new JScrollPane(canvas));
-        getContentPane().add(BorderLayout.EAST, consoleScroller);
+        getContentPane().add(BorderLayout.CENTER, canvasScroller);
+        getContentPane().add(BorderLayout.SOUTH, consoleScroller);
 
         try {
         canvas.loadImage(new File("test_images/how-good-is-your-color-vision-17.png"));
@@ -110,9 +174,24 @@ public class MainFrame extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(500, 40));
+        setPreferredSize(new Dimension(1200, 900));
         validate();
         repaint();
         pack();       
         setVisible(true);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent changeEvent) {
+		double [][] matrix = matrixDialog.getTransformMatrix();
+		try {
+			canvas.setColorRotateTransformer(matrix, 1.0);
+			canvas.invalidate();
+			canvas.repaint();
+		}
+		catch (Exception e) {
+        	consoleBuffer.append(e.getMessage());
+        	console.setText(consoleBuffer.toString());
+		}
 	}
 }
