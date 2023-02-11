@@ -25,21 +25,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 public class ArcRenderer extends AbstractFractionRenderer {
 	private AbstractCoordinateTransformation coordinate;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	private AbstractCoordinateTransformation arcSize;
 =======
 	private int width;
 	private int height;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+	private AbstractCoordinateTransformation arcSize;
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	private int startAngle;
 	private int arcAngle;
 	
 	private boolean fill;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public ArcRenderer(int coordinatesType, int sizeCoordinatesType) throws Exception {
 =======
 	public ArcRenderer(int coordinatesType) throws Exception {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+	public ArcRenderer(int coordinatesType, int sizeCoordinatesType) throws Exception {
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		if (coordinatesType == ABSOLUTE_COORDINATES) {
 			coordinate = new AbsoluteCoordinateTransformation();
 		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
@@ -48,6 +56,9 @@ public class ArcRenderer extends AbstractFractionRenderer {
 			throw new Exception("coordinates type " + coordinatesType + " is invalid");
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		
 		if (sizeCoordinatesType == ABSOLUTE_COORDINATES) {
 			arcSize = new AbsoluteCoordinateTransformation();
@@ -58,6 +69,7 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		} else {
 			throw new Exception("coordinates type " + sizeCoordinatesType + " is invalid");
 		}
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -65,20 +77,29 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		return -1.0;
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	}
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 		if (! isRenderComponent())
 			return;
 		
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		if (! isRenderComponent())
+			return;
+		
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		int x;
 		int y;
 		
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+<<<<<<< HEAD
 <<<<<<< HEAD
 		Point s = arcSize.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		
@@ -90,15 +111,22 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		else
 			g2d.drawArc(x, y, s.x, s.y, startAngle, arcAngle);
 =======
+=======
+		Point s = arcSize.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		
-		x = p.x - ((this.width - 1) / 2);
-		y = p.y - ((this.height - 1) / 2);
+		x = p.x - ((s.x - 1) / 2) - 1;
+		y = p.y - ((s.y - 1) / 2) - 1;
 		
 		if (fill)
-			g2d.fillArc(x, y, this.width, this.height, startAngle, arcAngle);
+			g2d.fillArc(x, y, s.x, s.y, startAngle, arcAngle);
 		else
+<<<<<<< HEAD
 			g2d.drawArc(x, y, this.width, this.height, startAngle, arcAngle);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+			g2d.drawArc(x, y, s.x, s.y, startAngle, arcAngle);
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	}
 
 	public double getX() {
@@ -127,6 +155,7 @@ public class ArcRenderer extends AbstractFractionRenderer {
 =======
 	}
 	
+<<<<<<< HEAD
 	public int getWidth() {
 		return width;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -136,6 +165,20 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		return arcSize.getY();
 	}
 
+=======
+	public double getWidth() {
+		return arcSize.getX();
+	}
+
+	public void setWidth(double width) {
+		arcSize.setX(width);
+	}
+
+	public double getHeight() {
+		return arcSize.getY();
+	}
+
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	public void setHeight(double height) {
 		arcSize.setY(height);
 	}

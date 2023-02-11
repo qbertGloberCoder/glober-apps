@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 =======
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +76,7 @@ public class ImageRenderer extends AbstractImageRenderer {
 =======
 public class ImageRenderer extends AbstractFractionRenderer {
 	private BufferedImage originalImage;
+	private BufferedImage overlayImage;
 	private BufferedImage image;
 
 	private double lastRotatedAngle = -9999999999.999;
@@ -88,14 +90,53 @@ public class ImageRenderer extends AbstractFractionRenderer {
 	private double boundMaximumYFraction;
 	
 	public ImageRenderer(File imageFile) {
+		this(imageFile, null);
+	}
+	
+	public ImageRenderer(File imageFile, File overlayFile) {
 		boundMinimumXFraction = boundMinimumYFraction = 0.0;
 		boundMaximumXFraction = boundMaximumYFraction = 1.0;
 
-		try {
-			originalImage = loadImageFromFile(imageFile);
-		} catch (Exception e) {
+		reinitImage(imageFile);
+		reinitOverlay(overlayFile);
+	}
+	
+	public void reinitImage(File imageFile) {
+		if (imageFile != null) {
+			try {
+				originalImage = loadImageFromFile(imageFile);
+			} catch (Exception e) {
+				originalImage = null;
+			}
+		} else {
 			originalImage = null;
 		}
+		
+		image = null;
+	}
+	
+	public void reinitOverlay(File overlayFile) {
+		if ((overlayFile != null) && (overlayFile.exists())) {
+			try {
+				overlayImage = loadImageFromFile(overlayFile);
+			} catch (Exception e) {
+				overlayImage = null;
+			}
+		} else {
+			overlayImage = null;
+		}
+		
+		image = null;
+	}
+	
+	public void setOriginalImage(BufferedImage originalImage) {
+		image = null;
+		this.originalImage = originalImage;
+	}
+
+	public void setOriginalOverlay(BufferedImage overlayImage) {
+		image = null;
+		this.overlayImage = overlayImage;
 	}
 
     private BufferedImage loadImageFromFile(File file) throws NullPointerException,IOException {
@@ -117,33 +158,48 @@ public class ImageRenderer extends AbstractFractionRenderer {
     	return newFile;
     }
     
-    private void resetImage() {
+    protected void resetImage() {
     	image = null;
     	if (originalImage == null)
     		return;
     	
     	lastRotatedAngle = rotateAngle;
     	
-    	if (rotateAngle == 0.0)
-    		image = originalImage;
-    	
-    	image = new BufferedImage(originalImage.getWidth(),
-	    		originalImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    	image = new BufferedImage((int)getBoundaryWidth(),
+    			(int)getBoundaryHeight(), BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2d = image.createGraphics();
 //	    g2d.drawImage(originalImage, 0, 0, null);
 	    
-	    if ((rotateX < 0) || (rotateY < 0))
-	    	g2d.rotate(Math.toRadians(rotateAngle), originalImage.getWidth() / 2, originalImage.getHeight() / 2);
-	    else
-	    	g2d.rotate(Math.toRadians(rotateAngle), rotateX, rotateY);
-	    g2d.drawImage(originalImage, null, 0, 0);
-        
+	    AffineTransform oldXForm = null;
+	    
+    	if (rotateAngle != 0.0) {
+    		oldXForm = g2d.getTransform();
+    		
+		    if ((rotateX < 0) || (rotateY < 0))
+		    	g2d.rotate(Math.toRadians(rotateAngle), image.getWidth() / 2, image.getHeight() / 2);
+		    else
+		    	g2d.rotate(Math.toRadians(rotateAngle), rotateX, rotateY);
+    	}
+    	
+    	g2d.drawImage(originalImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, originalImage.getWidth(), originalImage.getHeight(), null);	    	
+       
+    	if (oldXForm != null)
+    		g2d.setTransform(oldXForm);
+    	
+	    if (overlayImage != null) {
+	    	g2d.drawImage(overlayImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, overlayImage.getWidth(), overlayImage.getHeight(), null);	    	
+	    }
+	    
 	    g2d.dispose();
     }
     
 	@Override
 	public void renderComponent(Graphics2D g2d) {
-		if ((image == null) || (lastRotatedAngle != rotateAngle)) {
+		if (! isRenderComponent())
+			return;
+		
+		if ((image == null) || (lastRotatedAngle != rotateAngle) || ((int)getBoundaryWidth() != image.getWidth()) ||
+				((int)getBoundaryHeight() != image.getHeight())) {
 			resetImage();
 		}
 		

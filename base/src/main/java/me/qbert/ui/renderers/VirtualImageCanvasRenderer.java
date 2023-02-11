@@ -44,7 +44,10 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 	private double boundMaximumXFraction = 1.0;
 	private double boundMaximumYFraction = 1.0;
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	public VirtualImageCanvasRenderer() {
 		this(null);
 	}
@@ -53,11 +56,14 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 		this.imageTransformer = imageTransformer;
 	}
 
+<<<<<<< HEAD
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
 	}
 	
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	private void resetImage() {
 		double width = getBoundaryWidth();
 		double height = getBoundaryHeight();
