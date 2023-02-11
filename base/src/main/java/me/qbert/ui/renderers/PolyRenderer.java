@@ -1,8 +1,12 @@
 package me.qbert.ui.renderers;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.ArrayList;
 
-import me.qbert.ui.RendererI;
+import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
+import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
+import me.qbert.ui.coordinates.FractionCoordinateTransformation;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -19,38 +23,104 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class PolyRenderer implements RendererI {
+public class PolyRenderer extends AbstractFractionRenderer {
+	ArrayList<AbstractCoordinateTransformation> lineSegments;
 	
-	private int [] x;
-	private int [] y;
+	private int coordinatesType;
 	
 	private boolean fill;
 
+	public PolyRenderer(int coordinatesType) throws Exception {
+		if ((coordinatesType == ABSOLUTE_COORDINATES) || (coordinatesType == FRACTIONAL_COORDINATES)) {
+			this.coordinatesType = coordinatesType;
+		} else {
+			throw new Exception("coordinates type " + coordinatesType + " is invalid");
+		}
+	}
+	
+	private void initializeList(int count) {
+		lineSegments = new ArrayList<AbstractCoordinateTransformation>();
+		for (int i = 0;i < count;i ++) {
+			if (coordinatesType == ABSOLUTE_COORDINATES) {
+				lineSegments.add(new AbsoluteCoordinateTransformation());
+			} else if (coordinatesType == FRACTIONAL_COORDINATES) {
+				lineSegments.add(new FractionCoordinateTransformation());
+			}
+		}
+	}
+
 	@Override
 	public void renderComponent(Graphics2D g2d) {
-		if ((x == null) || (y == null) || (x.length != y.length))
+		if (lineSegments == null)
 			return;
+		
+		int left = (int)getBoundaryLeft();
+		int top = (int)getBoundaryTop();
+		int width = (int)getBoundaryWidth();
+		int height = (int)getBoundaryHeight();
+
+		int [] x = new int[lineSegments.size()];
+		int [] y = new int[lineSegments.size()];
+		
+		for (int i = 0;i < lineSegments.size();i ++) {
+			Point p = lineSegments.get(i).transform(left, top, width, height);
+			x[i] = p.x;
+			y[i] = p.y;
+		}
+
 		
 		if (fill)
 			g2d.fillPolygon(x, y, x.length);
 		else
 			g2d.drawPolygon(x, y, x.length);
 	}
-
-	public int[] getX() {
+	
+	public double[] getX() {
+		double [] x = new double[lineSegments.size()];
+		
+		for (int i = 0;i < lineSegments.size();i ++) {
+			x[i] = lineSegments.get(i).getX();
+		}
+		
 		return x;
 	}
 
-	public void setX(int[] x) {
-		this.x = x;
+	public void setX(double [] xArray) {
+		if (xArray == null) {
+			lineSegments = null;
+			return;
+		}
+		
+		if ((lineSegments == null) || (lineSegments.size() != xArray.length))
+			initializeList(xArray.length);
+		
+		for (int i = 0;i < xArray.length;i ++) {
+			lineSegments.get(i).setX(xArray[i]);
+		}
 	}
 
-	public int[] getY() {
+	public double[] getY() {
+		double [] y = new double[lineSegments.size()];
+		
+		for (int i = 0;i < lineSegments.size();i ++) {
+			y[i] = lineSegments.get(i).getY();
+		}
+		
 		return y;
 	}
 
-	public void setY(int[] y) {
-		this.y = y;
+	public void setY(double [] yArray) {
+		if (yArray == null) {
+			lineSegments = null;
+			return;
+		}
+		
+		if ((lineSegments == null) || (lineSegments.size() != yArray.length))
+			initializeList(yArray.length);
+		
+		for (int i = 0;i < yArray.length;i ++) {
+			lineSegments.get(i).setY(yArray[i]);
+		}
 	}
 
 	public boolean isFill() {

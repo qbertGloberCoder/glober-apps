@@ -10,10 +10,10 @@
     </parent>
 
   <groupId>me.qbert.skywatch</groupId>
-  <artifactId>sw-app</artifactId>
+  <artifactId>sw-earth-clock</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
-  <name>skywatcher main app</name>
+  <version>0.2.0</version>
+  <name>skywatcher earth clock app</name>
   <url>http://maven.apache.org</url>
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>

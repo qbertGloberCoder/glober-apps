@@ -38,8 +38,8 @@ public class RenderComponentUtil {
 		return r;
 	}
 	
-	public PolyRenderer drawBox(double leftPercent, double topPercent, double rightPercent, double bottomPercent, boolean isFilled) {
-		PolyRenderer r = new PolyRenderer();
+	public PolyRenderer drawBox(double leftPercent, double topPercent, double rightPercent, double bottomPercent, boolean isFilled) throws Exception {
+		PolyRenderer r = new PolyRenderer(PolyRenderer.ABSOLUTE_COORDINATES);
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();
@@ -49,8 +49,8 @@ public class RenderComponentUtil {
 		int rx = (int)(w * rightPercent);
 		int by = (int)(h * bottomPercent);
 		
-		int [] x = new int[4];
-		int [] y = new int[4];
+		double [] x = new double[4];
+		double [] y = new double[4];
 		
 		x[0] = lx;
 		x[1] = rx;
@@ -69,8 +69,8 @@ public class RenderComponentUtil {
 		return r;
 	}
 	
-	public PointRenderer drawPoint(double xPercent, double yPercent) {
-		PointRenderer r = new PointRenderer();
+	public PointRenderer drawPoint(double xPercent, double yPercent) throws Exception {
+		PointRenderer r = new PointRenderer(PointRenderer.ABSOLUTE_COORDINATES);
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();
@@ -84,8 +84,8 @@ public class RenderComponentUtil {
 		return r;
 	}
 	
-	public ArcRenderer drawCircle(double xPercent, double yPercent, int radius) {
-		ArcRenderer r = new ArcRenderer();
+	public ArcRenderer drawCircle(double xPercent, double yPercent, int radius) throws Exception {
+		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();
@@ -102,7 +102,7 @@ public class RenderComponentUtil {
 		return r;
 	}
 	
-	public ArcRenderer fillCircle(double xPercent, double yPercent, int radius) {
+	public ArcRenderer fillCircle(double xPercent, double yPercent, int radius) throws Exception {
 		ArcRenderer r = drawCircle(xPercent, yPercent, radius);
 
 		r.setFill(true);

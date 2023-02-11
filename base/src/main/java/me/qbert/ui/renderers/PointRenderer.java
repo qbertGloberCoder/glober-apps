@@ -1,8 +1,11 @@
 package me.qbert.ui.renderers;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
-import me.qbert.ui.RendererI;
+import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
+import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
+import me.qbert.ui.coordinates.FractionCoordinateTransformation;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -19,30 +22,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class PointRenderer implements RendererI {
+public class PointRenderer extends AbstractFractionRenderer {
 	
-	private int x;
-	private int y;
+	private AbstractCoordinateTransformation coordinate;
+	
+	public PointRenderer(int coordinatesType) throws Exception {
+		if (coordinatesType == ABSOLUTE_COORDINATES) {
+			coordinate = new AbsoluteCoordinateTransformation();
+		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
+			coordinate = new FractionCoordinateTransformation();
+		} else {
+			throw new Exception("coordinates type " + coordinatesType + " is invalid");
+		}
+	}
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
 		// Best alternative is to somehow get the canvas and setRGB on the canvas... This is easier
-		g2d.drawLine(x, y, x, y);
+		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+		g2d.drawLine(p.x, p.y, p.x, p.y);
 	}
 
-	public int getX() {
-		return x;
+	public double getX() {
+		return coordinate.getX();
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setX(double fractionX) {
+		coordinate.setX(fractionX);
 	}
 
-	public int getY() {
-		return y;
+	public double getY() {
+		return coordinate.getY();
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void setY(double fractionY) {
+		coordinate.setY(fractionY);
 	}
 }

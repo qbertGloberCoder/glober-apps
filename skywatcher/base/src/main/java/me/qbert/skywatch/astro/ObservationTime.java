@@ -49,6 +49,11 @@ public class ObservationTime {
 		recompute();
 	}
 	
+	public void addTime(int units, int calendarClassField) throws UninitializedObject {
+		this.time.add(calendarClassField, units);
+		recompute();
+	}
+	
 	public void addTime(long seconds) throws UninitializedObject {
 		this.time.setTimeInMillis(this.time.getTimeInMillis() + (seconds * 1000L));
 		recompute();

@@ -1,6 +1,6 @@
 package me.qbert.ui;
 
-import java.awt.Graphics2D;
+import java.awt.Point;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface RendererI {
-	public void renderComponent(Graphics2D g2d);
-	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
+public interface CoordinatesTransformationI {
+	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
 }

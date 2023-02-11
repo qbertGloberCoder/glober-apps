@@ -26,6 +26,10 @@ public class ColorRenderer implements RendererI {
 	private	Color foregroundColor = null;
 
 	@Override
+	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+	}
+
+	@Override
 	public void renderComponent(Graphics2D g2d) {
 		if (backgroundColor != null)
 			g2d.setBackground(backgroundColor);
