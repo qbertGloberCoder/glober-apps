@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
@@ -57,27 +58,34 @@ import javax.swing.JLabel;
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 import java.awt.Color;
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.Timer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+<<<<<<< HEAD
 import javax.swing.JLabel;
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -85,6 +93,7 @@ import javax.swing.JOptionPane;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -122,24 +131,27 @@ import me.qbert.ui.util.RenderComponentUtil;
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 import javax.swing.JPanel;
+=======
+import javax.swing.JScrollBar;
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
-import me.qbert.skywatch.astro.CelestialObject;
-import me.qbert.skywatch.astro.ObservationTime;
-import me.qbert.skywatch.astro.ObserverLocation;
-import me.qbert.skywatch.astro.impl.SunObject;
-import me.qbert.skywatch.exception.UninitializedObject;
-import me.qbert.skywatch.model.ObjectDirectionAltAz;
-import me.qbert.skywatch.service.CelestialObjects;
+import me.qbert.skywatch.service.AbstractCelestialObjects;
+import me.qbert.skywatch.service.AzimuthalEquidistantNPPObjects;
+import me.qbert.skywatch.service.AzimuthalEquidistantSPPObjects;
+import me.qbert.skywatch.service.EquirectilinearObjects;
+import me.qbert.skywatch.service.GlobeObjects;
+import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.util.AnimationTimer;
+<<<<<<< HEAD
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.ImageRenderer;
 import me.qbert.ui.util.RenderComponentUtil;
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -224,6 +236,7 @@ public class MainFrame extends JFrame implements KeyListener {
     private JCheckBoxMenuItem runningScript;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 	private JMenuBar menubar;
@@ -268,6 +281,8 @@ public class MainFrame extends JFrame implements KeyListener {
     private JCheckBoxMenuItem mickeyFaceMenu;
     
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	private Canvas canvas;
 	
 	private boolean timerRunning = false;
@@ -279,6 +294,7 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     private AbstractCelestialObjects celestialObjects;
 //    private CelestialObjects celestialObjects;
     
@@ -317,14 +333,26 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
     private CelestialObjects celestialObjects;
+=======
+    private AbstractCelestialObjects celestialObjects;
+//    private CelestialObjects celestialObjects;
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
     
     private boolean mickeyFace = true;
+    
+    private BufferedImage image = null;
+    private boolean exportMode = false;
     
     private Properties props;
     private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private static File propsFile = new File("settings.properties");
 	
+<<<<<<< HEAD
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+    private int frame = 1;
+    
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	public MainFrame() {
 		super("Multi-transformation earth clock");
 		
@@ -455,6 +483,7 @@ public class MainFrame extends JFrame implements KeyListener {
         menubar.add(m2);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         JMenuItem fullscreenMenu = new JMenuItem("Full screen");
         m2.add(fullscreenMenu);
 
@@ -583,6 +612,11 @@ public class MainFrame extends JFrame implements KeyListener {
         JMenuItem fullscreenMenu = new JMenuItem("Full screen");
         m2.add(fullscreenMenu);
 
+=======
+        JMenuItem fullscreenMenu = new JMenuItem("Full screen");
+        m2.add(fullscreenMenu);
+
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         JCheckBoxMenuItem recordMenu = new JCheckBoxMenuItem("Save to outputs");
         m2.add(recordMenu);
 
@@ -669,12 +703,15 @@ public class MainFrame extends JFrame implements KeyListener {
 
         m2.add(new JSeparator());
         
+<<<<<<< HEAD
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
         mb.add(m2);
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         timerMenu = new JCheckBoxMenuItem("Timer");
         m2.add(timerMenu);
         railwayStyleMenu = new JCheckBoxMenuItem("Swiss railway style");
@@ -692,6 +729,7 @@ public class MainFrame extends JFrame implements KeyListener {
         m2.add(twentyFourHourStyleMenu);
         twentyFourHourStyleMenu.setSelected(true);
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -860,11 +898,71 @@ public class MainFrame extends JFrame implements KeyListener {
         speedMenu.add(dayNightPartialMenu);
         dayNightFullMenu = new JCheckBoxMenuItem("Full");
         speedMenu.add(dayNightFullMenu);
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         mickeyFaceMenu = new JCheckBoxMenuItem("Mickey Mouse face");
         m2.add(mickeyFaceMenu);
-        
         mickeyFaceMenu.setSelected(true);
+        
+        m2.add(new JSeparator());
+        
+        sunZenithAnglesMenu = new JCheckBoxMenuItem("Sun zenith angles");
+        m2.add(sunZenithAnglesMenu);
+        moonZenithAnglesMenu = new JCheckBoxMenuItem("Moon zenith angles");
+        m2.add(moonZenithAnglesMenu);
+        renderSunGPGreatCircleRouteMenu = new JCheckBoxMenuItem("Sun GP great circle routes");
+        m2.add(renderSunGPGreatCircleRouteMenu);
+        renderMoonGPGreatCircleRouteMenu = new JCheckBoxMenuItem("Moon GP great circle routes");
+        m2.add(renderMoonGPGreatCircleRouteMenu);
+        subMenu = new JMenu("Sun day/night opacity");
+        m2.add(subMenu);
+        dayNightOffMenu = new JCheckBoxMenuItem("Off");
+        subMenu.add(dayNightOffMenu);
+        dayNightPartialMenu = new JCheckBoxMenuItem("Partial");
+        subMenu.add(dayNightPartialMenu);
+        dayNightFullMenu = new JCheckBoxMenuItem("Full");
+        subMenu.add(dayNightFullMenu);
+        
+        moonDayNightOffMenu = new JCheckBoxMenuItem("Moon day/night opacity");
+        m2.add(moonDayNightOffMenu);
 
+        String [] objectPathModes = AbstractCelestialObjects.getPrecessionPathModeLabels();
+        subMenu = new JMenu("Sun path");
+        m2.add(subMenu);
+        sunPaths = new JCheckBoxMenuItem[objectPathModes.length];
+        for (int i = 0;i < objectPathModes.length;i ++) {
+        	sunPaths[i] = new JCheckBoxMenuItem(objectPathModes[i]);
+        	subMenu.add(sunPaths[i]);
+        	
+        	final int index = i;
+        	sunPaths[i].addActionListener(new ActionListener() {
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				celestialObjects.setSunPrecessionPathMode(index);
+    				updateSunPathMenu(index);
+    				setSunPrecessionPathMode(index);
+    			}
+    		});
+        }
+        
+        subMenu = new JMenu("Moon path");
+        m2.add(subMenu);
+        moonPaths = new JCheckBoxMenuItem[objectPathModes.length];
+        for (int i = 0;i < objectPathModes.length;i ++) {
+        	moonPaths[i] = new JCheckBoxMenuItem(objectPathModes[i]);
+        	subMenu.add(moonPaths[i]);
+        	
+        	final int index = i;
+        	moonPaths[i].addActionListener(new ActionListener() {
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				celestialObjects.setMoonPrecessionPathMode(index);
+    				updateMoonPathMenu(index);
+    				setMoonPrecessionPathMode(index);
+    			}
+    		});
+        }
+        
         JMenu m3 = new JMenu("Speed");
         menubar.add(m3);
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
@@ -894,8 +992,12 @@ public class MainFrame extends JFrame implements KeyListener {
         
         m3.add(new JSeparator());
         
+<<<<<<< HEAD
         String [] speedLabels = CelestialObjects.getSpeedLabels();
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+        String [] speedLabels = AbstractCelestialObjects.getSpeedLabels();
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         speedSettings = new JCheckBoxMenuItem[speedLabels.length];
         for (int i = 0;i < speedLabels.length;i ++) {
         	speedSettings[i] = new JCheckBoxMenuItem(speedLabels[i]);
@@ -911,6 +1013,7 @@ public class MainFrame extends JFrame implements KeyListener {
     		});
         }
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -935,6 +1038,8 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         JMenu m4 = new JMenu("Location");
         menubar.add(m4);
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
@@ -955,8 +1060,11 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         runningScript = new JCheckBoxMenuItem("Script");
         menubar.add(runningScript);
         runningScript.addActionListener(new ActionListener() {
@@ -972,12 +1080,15 @@ public class MainFrame extends JFrame implements KeyListener {
 		});
         
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         final Frame thisInstance = this;
         fullscreenMenu.addActionListener(new ActionListener() {
 			@Override
@@ -1035,6 +1146,7 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         renderSunGPGreatCircleRouteMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1120,13 +1232,50 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
         zenithAnglesMenu.addActionListener(new ActionListener() {
+=======
+        renderSunGPGreatCircleRouteMenu.addActionListener(new ActionListener() {
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				celestialObjects.setRenderContourLines(! celestialObjects.isRenderContourLines());
-				zenithAnglesMenu.setSelected(celestialObjects.isRenderContourLines());
+				celestialObjects.setRenderSunGPGreatCircleRoute(! celestialObjects.isRenderSunGPGreatCircleRoute());
+				renderSunGPGreatCircleRouteMenu.setSelected(celestialObjects.isRenderSunGPGreatCircleRoute());
 				redrawClock();
+<<<<<<< HEAD
 				setZenithAngles(celestialObjects.isRenderContourLines());
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+				setSunGPGreatCircleRoutes(celestialObjects.isRenderSunGPGreatCircleRoute());
+			}
+		});
+        
+        renderMoonGPGreatCircleRouteMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setRenderMoonGPGreatCircleRoute(! celestialObjects.isRenderMoonGPGreatCircleRoute());
+				renderMoonGPGreatCircleRouteMenu.setSelected(celestialObjects.isRenderMoonGPGreatCircleRoute());
+				redrawClock();
+				setMoonGPGreatCircleRoutes(celestialObjects.isRenderMoonGPGreatCircleRoute());
+			}
+		});
+        
+        sunZenithAnglesMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setSunRenderContourLines(! celestialObjects.isSunRenderContourLines());
+				sunZenithAnglesMenu.setSelected(celestialObjects.isSunRenderContourLines());
+				redrawClock();
+				setSunZenithAngles(celestialObjects.isSunRenderContourLines());
+			}
+		});
+        
+        moonZenithAnglesMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setMoonRenderContourLines(! celestialObjects.isMoonRenderContourLines());
+				moonZenithAnglesMenu.setSelected(celestialObjects.isMoonRenderContourLines());
+				redrawClock();
+				setMoonZenithAngles(celestialObjects.isMoonRenderContourLines());
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 			}
 		});
         
@@ -1200,6 +1349,16 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+			}
+		});
+        
+        moonDayNightOffMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setMoonDayNightRendered(! celestialObjects.isMoonDayNightRendered());
+				updateMoonDayNightsMenu();
+				redrawClock();
+				setMoonDayNightOpacity(celestialObjects.isMoonDayNightRendered());
 			}
 		});
         
@@ -1433,10 +1592,31 @@ public class MainFrame extends JFrame implements KeyListener {
 
         canvas = new Canvas();
         
+        // 1920x1080
+        // 960x540
+		image = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
+//		image = new BufferedImage(960, 540, BufferedImage.TYPE_INT_ARGB);
+		
+		size1080Menu.setSelected(true);
+        
         //Adding Components to the frame.
         getContentPane().add(BorderLayout.NORTH, menubar);
         getContentPane().add(BorderLayout.CENTER, new JScrollPane(canvas));
+<<<<<<< HEAD
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+        
+        JScrollBar sb = new JScrollBar(JScrollBar.HORIZONTAL, 0, 1, -7200, 7200);
+        getContentPane().add(BorderLayout.SOUTH, new JScrollPane(sb));
+        
+        sb.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				celestialObjects.setTimeBias(sb.getValue());
+			}
+		});
+        
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(600, 600));
@@ -1453,13 +1633,17 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 		aeMapNProjection.setSelected(true);
 		aeMapSProjection.setSelected(true);
 		equirectilinearMapProjection.setSelected(false);
 		globeProjection.setSelected(false);
         initProjection(-1);
+<<<<<<< HEAD
 <<<<<<< HEAD
         
         if (timerRunning == false)
@@ -2432,6 +2616,8 @@ public class MainFrame extends JFrame implements KeyListener {
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         updateObjects();
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         
         if (timerRunning == false)
         	toggleTimer();
@@ -2441,6 +2627,93 @@ public class MainFrame extends JFrame implements KeyListener {
 =======
 		
 		addKeyListener(this);
+	}
+	
+	private void initProjection(int projectionIndex) {
+		if ((celestialObjects != null) && (celestialObjects.isRunningScript()))
+			return;
+		
+        boolean reloadProps = (props == null);
+        if (reloadProps)
+        	props = new Properties();
+        
+		if (propsFile.exists()) {
+			if (reloadProps) {
+				try {
+					FileInputStream fis = new FileInputStream(propsFile);
+					props.load(fis);
+					fis.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		
+		if (projectionIndex < 0) {
+			projectionIndex = getProjection("0");
+		}
+
+        try {
+        	if (projectionIndex == 0)
+        		celestialObjects = new AzimuthalEquidistantNPPObjects(canvas);
+        	else if (projectionIndex == 1)
+        		celestialObjects = new EquirectilinearObjects(canvas);
+        	else if (projectionIndex == 2)
+        		celestialObjects = new AzimuthalEquidistantSPPObjects(canvas);
+        	else if (projectionIndex == 3)
+        		celestialObjects = new GlobeObjects(canvas);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+        
+        updateTimerMenu();
+        celestialObjects.setSpeed(1);
+        updateSpeedMenu(1);
+        
+		if (propsFile.exists())
+			setFromProps();
+		 else {
+	        railwayStyleMenu.setSelected(celestialObjects.isRailwayStyleClock());
+			sunZenithAnglesMenu.setSelected(celestialObjects.isSunRenderContourLines());
+			moonZenithAnglesMenu.setSelected(celestialObjects.isMoonRenderContourLines());
+			renderSunGPGreatCircleRouteMenu.setSelected(celestialObjects.isRenderSunGPGreatCircleRoute());
+			renderMoonGPGreatCircleRouteMenu.setSelected(celestialObjects.isRenderMoonGPGreatCircleRoute());
+			updateDayNightsMenu();
+			updateMoonDayNightsMenu();
+		 }
+		
+		updateSunPathMenu();
+		updateMoonPathMenu();
+        updateObjects();
+
+        if (projectionIndex == 0) {
+			aeMapNProjection.setSelected(true);
+			aeMapSProjection.setSelected(false);
+			equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerMapMenu.setEnabled(true);
+			globeFullSize.setEnabled(false);
+        } else if (projectionIndex == 1) {
+        	aeMapNProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(true);
+			globeProjection.setSelected(false);
+			centerMapMenu.setEnabled(false);
+			globeFullSize.setEnabled(false);
+        } else if (projectionIndex == 2) {
+        	aeMapNProjection.setSelected(false);
+			aeMapSProjection.setSelected(true);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerMapMenu.setEnabled(true);
+			globeFullSize.setEnabled(false);
+        } else {
+        	aeMapNProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(true);
+			centerMapMenu.setEnabled(true);
+			globeFullSize.setEnabled(true);
+        }
 	}
 	
 	private void saveSettingsToProps() {
@@ -2507,12 +2780,71 @@ public class MainFrame extends JFrame implements KeyListener {
     	saveSettingsToProps();
 	}
 	
-	private boolean getZenithAngles(boolean defaultSelected) {
+	private void setSunGPGreatCircleRoutes(boolean selected) {
+    	props.setProperty("sungpgreatcircleroute", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private boolean getSunGPGreatCircleRoutes(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("sungpgreatcircleroute", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setMoonGPGreatCircleRoutes(boolean selected) {
+    	props.setProperty("moongpgreatcircleroute", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private boolean getMoonGPGreatCircleRoutes(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("moongpgreatcircleroute", (defaultSelected ? "1" : "0")));
+	}
+	
+	private boolean getSunZenithAngles(boolean defaultSelected) {
 		return stringToBoolean(props.getProperty("showcontourlines", (defaultSelected ? "1" : "0")));
 	}
 	
-	private void setZenithAngles(boolean selected) {
+	private void setSunZenithAngles(boolean selected) {
     	props.setProperty("showcontourlines", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private boolean getMoonZenithAngles(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("showmooncontourlines", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setMoonZenithAngles(boolean selected) {
+    	props.setProperty("showmooncontourlines", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private int getSunPrecessionPathMode(String defaultPathMode) {
+		Integer i;
+		try {
+			i = new Integer(props.getProperty("sunprecessionpathmode", defaultPathMode));
+		} catch (Exception e) {
+			i = new Integer(0);
+		}
+		return i.intValue();
+
+	}
+	
+	private void setSunPrecessionPathMode(int pathMode) {
+    	props.setProperty("sunprecessionpathmode", Integer.toString(pathMode));
+    	saveSettingsToProps();
+	}
+	
+	private int getMoonPrecessionPathMode(String defaultPathMode) {
+		Integer i;
+		try {
+			i = new Integer(props.getProperty("moonprecessionpathmode", defaultPathMode));
+		} catch (Exception e) {
+			i = new Integer(0);
+		}
+		return i.intValue();
+
+	}
+	
+	private void setMoonPrecessionPathMode(int pathMode) {
+    	props.setProperty("moonprecessionpathmode", Integer.toString(pathMode));
     	saveSettingsToProps();
 	}
 	
@@ -2534,12 +2866,69 @@ public class MainFrame extends JFrame implements KeyListener {
     	saveSettingsToProps();
 	}
 	
+	private boolean getMoonDayNightOpacity(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("moondaynightopacity", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setMoonDayNightOpacity(boolean selected) {
+    	props.setProperty("moondaynightopacity", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
 	private boolean getMickeyFace(boolean defaultSelected) {
 		return stringToBoolean(props.getProperty("usemickeyface", (defaultSelected ? "1" : "0")));
 	}
 	
 	private void setMickeyFace(boolean selected) {
     	props.setProperty("usemickeyface", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private int getShiftDirection(String defaultShiftDirection) {
+		Integer i;
+		try {
+			i = new Integer(props.getProperty("justify", defaultShiftDirection));
+		} catch (Exception e) {
+			i = new Integer(0);
+		}
+		return i.intValue();
+
+	}
+	
+	private void setShiftDirection(int shiftDirection) {
+    	props.setProperty("justify", Integer.toString(shiftDirection));
+    	saveSettingsToProps();
+	}
+	
+	private int getOrientation(String defaultOrientation) {
+		Integer i;
+		try {
+			i = new Integer(props.getProperty("orientation", defaultOrientation));
+		} catch (Exception e) {
+			i = new Integer(0);
+		}
+		return i.intValue();
+
+	}
+	
+	private void setProjection(int projection) {
+    	props.setProperty("projection", Integer.toString(projection));
+    	saveSettingsToProps();
+	}
+	
+	private int getProjection(String defaultOrientation) {
+		Integer i;
+		try {
+			i = new Integer(props.getProperty("projection", defaultOrientation));
+		} catch (Exception e) {
+			i = new Integer(0);
+		}
+		return i.intValue();
+
+	}
+	
+	private void setOrientation(int orientation) {
+    	props.setProperty("orientation", Integer.toString(orientation));
     	saveSettingsToProps();
 	}
 	
@@ -2554,9 +2943,21 @@ public class MainFrame extends JFrame implements KeyListener {
 		celestialObjects.setTwentyFourHourClock(tempBoolean);
 		twentyFourHourStyleMenu.setSelected(tempBoolean);
 
-		tempBoolean = getZenithAngles(true);
-		celestialObjects.setRenderContourLines(tempBoolean);
-		zenithAnglesMenu.setSelected(tempBoolean);
+		tempBoolean = getSunGPGreatCircleRoutes(true);
+		celestialObjects.setRenderSunGPGreatCircleRoute(tempBoolean);
+		renderSunGPGreatCircleRouteMenu.setSelected(tempBoolean);
+
+		tempBoolean = getMoonGPGreatCircleRoutes(true);
+		celestialObjects.setRenderMoonGPGreatCircleRoute(tempBoolean);
+		renderMoonGPGreatCircleRouteMenu.setSelected(tempBoolean);
+
+		tempBoolean = getSunZenithAngles(true);
+		celestialObjects.setSunRenderContourLines(tempBoolean);
+		sunZenithAnglesMenu.setSelected(tempBoolean);
+
+		tempBoolean = getMoonZenithAngles(true);
+		celestialObjects.setMoonRenderContourLines(tempBoolean);
+		moonZenithAnglesMenu.setSelected(tempBoolean);
 
 		
 		String opacity = getDayNightOpacity("1");
@@ -2571,10 +2972,41 @@ public class MainFrame extends JFrame implements KeyListener {
 		}
 		updateDayNightsMenu();
 		
+		tempBoolean = getMoonDayNightOpacity(true);
+		celestialObjects.setMoonDayNightRendered(tempBoolean);
+		updateMoonDayNightsMenu();
+		
 		mickeyFace = getMickeyFace(true);
         mickeyFaceMenu.setSelected(mickeyFace);
         celestialObjects.setClockFace(mickeyFace);
+        
+        celestialObjects.setSunPrecessionPathMode(getSunPrecessionPathMode("0"));
+        celestialObjects.setMoonPrecessionPathMode(getMoonPrecessionPathMode("0"));
+        
+        celestialObjects.setShiftDirection(getShiftDirection("0"));
+        updateJustifyMenu(celestialObjects.getShiftDirection());
+        
+        celestialObjects.setDstRotateSetting(getOrientation("0"));
+        updateOrientationMenu(celestialObjects.getDstRotateSetting());
     }
+	
+	private void updateCenterModes(int centerModeIndex) {
+		for (int scanPaths = 0;scanPaths < centerModes.length;scanPaths ++) {
+			centerModes[scanPaths].setSelected(scanPaths == centerModeIndex);
+		}
+	}
+	
+	private void updateCenterModesMenu() {
+		MapCenterMode centerLocation = celestialObjects.getCenterLocation();
+        MapCenterMode [] centerMapModes = AbstractCelestialObjects.MAP_CENTER_MODES;
+
+        for (int i = 0;i < centerMapModes.length;i ++) {
+        	if (centerLocation == centerMapModes[i]) {
+        		updateCenterModes(i);
+        		break;
+        	}
+        }
+	}
 	
 	private void updateDayNightsMenu() {
 		if (! celestialObjects.isDayNightRendered()) {
@@ -2595,6 +3027,42 @@ public class MainFrame extends JFrame implements KeyListener {
 		}
 	}
 	
+	private void updateMoonDayNightsMenu() {
+		moonDayNightOffMenu.setSelected(celestialObjects.isMoonDayNightRendered());
+	}
+	
+	private void updateSunPathMenu() {
+		updateSunPathMenu(celestialObjects.getSunPrecessionPathMode());
+	}
+	
+	private void updateJustifyMenu(int justifyIndex) {
+		justifyLeftMenu.setSelected(justifyIndex < 0);
+		justifyCenterMenu.setSelected(justifyIndex == 0);
+		justifyRightMenu.setSelected(justifyIndex > 0);
+	}
+	
+	private void updateOrientationMenu(int dstOrientation) {
+	    orientNormalMenu.setSelected(dstOrientation == 0);
+	    orientMapShiftMenu.setSelected(dstOrientation == 1);
+	    orientDSTAdjustMenu.setSelected(dstOrientation == 2);
+	}
+	
+	private void updateSunPathMenu(int pathModeIndex) {
+		for (int scanPaths = 0;scanPaths < sunPaths.length;scanPaths ++) {
+			sunPaths[scanPaths].setSelected(scanPaths == pathModeIndex);
+		}
+	}
+	
+	private void updateMoonPathMenu() {
+		updateMoonPathMenu(celestialObjects.getMoonPrecessionPathMode());
+	}
+	
+	private void updateMoonPathMenu(int pathModeIndex) {
+		for (int scanPaths = 0;scanPaths < moonPaths.length;scanPaths ++) {
+			moonPaths[scanPaths].setSelected(scanPaths == pathModeIndex);
+		}
+	}
+	
 	private void updateSpeedMenu() {
 		updateSpeedMenu(celestialObjects.getCurrentSpeed());
 	}
@@ -2609,7 +3077,7 @@ public class MainFrame extends JFrame implements KeyListener {
 		if (speedHint == 0)
 			newInterval = 1000;
 		else if (speedHint == 1)
-			newInterval = 16;
+			newInterval = 125;
 		else
 			newInterval = 250;
 		if (newInterval != timerInterval) {
@@ -2627,8 +3095,11 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	private BufferedImage stripAlphaChannel(BufferedImage image) {
 	    BufferedImage clone = new BufferedImage(image.getWidth(),
 	            image.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -2638,6 +3109,7 @@ public class MainFrame extends JFrame implements KeyListener {
 	    return clone;
 	}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	private void updateObjects() {
 		if (canvas.isCurrentlyRendering())
@@ -2719,10 +3191,37 @@ public class MainFrame extends JFrame implements KeyListener {
 	}
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	private void updateObjects() {
+		if (canvas.isCurrentlyRendering())
+			return;
+		
 		try {
-			celestialObjects.updateObjects();
+			canvas.setRecordMode(((exportMode) || (celestialObjects.isRunningScript())));
+			
+			celestialObjects.updateObjects(false);
+			
+			if ((exportMode) || (celestialObjects.isRunningScript())) {
+				canvas.paintToImage(image, true);
+				
+				String fname = String.format("output/test_%06d.jpg", frame ++);
+				
+				ImageIO.write(stripAlphaChannel(image), "jpg", new File(fname));
+			} else {
+				canvas.clearRepaintPanelFromImage();
+				if (frame > 1) {
+					runningScript.setSelected(false);
+					frame = 1;
+				} else if (runningScript.isSelected()) {
+					celestialObjects.runScript();
+				}
+			}
+			canvas.repaint();
 		} catch (Exception e) {
+			e.printStackTrace();
+			if (exportMode)
+				exportMode = false;
 		}
 	}
 <<<<<<< HEAD
@@ -2730,7 +3229,7 @@ public class MainFrame extends JFrame implements KeyListener {
 =======
 	
 	private void redrawClock() {
-		if ((! timerRunning) && (! canvas.isCurrentlyRendering()))
+		if (! timerRunning)
 			updateObjects();
 	}
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
@@ -2742,6 +3241,7 @@ public class MainFrame extends JFrame implements KeyListener {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			celestialObjects.resetDayNightRender();
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -2750,6 +3250,9 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+			celestialObjects.resetDayNightRender();
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 			timerRunning = true;
 			timer = new Timer();
 			animationTimer = new AnimationTimer(this);
@@ -2768,8 +3271,7 @@ public class MainFrame extends JFrame implements KeyListener {
 
 	public void animate(me.qbert.skywatch.util.AnimationTimer timer)
 	{
-		if (! canvas.isCurrentlyRendering())
-			updateObjects();
+		updateObjects();
 	}
 
 	@Override

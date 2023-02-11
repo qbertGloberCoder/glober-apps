@@ -3,6 +3,7 @@ package me.qbert.skywatch.ui.component;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,14 +29,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
+=======
+import java.awt.Color;
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 <<<<<<< HEAD
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 import java.awt.geom.AffineTransform;
+<<<<<<< HEAD
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+import java.awt.image.BufferedImage;
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,13 +71,17 @@ public class Canvas extends JPanel {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8096630972921259096L;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	private List<RendererI> renderers = new ArrayList<RendererI>();
 	
@@ -124,16 +137,36 @@ public class Canvas extends JPanel {
     private void renderComponents(Graphics2D g2d, int width, int height) {
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 	private List<RendererI> renderers = new ArrayList<RendererI>();
 	
+	private boolean recordMode = false;
+	private boolean repaintPanelFromImage = false;
+	private BufferedImage repaintImageBuffer = null;
+	
 	private boolean currentlyRendering = false;
+	
+	private static Boolean linuxMachine = null;
 
-    private void doDrawing(Graphics g) {
-    	currentlyRendering = true;
+    public void paintToImage(BufferedImage drawToImage, boolean repaintPanelFromImage) {
+    	this.repaintPanelFromImage = repaintPanelFromImage;
+    	this.repaintImageBuffer = drawToImage;
     	
+<<<<<<< HEAD
         Graphics2D g2d = (Graphics2D) g.create();
 
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		Graphics2D g2d = drawToImage.createGraphics();
+		
+		renderComponents(g2d, drawToImage.getWidth(), drawToImage.getHeight());
+		
+		g2d.dispose();
+    }
+    
+    private void renderComponents(Graphics2D g2d, int width, int height) {
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -145,6 +178,7 @@ public class Canvas extends JPanel {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         for (RendererI renderer : renderers) {
         	AffineTransform oldXForm = g2d.getTransform();
         	renderer.setRenderDimensions(0, 0, width, height);
@@ -320,22 +354,93 @@ public class Canvas extends JPanel {
         int width = getWidth();
         int height = getHeight();
 
+=======
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
         for (RendererI renderer : renderers) {
         	AffineTransform oldXForm = g2d.getTransform();
         	renderer.setRenderDimensions(0, 0, width, height);
         	renderer.renderComponent(g2d);
         	g2d.setTransform(oldXForm);
         }
-        
-        currentlyRendering = false;
+    }
+    
+    @Override
+    public void repaint() {
+    	currentlyRendering = true;
+    	super.repaint();
     }
 
     @Override
     public void paintComponent(Graphics g) {
+    	currentlyRendering = true;
+    	
         super.paintComponent(g);
         
+<<<<<<< HEAD
         doDrawing(g);
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+        int width = getWidth();
+        int height = getHeight();
+
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        if ((repaintPanelFromImage == true) && (repaintImageBuffer != null)) {
+        	int leftX = 0;
+        	int topY = 0;
+        	int rightX = width;
+        	int bottomY = height;
+        	
+        	double aspectDifference = ((double)repaintImageBuffer.getWidth() / (double)repaintImageBuffer.getHeight()) - ((double)width / (double)height);
+        	
+        	if (aspectDifference > 0.0) {
+        		bottomY = (int)((double)width * (double)repaintImageBuffer.getHeight() / (double)repaintImageBuffer.getWidth());
+        		topY = (height - bottomY) / 2;
+        		bottomY += topY;
+        	} else if (aspectDifference < 0.0) {
+        		rightX = (int)((double)height * (double)repaintImageBuffer.getWidth() / (double)repaintImageBuffer.getHeight());
+        		leftX = (width - rightX) / 2;
+        		rightX += leftX;
+        	}
+        	
+            RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+            rh.put(RenderingHints.KEY_RENDERING,
+                    RenderingHints.VALUE_RENDER_QUALITY);
+
+            g2d.setRenderingHints(rh);
+        	g2d.drawImage(repaintImageBuffer, leftX, topY, rightX, bottomY, 0, 0, repaintImageBuffer.getWidth(), repaintImageBuffer.getHeight(), this);
+        } else {
+	        try {
+	            
+	            renderComponents(g2d, width, height);
+	        } catch (Exception e) {
+	        	currentlyRendering = false;
+	            throw e;
+	        }
+        }
+        
+        if (recordMode) {
+        	g2d.setColor(Color.red);
+        	g2d.setBackground(Color.red);
+        	g2d.fillArc(width - 30, 10, 20, 20, 0, 360);
+        }
+        
+        currentlyRendering = false;
+    }
+    
+    public void setRecordMode(boolean recordMode) {
+    	this.recordMode = recordMode;
+    }
+    
+    public boolean isRecordMode() {
+    	return recordMode;
+    }
+    
+    public void clearRepaintPanelFromImage() {
+    	repaintPanelFromImage = false;
+>>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
     }
 
 	public List<RendererI> getRenderers() {
