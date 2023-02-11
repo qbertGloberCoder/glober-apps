@@ -49,6 +49,7 @@ public class ObservationTime {
 		
 		this.time.setTimeInMillis(calendar.getTimeInMillis() + (long)timeBiasMillis);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		recompute();
 	}
 	
@@ -61,6 +62,8 @@ public class ObservationTime {
 	
 	public void addTime(int units, int calendarClassField) throws UninitializedObject {
 		this.time.add(calendarClassField, units);
+=======
+>>>>>>> a648753 (update pom version, add a time bias (or current time shift) to the time, add sun and moon precession calculators)
 		recompute();
 	}
 	
