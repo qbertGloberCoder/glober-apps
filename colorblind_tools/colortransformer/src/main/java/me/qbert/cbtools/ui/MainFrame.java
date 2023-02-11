@@ -164,14 +164,6 @@ public class MainFrame extends JFrame implements ChangeListener {
         getContentPane().add(BorderLayout.CENTER, canvasScroller);
         getContentPane().add(BorderLayout.SOUTH, consoleScroller);
 
-        try {
-        canvas.loadImage(new File("test_images/how-good-is-your-color-vision-17.png"));
-//        canvas.loadImage(new File("test_images/vertical_test.jpeg"));
-        } catch (Exception e) {
-        	consoleBuffer.append(e.getMessage());
-        	console.setText(consoleBuffer.toString());
-        }
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(500, 40));
         setPreferredSize(new Dimension(1200, 900));
