@@ -186,8 +186,8 @@ public class TestAstroCalculators {
 		assertForTest("Star 2 RA is incorrect", "Star 2 Dec is incorrect", direction, 108.81889224944868, 39.0);
 		
 		System.out.println("Additional... where is the sun now? ");
-		lat=45.41212;
-		lon=-75.69026;
+		lat=0.0;
+		lon=0.0;
 		transactionalListener.begin();
 		time.setCurrentTime();
 		myLocation.setGeoLocation(lat, lon);
