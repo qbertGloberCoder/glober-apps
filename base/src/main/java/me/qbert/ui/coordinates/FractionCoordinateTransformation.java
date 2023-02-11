@@ -4,6 +4,9 @@ package me.qbert.ui.coordinates;
 import java.awt.Point;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 /*
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

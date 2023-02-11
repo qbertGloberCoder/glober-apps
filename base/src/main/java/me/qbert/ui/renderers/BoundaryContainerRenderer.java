@@ -30,6 +30,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	private double boundMaximumYFraction = 1.0;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	private double largestAspect = 1.0;
 	
 	private BoundaryContainerRenderer followContainer = null;
@@ -38,10 +41,13 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 		updateAspectRatio();
 		
+<<<<<<< HEAD
 =======
 	@Override
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 		super.setRenderDimensions(dimensionLeftX, dimensionTopY, dimensionWidth, dimensionHeight);
 		
 		double boundLeftX = getBoundaryLeft();
@@ -61,6 +67,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	
 	@Override
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	public double getAspectRatio() {
 		if (followContainer != null)
 			return followContainer.getAspectRatio();
@@ -97,6 +106,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	@Override
 	public void renderComponent(Graphics2D g2d) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if ((! isRenderComponent()) || (renderers == null))
 			return;
 		
@@ -105,6 +115,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 		if (! isRenderComponent())
+=======
+		if ((! isRenderComponent()) || (renderers == null))
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 			return;
 		
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
@@ -120,9 +133,13 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		updateAspectRatio();
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		updateAspectRatio();
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	}
 
 	public double getBoundMinimumXFraction() {

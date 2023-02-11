@@ -80,6 +80,11 @@ public class ArcRenderer extends AbstractFractionRenderer {
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	}
+
+	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {

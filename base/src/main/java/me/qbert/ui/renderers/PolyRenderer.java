@@ -39,13 +39,19 @@ public class PolyRenderer extends AbstractFractionRenderer {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
 	}
 	
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	private void initializeList(int count) {
 		lineSegments = new ArrayList<AbstractCoordinateTransformation>();
 		for (int i = 0;i < count;i ++) {
