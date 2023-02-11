@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ public class ObservationTime {
 	private double utcTime;
 	private double timezoneAdjust;
 	
-	private ArrayList<CelestialObject> listeners = new ArrayList<CelestialObject>();
+	private ArrayList<ObjectStateChangeListener> listeners = new ArrayList<ObjectStateChangeListener>();
 	
 	public Calendar getTime() {
 		return time;
@@ -82,9 +82,9 @@ public class ObservationTime {
 		return timezoneAdjust;
 	}
 
-	public void addListener(CelestialObject celestialObject) {
-		if (! listeners.contains(celestialObject))
-			listeners.add(celestialObject);
+	public void addListener(ObjectStateChangeListener stateChangeListener) {
+		if (! listeners.contains(stateChangeListener))
+			listeners.add(stateChangeListener);
 	}
 	
 	private void recompute() throws UninitializedObject {
@@ -113,8 +113,8 @@ public class ObservationTime {
 	}
 	
 	private void notifyListeners() {
-		for (CelestialObject listener : listeners) {
-			listener.recompute();
+		for (ObjectStateChangeListener listener : listeners) {
+			listener.stateChanged(this, listener);
 		}
 	}
 
