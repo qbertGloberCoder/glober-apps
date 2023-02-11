@@ -4,8 +4,11 @@
 **/.settings
 **/bin
 **/.DS_Store
+<<<<<<< HEAD
 skywatcher/earthclock/script*.txt
 skywatcher/earthclock/clocks/
 skywatcher/earthclock/projections/
 skywatcher/earthclock/settings.properties
+=======
+>>>>>>> ec31a62 (fix the .gitignore to wildcard ignored files in any directory)
 
