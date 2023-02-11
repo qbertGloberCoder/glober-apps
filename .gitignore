@@ -5,10 +5,16 @@
 **/bin
 **/.DS_Store
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 skywatcher/earthclock/script*.txt
 skywatcher/earthclock/clocks/
 skywatcher/earthclock/projections/
 skywatcher/earthclock/settings.properties
+<<<<<<< HEAD
 =======
 >>>>>>> ec31a62 (fix the .gitignore to wildcard ignored files in any directory)
+=======
+>>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 
