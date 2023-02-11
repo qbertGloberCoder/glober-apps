@@ -34,4 +34,22 @@ public class ObjectDirectionAltAz {
 	public void setAzimuth(double azimuth) {
 		this.azimuth = azimuth;
 	}
+
+	@Override
+	public boolean equals(Object object) {
+	    // self check
+	    if (this == object)
+	        return true;
+	    // null check
+	    if (object == null)
+	        return false;
+	    if (getClass() != object.getClass())
+	        return false;
+	    ObjectDirectionAltAz castObj = (ObjectDirectionAltAz)object;
+	    
+		if ((altitude != castObj.altitude) || (azimuth != castObj.azimuth))
+			return false;
+		
+		return true;
+	}
 }

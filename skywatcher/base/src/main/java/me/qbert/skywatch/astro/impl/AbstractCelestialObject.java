@@ -7,6 +7,7 @@ import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
+import me.qbert.skywatch.model.ObjectDirectionAltAz;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
 /*
@@ -24,7 +25,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public abstract class AbstractCelestialObject implements CelestialObject {
+public abstract class AbstractCelestialObject extends GeoCalculator implements CelestialObject {
 	public abstract class AbstractCelestialObjectBuilder implements CelestialObjectBuilder {
 		private ObjectStateChangeListener stateChangeListener = null;
 		
@@ -89,5 +90,16 @@ public abstract class AbstractCelestialObject implements CelestialObject {
 	@Override
 	public void stateChanged(Object source, ObjectStateChangeListener listener) {
 		recompute();
+	}
+	
+	@Override
+	public ObjectDirectionAltAz getCurrentDirectionAsAltitudeAzimuth(ObjectDirectionRaDec providedRaDec) {
+		return raDeclinationToAltitudeAzimuth(providedRaDec, location);
+	}
+	
+	@Override
+	public ObjectDirectionAltAz getCurrentDirectionAsAltitudeAzimuth() {
+		ObjectDirectionRaDec direction = getCurrentDirection();
+		return raDeclinationToAltitudeAzimuth(direction, location);
 	}
 }

@@ -2,6 +2,7 @@ package me.qbert.skywatch.astro;
 
 import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
+import me.qbert.skywatch.model.ObjectDirectionAltAz;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
 /*
@@ -23,5 +24,7 @@ public interface CelestialObject extends ObjectStateChangeListener {
 	public void recompute();
 	public ObjectDirectionRaDec getCelestialSphereLocation();
 	public ObjectDirectionRaDec getCurrentDirection();
+	public ObjectDirectionAltAz getCurrentDirectionAsAltitudeAzimuth(ObjectDirectionRaDec providedRaDec);
+	public ObjectDirectionAltAz getCurrentDirectionAsAltitudeAzimuth();
 	public GeoLocation getEarthPositionOverhead();
 }
