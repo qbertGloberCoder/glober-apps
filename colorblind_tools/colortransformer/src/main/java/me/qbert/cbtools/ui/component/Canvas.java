@@ -1,5 +1,6 @@
 package me.qbert.cbtools.ui.component;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import me.qbert.cbtools.transformers.MultiColorTransformer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -45,9 +48,40 @@ public class Canvas extends JPanel {
 	private BufferedImage originalImage = null;
 	private File imageFile = null;
 	
+	private MultiColorTransformer colorTransformer = new MultiColorTransformer();
+	
+	private Color rgbToColor(int rgbColor) {
+        int red =   (rgbColor & 0x00ff0000) >> 16;
+        int green = (rgbColor & 0x0000ff00) >> 8;
+        int blue =   rgbColor & 0x000000ff;
+        return new Color(red, green, blue);
+	}
+	
+	private int colorToRGB(Color color) {
+		return 0xff000000 + ((color.getRed() << 16) & 0x00ff0000) + ((color.getGreen() << 8) & 0x0000ff00) + (color.getBlue() & 0x000000ff);
+	}
+
+	
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         
+    	// Brute force?? Don't like the core java API
+		for (int h = 0;h < originalImage.getHeight();h ++) {
+			for (int w = 0;w < originalImage.getWidth();w ++) {
+				try {
+					Color color = rgbToColor(originalImage.getRGB(w, h));
+					int rgb = colorToRGB(colorTransformer.transformColor(color));
+					image.setRGB(w, h, rgb);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("??? w is " + w);
+					System.out.println("??? h is " + h);
+					return;
+				}
+			}
+		}
+
         
 
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
@@ -70,9 +104,12 @@ public class Canvas extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         doDrawing(g);
+    }
+    
+    public void setColorTransformer(String transformerName) throws Exception {
+    	colorTransformer.changeTransformer(transformerName);
     }
 
 	public void loadImage(File file) throws IOException {

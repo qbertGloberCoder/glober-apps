@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 import java.util.Timer;
 
 import javax.swing.JFrame;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import me.qbert.cbtools.transformers.ColorMatrixTransformerFactory;
 import me.qbert.cbtools.ui.component.Canvas;
 
 /*
@@ -61,6 +63,29 @@ public class MainFrame extends JFrame {
 				System.exit(0);
 			}
 		});
+        
+        JMenu m2 = new JMenu("Type of Colorblindness");
+        mb.add(m2);
+        
+        List<String> transformNames = ColorMatrixTransformerFactory.getTransformNames();
+        for (String name : transformNames) {
+        	JMenuItem item = new JMenuItem(name);
+        	m2.add(item);
+        	item.addActionListener(new ActionListener() {
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				Object src = e.getSource();
+    		        try {
+    					canvas.setColorTransformer(((JMenuItem)src).getText());
+    					canvas.invalidate();
+    			        validate();
+    			        repaint();
+    				} catch (Exception e1) {
+    					e1.printStackTrace();
+    				}
+    			}
+    		});
+        }
 
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(600, 600));
