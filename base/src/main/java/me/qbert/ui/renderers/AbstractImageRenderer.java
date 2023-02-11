@@ -1,17 +1,12 @@
 package me.qbert.ui.renderers;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
-import me.qbert.ui.ImageTransformerI;
-import me.qbert.ui.RendererI;
-import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
-import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
-import me.qbert.ui.coordinates.FractionCoordinateTransformation;
+import javax.imageio.ImageIO;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -28,57 +23,74 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
-	List<RendererI> renderers = new ArrayList<RendererI>();
-	
+public abstract class AbstractImageRenderer extends AbstractFractionRenderer {
+	private BufferedImage originalImage;
+	private BufferedImage overlayImage;
 	private BufferedImage image;
-	
-	private ImageTransformerI imageTransformer;
-	
+
+	private double lastRotatedAngle = -9999999999.999;
 	private double rotateAngle;
 	private double rotateX = -1;
 	private double rotateY = -1;
 	
-	private double boundMinimumXFraction = 0.0;
-	private double boundMinimumYFraction = 0.0;
-	private double boundMaximumXFraction = 1.0;
-	private double boundMaximumYFraction = 1.0;
+	private double boundMinimumXFraction;
+	private double boundMinimumYFraction;
+	private double boundMaximumXFraction;
+	private double boundMaximumYFraction;
 	
+	public AbstractImageRenderer() {
+		boundMinimumXFraction = boundMinimumYFraction = 0.0;
+		boundMaximumXFraction = boundMaximumYFraction = 1.0;
+	}
 	
-	public VirtualImageCanvasRenderer() {
-		this(null);
-	}
-
-	public VirtualImageCanvasRenderer(ImageTransformerI imageTransformer) {
-		this.imageTransformer = imageTransformer;
-	}
-
 	@Override
 	public double getAspectRatio() {
-		return -1.0;
+		if (originalImage == null)
+			return 1.0;
+		
+		return (double)originalImage.getWidth() / (double)originalImage.getHeight();
 	}
 	
-	private void resetImage() {
-		double width = getBoundaryWidth();
-		double height = getBoundaryHeight();
-		image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2d = image.createGraphics();
-        for (RendererI renderer : renderers) {
-        	renderer.setRenderDimensions(0, 0, (int)width, (int)height);
-        	renderer.renderComponent(g2d);
-        }
-	    
-	    g2d.dispose();
-        
-        if (imageTransformer != null)
-        	imageTransformer.transformImage(this, image);
+	public void setOriginalImage(BufferedImage originalImage) {
+		image = null;
+		this.originalImage = originalImage;
 	}
 
-	private BufferedImage rotateImage() {
-		int width = image.getWidth();
-		int height = image.getHeight();
-		BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2d = newImage.createGraphics();
+	public void setOriginalOverlay(BufferedImage overlayImage) {
+		image = null;
+		this.overlayImage = overlayImage;
+	}
+
+    protected BufferedImage loadImageFromFile(File file) throws NullPointerException,IOException {
+    	BufferedImage newFile = null;
+    	
+    	newFile = ImageIO.read(file);
+    	try {
+    		while (newFile.getWidth(null) == -1)
+    			Thread.sleep(500);
+    	} catch (InterruptedException e) {
+    		newFile = null;
+    	} catch (NullPointerException e) {
+    		// Let's print the offending file name and pretend no file was loaded
+    		System.out.println("Unable to load file: " + file.getName());
+    		newFile = null;
+    		throw e;
+    	}
+    	
+    	return newFile;
+    }
+
+    protected void resetImage() {
+    	image = null;
+    	if (originalImage == null)
+    		return;
+    	
+    	lastRotatedAngle = rotateAngle;
+    	
+    	image = new BufferedImage((int)getBoundaryWidth(),
+    			(int)getBoundaryHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2d = image.createGraphics();
+//	    g2d.drawImage(originalImage, 0, 0, null);
 	    
 	    AffineTransform oldXForm = null;
 	    
@@ -86,32 +98,36 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
     		oldXForm = g2d.getTransform();
     		
 		    if ((rotateX < 0) || (rotateY < 0))
-		    	g2d.rotate(Math.toRadians(rotateAngle), width / 2, height / 2);
+		    	g2d.rotate(Math.toRadians(rotateAngle), image.getWidth() / 2, image.getHeight() / 2);
 		    else
 		    	g2d.rotate(Math.toRadians(rotateAngle), rotateX, rotateY);
     	}
     	
-    	g2d.drawImage(image, 0, 0, width, height, 0, 0, width, height, null);	    	
-        
-     	if (oldXForm != null)
-     		g2d.setTransform(oldXForm);
-
-    	g2d.dispose();
-        
-    	return newImage;
-	}
-
+    	g2d.drawImage(originalImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, originalImage.getWidth(), originalImage.getHeight(), null);	    	
+       
+    	if (oldXForm != null)
+    		g2d.setTransform(oldXForm);
+    	
+	    if (overlayImage != null) {
+	    	g2d.drawImage(overlayImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, overlayImage.getWidth(), overlayImage.getHeight(), null);	    	
+	    }
+	    
+	    g2d.dispose();
+    }
+    
 	@Override
 	public void renderComponent(Graphics2D g2d) {
 		if (! isRenderComponent())
 			return;
 		
-		if ((image == null) || ((int)getBoundaryWidth() != image.getWidth()) || ((int)getBoundaryHeight() != image.getHeight())) {
+		if ((image == null) || (lastRotatedAngle != rotateAngle) || ((int)getBoundaryWidth() != image.getWidth()) ||
+				((int)getBoundaryHeight() != image.getHeight())) {
 			resetImage();
 		}
 		
 		if (image == null)
 			return;
+		
 		
 		double boundLeftX = getBoundaryLeft();
 		double boundTopY = getBoundaryTop();
@@ -119,33 +135,11 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 		double height = getBoundaryHeight();
 		
 		int boundaryLeft = (int)(boundLeftX + (boundMinimumXFraction * width));
-		int boundaryTop = (int)(boundTopY + (boundMinimumYFraction * height));
 		int boundaryRight = (int)(boundLeftX + (boundMaximumXFraction * width));
+		int boundaryTop = (int)(boundTopY + (boundMinimumYFraction * height));
 		int boundaryBottom = (int)(boundTopY + (boundMaximumYFraction * height));
 		
-	    AffineTransform oldXForm = null;
-	    
-    	if (rotateAngle != 0.0) {
-    		oldXForm = g2d.getTransform();
-    		
-		    if ((rotateX < 0) || (rotateY < 0)) {
-		    	int middleX = boundaryLeft + ((boundaryRight - boundaryLeft) / 2);
-		    	int middleY = boundaryTop + ((boundaryBottom - boundaryTop) / 2);
-		    	g2d.rotate(Math.toRadians(rotateAngle), middleX, middleY);
-		    }
-		    else {
-		    	g2d.rotate(Math.toRadians(rotateAngle), rotateX, rotateY);
-		    }
-    	}
-    	
     	g2d.drawImage(image, boundaryLeft, boundaryTop, boundaryRight, boundaryBottom, 0, 0, image.getWidth(), image.getHeight(), null);
-
-    	if (oldXForm != null)
-    		g2d.setTransform(oldXForm);
-	}
-	
-	public void invalidate() {
-		image = null;
 	}
 
 	public double getRotateAngle() {
@@ -202,14 +196,5 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 
 	public void setBoundMaximumYFraction(double boundMaximumYFraction) {
 		this.boundMaximumYFraction = boundMaximumYFraction;
-	}
-	
-	public List<RendererI> getRenderers() {
-		return renderers;
-	}
-
-	public void setRenderers(List<RendererI> renderers) {
-		this.renderers = renderers;
-		image = null;
 	}
 }

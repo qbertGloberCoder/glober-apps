@@ -38,6 +38,11 @@ public class PolyRenderer extends AbstractFractionRenderer {
 		}
 	}
 	
+	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
+	
 	private void initializeList(int count) {
 		lineSegments = new ArrayList<AbstractCoordinateTransformation>();
 		for (int i = 0;i < count;i ++) {

@@ -3,6 +3,9 @@ package me.qbert.ui.renderers;
 import java.awt.Point;
 
 import me.qbert.ui.RendererI;
+import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
+import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
+import me.qbert.ui.coordinates.FractionCoordinateTransformation;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -26,6 +29,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	private boolean renderComponent = true;
 	
 	private boolean maintainAspectRatio = true;
+	private int shiftDirectionX = 0;
+	private int shiftDirectionY = 0;
 	
 	private double boundaryLeft = 0;
 	private double boundaryTop = 0;
@@ -35,6 +40,11 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	private Point topLeft;
 	private Point bottomRight;
 	
+//	private boolean debug = false;
+	
+	private AbsoluteCoordinateTransformation absoluteCoordinate = new AbsoluteCoordinateTransformation();
+	private FractionCoordinateTransformation fractionCoordinate = new FractionCoordinateTransformation();
+	
 	@Override
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 		boundaryLeft = (double)dimensionLeftX;
@@ -42,24 +52,70 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		boundaryWidth = (double)dimensionWidth;
 		boundaryHeight = (double)dimensionHeight;
 		
+		double aspectRatio = 1.0;
+		
 		if (maintainAspectRatio) {
-			if (boundaryWidth > boundaryHeight) {
+			aspectRatio = getAspectRatio();
+			if (aspectRatio <= 0)
+				aspectRatio = boundaryWidth / boundaryHeight;
+			
+			if ((boundaryWidth / boundaryHeight) > aspectRatio) {
 				// width is greater than height
-				boundaryWidth = boundaryHeight;
-				boundaryLeft = (((double)dimensionWidth - boundaryHeight) / 2.0);
-			} else if (boundaryWidth < boundaryHeight) {
+				boundaryWidth = boundaryHeight * aspectRatio;
+				
+				if (shiftDirectionX < 0)
+					boundaryLeft = 0.0;
+				else if (shiftDirectionX == 0)
+					boundaryLeft = (((double)dimensionWidth - boundaryWidth) / 2.0);
+				else
+					boundaryLeft = ((double)dimensionWidth - boundaryWidth);
+				
+				boundaryLeft += dimensionLeftX;
+			} else if ((boundaryWidth / boundaryHeight) <= aspectRatio) {
 				// height is greater than width
-				boundaryHeight = boundaryWidth;
-				boundaryTop = (((double)dimensionHeight - boundaryWidth) / 2.0);
+				boundaryHeight = boundaryWidth / aspectRatio;
+				if (shiftDirectionY < 0)
+					boundaryTop = 0.0;
+				else if (shiftDirectionY == 0)
+					boundaryTop = (((double)dimensionHeight - boundaryHeight) / 2.0);
+				else
+					boundaryTop = ((double)dimensionHeight - boundaryHeight);
+				
+				boundaryTop += dimensionTopY;
 			}
 		}
 		
-//		System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
+//		if (debug)
+//			System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
 		
 		topLeft = convertFractionToPoint(0.0, 0.0);
 		bottomRight = convertFractionToPoint(1.0, 1.0);
 	}
 	
+/*	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	
+	public boolean isDebug() {
+		return debug;
+	} */
+	
+	public int getShiftDirectionX() {
+		return shiftDirectionX;
+	}
+
+	public void setShiftDirectionX(int shiftDirectionX) {
+		this.shiftDirectionX = shiftDirectionX;
+	}
+
+	public int getShiftDirectionY() {
+		return shiftDirectionY;
+	}
+
+	public void setShiftDirectionY(int shiftDirectionY) {
+		this.shiftDirectionY = shiftDirectionY;
+	}
+
 	protected Point convertFractionToPoint(double fractionX, double fractionY) {
 		int x = (int)(boundaryLeft + (boundaryWidth * fractionX));
 		int y = (int)(boundaryTop + (boundaryHeight * fractionY));
@@ -68,6 +124,31 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		
 		return p;
 		
+	}
+	
+	public Point convertToCoordinates(double x, double y, int coordinatesType, boolean floatConversion) throws Exception {
+		AbstractCoordinateTransformation coordinate = null;
+		
+		if (coordinatesType == ABSOLUTE_COORDINATES) {
+			absoluteCoordinate.setFloatTransformation(floatConversion);
+			coordinate = absoluteCoordinate;
+		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
+			fractionCoordinate.setFloatTransformation(floatConversion);
+			coordinate = fractionCoordinate;
+		} else {
+			throw new Exception("coordinates type " + coordinatesType + " is invalid");
+		}
+		
+		coordinate.setX(x);
+		coordinate.setY(y);
+
+		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+
+//		if (debug) {
+//			System.out.println(" CONVERT: " + x + ", " + y + " and " +  (int)getBoundaryLeft() + ", " + (int)getBoundaryTop() + ", " + (int)getBoundaryWidth() + ", " + (int)getBoundaryHeight() + " --> " + p.x + ", " + p.y);
+//		}
+		
+		return p;
 	}
 
 	public boolean isRenderComponent() {

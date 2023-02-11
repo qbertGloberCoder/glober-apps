@@ -52,4 +52,9 @@ public class ColorRenderer implements RendererI {
 	public void setForegroundColor(Color foregroundColor) {
 		this.foregroundColor = foregroundColor;
 	}
+
+	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
 }

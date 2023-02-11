@@ -29,8 +29,14 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	private double boundMaximumXFraction = 1.0;
 	private double boundMaximumYFraction = 1.0;
 
+	private double largestAspect = 1.0;
+	
+	private BoundaryContainerRenderer followContainer = null;
+
 	@Override
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+		updateAspectRatio();
+		
 		super.setRenderDimensions(dimensionLeftX, dimensionTopY, dimensionWidth, dimensionHeight);
 		
 		double boundLeftX = getBoundaryLeft();
@@ -49,8 +55,42 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	}
 	
 	@Override
+	public double getAspectRatio() {
+		if (followContainer != null)
+			return followContainer.getAspectRatio();
+		
+		return largestAspect;
+	}
+	
+	public BoundaryContainerRenderer getFollowContainer() {
+		return followContainer;
+	}
+
+	public void setFollowContainer(BoundaryContainerRenderer followContainer) {
+		this.followContainer = followContainer;
+	}
+
+	private void updateAspectRatio() {
+		if (followContainer != null)
+			return;
+		
+		largestAspect = -1.0;
+		
+		for (RendererI renderer : renderers) {
+			if (renderer.getAspectRatio() > largestAspect) {
+				largestAspect = renderer.getAspectRatio();
+			}
+//			if (isDebug())
+//				System.out.println("DEBUG: " + renderer.getClass().getCanonicalName() + " : largest aspect ratio: " + renderer.getAspectRatio());
+		}
+		
+//		if (isDebug())
+//			System.out.println("DEBUG: largest aspect ratio: " + largestAspect);
+	}
+	
+	@Override
 	public void renderComponent(Graphics2D g2d) {
-		if (! isRenderComponent())
+		if ((! isRenderComponent()) || (renderers == null))
 			return;
 		
 		for (RendererI renderer : renderers) {
@@ -64,6 +104,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
+		updateAspectRatio();
 	}
 
 	public double getBoundMinimumXFraction() {

@@ -35,6 +35,8 @@ public class LineRenderer extends AbstractFractionRenderer {
 	
 	private int coordinatesType;
 	
+	private int lineConnectionMode = 1;
+	
 	public LineRenderer(int coordinatesType) throws Exception {
 		if ((coordinatesType == ABSOLUTE_COORDINATES) || (coordinatesType == FRACTIONAL_COORDINATES)) {
 			this.coordinatesType = coordinatesType;
@@ -43,6 +45,18 @@ public class LineRenderer extends AbstractFractionRenderer {
 		}
 		
 		initializeList(1);
+	}
+	
+	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
+	
+	public void setLineConnectionPacmanMode(boolean pacmanMode) {
+		if (pacmanMode)
+			lineConnectionMode = 2;
+		else
+			lineConnectionMode = 1;
 	}
 	
 	private void initializeList(int count) {
@@ -103,12 +117,47 @@ public class LineRenderer extends AbstractFractionRenderer {
 			g2d.setColor(c);
 		}
 		
-		for (int i = 0;i < lineSegments.size();i ++) {
-			AbstractCoordinateTransformation [] linePair = lineSegments.get(i);
-			
-			Point p1 = linePair[0].transform(left, top, width, height);
-			Point p2 = linePair[1].transform(left, top, width, height);
-			g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+		if (lineSegments.size() > 0) {
+			double cutoff = Math.sqrt(width * width + height * height) * 2.0 / 3.0;
+
+			for (int i = 0;i < lineSegments.size();i ++) {
+				AbstractCoordinateTransformation [] linePair = lineSegments.get(i);
+				
+				Point p1 = linePair[0].transform(left, top, width, height);
+				Point p2 = linePair[1].transform(left, top, width, height);
+				
+				if (lineConnectionMode == 1) {
+					g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+				} else {
+					double xDelta = p1.x - p2.x;
+					double yDelta = p1.y - p2.y;
+					double length = Math.sqrt(xDelta*xDelta + yDelta*yDelta);
+					if (length < cutoff) {
+						g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+					} else {
+						int fromX = p1.x - left;
+						int fromY = p1.y;
+						int toX = p2.x - left;
+						int toY = p2.y;
+						int intermediateX = toX;
+						int intermediateY = toY;
+						
+						if (toX > fromX) {
+							intermediateX -= width;
+							intermediateY = fromY - (int)(((double)(fromY - intermediateY) / (double)(fromX - intermediateX))*(double)fromX);
+							g2d.drawLine(p1.x, p1.y, left, intermediateY);
+							g2d.drawLine(left + width - 1, intermediateY, p2.x, p2.y);
+						}
+						else {
+							intermediateX += width;
+//							intermediateY = toY - (int)(((double)(intermediateY - fromY) / (double)(intermediateX - width))*(double)(width - fromX));
+							intermediateY = fromY - (int)(((double)(fromY - intermediateY) / (double)(intermediateX - fromX))*(double)(width - fromX));
+							g2d.drawLine(p1.x, p1.y, left + width - 1, intermediateY);
+							g2d.drawLine(left, intermediateY, p2.x, p2.y);
+						}
+					}
+				}
+			}
 		}
 		
 		if (lastBgColor != null)

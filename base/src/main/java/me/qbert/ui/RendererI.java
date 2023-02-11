@@ -19,5 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public interface RendererI {
 	public void renderComponent(Graphics2D g2d);
+	public double getAspectRatio();
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
 }
