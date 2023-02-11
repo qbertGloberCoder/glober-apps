@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flerf friendly calculator</title>
+<script>
+
+var transformer = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" ];
+
+var withCarry = 0;
+var carry = 0.0;
+var inputValue = 0.0;
+var fraction = 0.0;
+var operator = "";
+
+var resetInput = 0;
+
+var shiftMode = 0;
+var degMode = 1;
+
+var flerfMode = 0;
+
+function updateClearButton() {
+	if ((carry == 0) && (operator == "")) {
+		if (inputValue == 0.0)
+			document.getElementById("clear").innerHTML = "AC";
+		else
+			document.getElementById("clear").innerHTML = "C";
+	} else {
+		if (operator == "=")
+			document.getElementById("clear").innerHTML = "AC";
+		else
+			document.getElementById("clear").innerHTML = "C";
+	}
+}
+
+function displayCarry() {
+	if ((carry == 0) && (operator == "")) {
+		document.getElementById("disp1").innerHTML = "&nbsp;";
+	} else {
+		var val = "";
+
+		if (operator == "=")
+			val = val + "= ";
+		if (operator == "nroot")
+			val = val + "n &radic; ";
+
+		val = val + carry;
+
+		if (operator == "npow")
+			val = val + "<sup>n</sup>";
+
+		if ((operator != "") && (operator != "=") && (operator != "nroot") && (operator != "npow")) {
+			val = val + " " + operator;
+		}
+
+		if ((flerfMode) && (operator == "=")) {
+			for (var loop = 0;loop < 10;loop ++) {
+				val = val.replaceAll(String.fromCharCode("0".charCodeAt(0) + loop), transformer[loop]);
+			}
+			for (var loop = 0;loop < 10;loop ++) {
+				val = val.replaceAll(String.fromCharCode("A".charCodeAt(0) + loop), String.fromCharCode("0".charCodeAt(0) + loop));
+			}
+		}
+
+		document.getElementById("disp1").innerHTML = val;
+	}
+}
+
+function displayInput() {
+	var val = "" + inputValue;
+
+	if (fraction == 10.0) {
+		val = val + ".";
+	}
+
+	document.getElementById("disp2").innerHTML = val;
+
+	updateClearButton();
+}
+
+function compute() {
+	if (operator == "")
+		return;
+
+	if (withCarry) {
+		if (operator == "+")
+			carry = carry + inputValue;
+		if (operator == "-")
+			carry = carry - inputValue;
+		if (operator == "x")
+			carry = carry * inputValue;
+		if (operator == "/")
+			carry = carry / inputValue;
+		if (operator == "nroot")
+			carry = Math.pow(carry, 1/inputValue);
+		if (operator == "npow")
+			carry = Math.pow(carry, inputValue);
+	} else {
+		carry = inputValue;
+		withCarry = 1;
+	}
+
+	inputValue = 0;
+	fraction = 0.0;
+}
+
+function setPercent() {
+	inputValue /= 100.0;
+
+	displayInput();
+}
+
+function setOperator(newOperator) {
+	if (operator == "=") {
+		carry = 0;
+		withCarry = 0;
+	}
+	operator = newOperator;
+	compute();
+	displayCarry();
+	displayInput();
+}
+
+function equals() {
+	flerfShuffle();
+	compute();
+	operator = "=";
+	displayCarry();
+	displayInput();
+}
+
+function buttonReset() {
+	if (inputValue == 0) {
+		carry = 0;
+		withCarry = 0;
+		operator = "";
+		displayCarry();
+	}
+	inputValue = 0;
+	fraction = 0.0;
+	displayInput();
+}
+
+function toggleSign() {
+	if (inputValue != 0.0) {
+		inputValue *= -1.0;
+		displayInput();
+	}
+}
+
+function buttonDecimal() {
+	if (fraction == 0.0) {
+		fraction = 10.0;
+	}
+
+	displayInput();
+}
+
+function buttonDigitClick(value) {
+	if (resetInput) {
+		resetInput = 0;
+		fraction = 0.0;
+		inputValue = 0.0;
+	}
+
+	if (fraction < 1) {
+		inputValue = inputValue * 10.0 + value;
+	} else {
+		inputValue = inputValue + (value / fraction);
+		fraction = fraction * 10.0;
+	}
+
+	displayInput();
+}
+
+function buttonPi() {
+	inputValue = 3.141592653589793;
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonInvert() {
+	inputValue = 1 / inputValue;
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonSqr(nthRoot) {
+	inputValue = Math.pow(inputValue, nthRoot);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonSqrt(nthRoot) {
+	inputValue = Math.pow(inputValue, 1/nthRoot);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function flerfShuffle() {
+	transformer.sort(() => (Math.random() > .5) ? 1 : -1);
+}
+
+function buttonFlerfMode() {
+	flerfMode = !flerfMode;
+
+	flerfShuffle();
+
+	if (flerfMode) {
+		document.getElementById("flerfmode").classList.add('buttondown');
+	} else {
+		document.getElementById("flerfmode").classList.remove('buttondown');
+	}
+
+	displayCarry();
+	displayInput();
+}
+
+function buttonEPowX(nthRoot) {
+	inputValue = Math.pow(2.718281828459045, inputValue);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonTenPowX(nthRoot) {
+	inputValue = Math.pow(10, inputValue);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonLn(nthRoot) {
+	inputValue = Math.log(inputValue);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonLogTen(nthRoot) {
+	inputValue = Math.log10(inputValue);
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonE() {
+	inputValue = 2.718281828459045;
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonRand() {
+	inputValue = Math.random();
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonTrig(trigFunc) {
+	var angle = inputValue;
+
+	if (shiftMode) {
+		if (trigFunc == "sin") {
+			angle = Math.asin(inputValue);
+		}
+		if (trigFunc == "cos") {
+			angle = Math.acos(inputValue);
+		}
+		if (trigFunc == "tan") {
+			angle = Math.atan(inputValue);
+		}
+		if (trigFunc == "sinh") {
+			angle = Math.asinh(inputValue);
+		}
+		if (trigFunc == "cosh") {
+			angle = Math.acosh(inputValue);
+		}
+		if (trigFunc == "tanh") {
+			angle = Math.atanh(inputValue);
+		}
+
+		if ((degMode) && ((trigFunc == "sin") || (trigFunc == "cos") || (trigFunc == "tan"))) {
+			angle = angle * 180 / 3.141592653589793;
+		}
+
+		inputValue = angle;
+	} else {
+		if ((degMode) && ((trigFunc == "sin") || (trigFunc == "cos") || (trigFunc == "tan"))) {
+			angle = angle * 3.141592653589793 / 180.0;
+		}
+
+		if (trigFunc == "sin") {
+			inputValue = Math.sin(angle);
+		}
+		if (trigFunc == "cos") {
+			inputValue = Math.cos(angle);
+		}
+		if (trigFunc == "tan") {
+			inputValue = Math.tan(angle);
+		}
+		if (trigFunc == "sinh") {
+			inputValue = Math.sinh(angle);
+		}
+		if (trigFunc == "cosh") {
+			inputValue = Math.cosh(angle);
+		}
+		if (trigFunc == "tanh") {
+			inputValue = Math.tanh(angle);
+		}
+	}
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonFactorial() {
+	if (Number.isInteger(inputValue)) {
+		var count = inputValue;
+		inputValue = 1.0;
+		for (var loop = 1;loop <= count;loop ++) {
+			inputValue = inputValue * loop;
+		}
+	} else {
+		inputValue = NaN;
+	}
+
+	fraction = 0.0;
+	resetInput = 1;
+
+	displayInput();
+}
+
+function buttonRad() {
+	degMode = !degMode;
+
+	if (degMode) {
+		document.getElementById("rad").innerHTML = "Deg";
+		document.getElementById("rad").classList.remove('buttondown');
+	} else {
+		document.getElementById("rad").innerHTML = "Rad";
+		document.getElementById("rad").classList.add('buttondown');
+	}
+}
+
+function buttonSecond() {
+	shiftMode = !shiftMode;
+	
+	if (shiftMode) {
+		document.getElementById("sin").innerHTML = "asin";
+		document.getElementById("cos").innerHTML = "acos";
+		document.getElementById("tan").innerHTML = "atan";
+		document.getElementById("sinh").innerHTML = "asinh";
+		document.getElementById("cosh").innerHTML = "acosh";
+		document.getElementById("tanh").innerHTML = "atanh";
+
+		document.getElementById("second").classList.add('buttondown');
+	} else {
+		document.getElementById("sin").innerHTML = "sin";
+		document.getElementById("cos").innerHTML = "cos";
+		document.getElementById("tan").innerHTML = "tan";
+		document.getElementById("sinh").innerHTML = "sinh";
+		document.getElementById("cosh").innerHTML = "cosh";
+		document.getElementById("tanh").innerHTML = "tanh";
+
+		document.getElementById("second").classList.remove('buttondown');
+	}
+}
+</script>
+
+<style>
+body {
+  background-color: linen;
+  padding: 10px;
+}
+
+h1 {
+  color: maroon;
+  margin-left: 40px;
+}
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+@media screen,print {
+
+.cell {
+  width: 10%;
+  height: 100px;
+  min-height: 10%;
+  border: 4px solid green;
+  background-color: white;
+    -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+.buttondown {
+  background-color: #9070E0 !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+.white {
+  background-color: #FFFFFF !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+.centerp {
+  text-align: center;
+}
+
+.rightp {
+  text-align: right;
+}
+
+.fullwidth {
+	width: 100%;
+}
+
+.board {
+	width: 100%;
+	min-height: 100%;
+	height: 100%;
+	background-color: green !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    background: transparent;
+    width: 100%;
+    border: none;
+    border-top: solid 1px #000;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+button {
+	width: 100%;
+	min-height: 100%;
+	height: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.pad3 {
+	padding: 4px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div>
+	<div class="no-print">
+		<h1>FLERF friendly calculator</h1>
+	</div>
+
+	<div class="fullwidth white">
+		<p id="disp1" class="rightp white">&nbsp;</p>
+		<p id="disp2" class="rightp white">0</p>
+	</div>
+
+	<div class="board pad3">
+           <table class="board">
+             <tr>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"><button id="clear" type="button" onclick="buttonReset()">AC</button></td>
+               <td class="cell centerp"><button type="button" onclick="toggleSign()">+/-</button></td>
+               <td class="cell centerp"><button type="button" onclick="setPercent()">%</button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('/')">/</button></td>
+             </tr>
+             <tr>
+               <td class="cell centerp"><button id="second" type="button" onclick="buttonSecond()">2<sup>nd</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonSqr(2)">x<sup>2</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonSqr(3)">x<sup>3</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('npow')">x<sup>y</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonEPowX()">e<sup>x</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonTenPowX()">10<sup>x</sup></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(7)">7</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(8)">8</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(9)">9</button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('x')">X</button></td>
+             </tr>
+             <tr>
+               <td class="cell centerp"><button type="button" onclick="buttonInvert();">1<br />-<br />X</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonSqrt(2)">2 &radic; x</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonSqrt(3)">3 &radic; x</button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('nroot')">y &radic; x</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonLn()">ln</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonLogTen()">log<sub>10</sub></button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(4)">4</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(5)">5</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(6)">6</button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('-')">-</button></td>
+             </tr>
+             <tr>
+               <td class="cell centerp"><button type="button" onclick="buttonFactorial()">x!</button></td>
+               <td class="cell centerp"><button id="sin" type="button" onclick="buttonTrig('sin')">sin</button></td>
+               <td class="cell centerp"><button id="cos" type="button" onclick="buttonTrig('cos')">cos</button></td>
+               <td class="cell centerp"><button id="tan" type="button" onclick="buttonTrig('tan')">tan</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonE()">e</button></td>
+               <td class="cell centerp"><button id="flerfmode" type="button" onclick="buttonFlerfMode()">Flerf mode</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(1)">1</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(2)">2</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(3)">3</button></td>
+               <td class="cell centerp"><button type="button" onclick="setOperator('+')">+</button></td>
+             </tr>
+             <tr>
+               <td class="cell centerp"><button id="rad" type="button" onclick="buttonRad()">Deg</button</td>
+               <td class="cell centerp"><button id="sinh" type="button" onclick="buttonTrig('sinh')">sinh</button></td>
+               <td class="cell centerp"><button id="cosh" type="button" onclick="buttonTrig('cosh')">cosh</button></td>
+               <td class="cell centerp"><button id="tanh" type="button" onclick="buttonTrig('tanh')">tanh</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonPi()">&pi;</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonRand()">Rand</button></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDigitClick(0)">0</button></td>
+               <td class="cell centerp"></td>
+               <td class="cell centerp"><button type="button" onclick="buttonDecimal()">.</button></td>
+               <td class="cell centerp"><button type="button" onclick="equals()">=</button></td>
+             </tr>
+           </table> 
+	</div>
+
+</div>
+</body>
+</html> 
