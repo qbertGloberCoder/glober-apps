@@ -9,14 +9,18 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 =======
 >>>>>>> be58656 (add a few stragglers so a fresh checkout can compile without missing dependencies)
+=======
+>>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 skywatcher/earthclock/script*.txt
 skywatcher/earthclock/clocks/
 skywatcher/earthclock/projections/
 skywatcher/earthclock/settings.properties
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -29,4 +33,6 @@ skywatcher/earthclock/settings.properties
 >>>>>>> be58656 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 =======
 >>>>>>> ec31a62 (fix the .gitignore to wildcard ignored files in any directory)
+=======
+>>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 
