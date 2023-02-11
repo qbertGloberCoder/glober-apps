@@ -4,4 +4,8 @@
 **/.settings
 **/bin
 **/.DS_Store
+skywatcher/earthclock/script*.txt
+skywatcher/earthclock/clocks/
+skywatcher/earthclock/projections/
+skywatcher/earthclock/settings.properties
 
