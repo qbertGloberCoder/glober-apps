@@ -39,6 +39,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class TestAstroCalculators {
+	private double myTestLatitude;
+	private double myTestLongitude;
+	
 	private void assertForTest(String failMessage, double computed, double expected) throws AssertionFailedError {
 		Assert.assertTrue(failMessage, (computed == expected ? true : false));
 	}
@@ -196,10 +199,12 @@ public class TestAstroCalculators {
 		assertForTest("Star 2 RA is incorrect", "Star 2 Dec is incorrect", direction, 108.81889224944868, 39.0);
 		
 		System.out.println("Additional... where is the sun now? ");
-		lat=0.0;
-		lon=0.0;
+		lat=myTestLatitude;
+		lon=myTestLongitude;
 		transactionalListener.begin();
 		time.setCurrentTime();
+		time.addTime(-86400*8);
+		starOne.setAddress(88.792939,7.407064);
 		myLocation.setGeoLocation(lat, lon);
 		transactionalListener.commit();
 		
@@ -214,11 +219,27 @@ public class TestAstroCalculators {
 		double tzOffset = (double)(workingCal.get(Calendar.ZONE_OFFSET) / 3600000.0);
 		double timezoneAdjust = tzOffset + dstOffset;
 		
-		direction = sun.getCurrentDirection();
+		direction = sun.getCelestialSphereLocation();
 		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon +
 				"   AT " + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
-		System.out.println("	 Sun = " + angleToHms(direction.getRightAscension()) + " LHA, " + angleToDms(direction.getDeclination()) + " dec");
+		System.out.println(">>>  Sun = " + angleToHms(direction.getRightAscension()) + ", " + angleToDms(direction.getDeclination()) + " dec");
+		direction = sun.getCurrentDirection();
+		System.out.println("	  AT = " + angleToHms(direction.getRightAscension()) + " LHA, " + angleToDms(direction.getDeclination()) + " dec");
 		ObjectDirectionAltAz altAz = raDeclinationToAltitudeAzimuth(direction.getRightAscension(), direction.getDeclination(), lat, lon);
+		System.out.println(" Altitude: " + angleToDms(altAz.getAltitude()) + " and azimuth: " + angleToDms(altAz.getAzimuth()));
+		
+		direction = moon.getCelestialSphereLocation();
+		System.out.println(">>> MOON = " + angleToHms(direction.getRightAscension()) + ", " + angleToDms(direction.getDeclination()) + " dec");
+		direction = moon.getCurrentDirection();
+		System.out.println("	  AT = " + angleToHms(direction.getRightAscension()) + " LHA, " + angleToDms(direction.getDeclination()) + " dec");
+		altAz = raDeclinationToAltitudeAzimuth(direction.getRightAscension(), direction.getDeclination(), lat, lon);
+		System.out.println(" Altitude: " + angleToDms(altAz.getAltitude()) + " and azimuth: " + angleToDms(altAz.getAzimuth()));
+		
+		direction = starObjOne.getCelestialSphereLocation();
+		System.out.println(">>> Betelgeuse = " + angleToHms(direction.getRightAscension()) + ", " + angleToDms(direction.getDeclination()) + " dec");
+		direction = starObjOne.getCurrentDirection();
+		System.out.println("	  AT = " + angleToHms(direction.getRightAscension()) + " LHA, " + angleToDms(direction.getDeclination()) + " dec");
+		altAz = raDeclinationToAltitudeAzimuth(direction.getRightAscension(), direction.getDeclination(), lat, lon);
 		System.out.println(" Altitude: " + angleToDms(altAz.getAltitude()) + " and azimuth: " + angleToDms(altAz.getAzimuth()));
 	}
 	
@@ -228,8 +249,23 @@ public class TestAstroCalculators {
 		Configurator.setLevel("me.qbert.skywatch", Level.TRACE);
 		
 		logger.log(Level.ALL, "Test log here");
-
+		
 		TestAstroCalculators tester = new TestAstroCalculators();
+
+		if (args.length == 2) {
+			try {
+				Double d = new Double(args[0]);
+				tester.myTestLatitude = d.doubleValue();
+				d = new Double(args[1]);
+				tester.myTestLongitude = d.doubleValue();
+			} catch (NumberFormatException e) {
+				logger.error("Can't set the test geo-coordinates: " + e.getMessage());
+				tester.myTestLatitude = 0.0;
+				tester.myTestLongitude = 0.0;
+			}
+			
+		}
+
 		tester.testTransactional();
 	}
 }

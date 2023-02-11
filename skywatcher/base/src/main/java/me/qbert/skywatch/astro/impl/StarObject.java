@@ -56,7 +56,7 @@ public class StarObject extends AbstractCelestialObject {
 	private static double julianDate;
 	private static double gast;
 	private double hourAngle;
-
+	
 	// Not entirely happy with this design
 	private StarObject() {
 	}
@@ -100,7 +100,7 @@ public class StarObject extends AbstractCelestialObject {
 			double eqEq = deltaW*Math.cos(Math.toRadians(e));
 			// B21
 			gast = gmst+eqEq;
-
+			
 			logger.trace("          and gast: " + gast);
 		}
 		
@@ -111,6 +111,14 @@ public class StarObject extends AbstractCelestialObject {
 		// TZ = B5
 		// Date = b10
 		// time = b11
+	}
+	
+	// For a star, it's MAINLY their star location....
+	// according to stellarium, it seems the declination shifts slightly throughout the year..
+	// due to earth wobble? more research is needed
+	@Override
+	public ObjectDirectionRaDec getCelestialSphereLocation() {
+		return makeRaDec(starLocation.getRightAscension(), starLocation.getDeclination());
 	}
 
 	@Override
