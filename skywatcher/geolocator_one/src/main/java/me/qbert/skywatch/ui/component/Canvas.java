@@ -39,8 +39,13 @@ public class Canvas extends JPanel {
 
         g2d.setRenderingHints(rh);
 
-        for (RendererI renderer : renderers)
+        int width = getWidth();
+        int height = getHeight();
+
+        for (RendererI renderer : renderers) {
+        	renderer.setRenderDimensions(0, 0, width, height);
         	renderer.renderComponent(g2d);
+        }
     }
 
     @Override

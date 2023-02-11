@@ -190,10 +190,12 @@ public class MainFrame extends JFrame {
 			location = sensorTracker.seekSun();
 			updateControls(location);
 		} catch (UninitializedObject e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
-	private void updateControls(CurrentLocation location) {
+	private void updateControls(CurrentLocation location) throws Exception {
 		if (location == null)
 			return;
 		
