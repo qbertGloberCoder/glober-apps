@@ -77,6 +77,7 @@ public class MainFrame extends JFrame {
 
         try {
         canvas.loadImage(new File("test_images/how-good-is-your-color-vision-17.png"));
+//        canvas.loadImage(new File("test_images/vertical_test.jpeg"));
         } catch (Exception e) {
         	consoleBuffer.append(e.getMessage());
         	console.setText(consoleBuffer.toString());
