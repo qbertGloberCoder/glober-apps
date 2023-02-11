@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.qbert.cbtools.transformers.impl.ColorMatrixTransformer;
+import me.qbert.cbtools.transformers.impl.NoOpColorTransformer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -78,6 +79,7 @@ var ColorMatrixMatrixes = {
 	
 	// Need a better way to initialize this... like a database for example.
 	
+	private static final int NORMAL_TRANSFORM_INDEX = 0;
 	private static final String [] TRANSFORM_MODE_NAMES = {
 			"Normal", "Protanopia", "Protanomaly", "Deuteranopia", "Deuteranomaly",
 			"Tritanopia", "Tritanomaly", "Achromatopsia", "Achromatomaly" };
@@ -111,6 +113,10 @@ var ColorMatrixMatrixes = {
 		
 		if (index < 0)
 			throw new Exception("Transform cannot be found");
+		
+		// If the user selected "normal", it will be faster to use the "NoOp" transformer
+		if (TRANSFORM_MODE_NAMES[NORMAL_TRANSFORM_INDEX].equals(transformName))
+			return new NoOpColorTransformer();
 		
 		return new ColorMatrixTransformer(TRANSFORM_MODE_MATRIX[index], true);
 	}

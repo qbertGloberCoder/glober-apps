@@ -3,8 +3,12 @@ package me.qbert.cbtools.ui.component;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import me.qbert.cbtools.transformers.MultiColorTransformer;
+import me.qbert.cbtools.transformers.impl.ColorMatrixTransformer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -49,6 +54,7 @@ public class Canvas extends JPanel {
 	private File imageFile = null;
 	
 	private MultiColorTransformer colorTransformer = new MultiColorTransformer();
+	private ColorMatrixTransformer colorRotateTransformer = null;
 	
 	private Color rgbToColor(int rgbColor) {
         int red =   (rgbColor & 0x00ff0000) >> 16;
@@ -70,6 +76,8 @@ public class Canvas extends JPanel {
 			for (int w = 0;w < originalImage.getWidth();w ++) {
 				try {
 					Color color = rgbToColor(originalImage.getRGB(w, h));
+					if (colorRotateTransformer != null)
+						color = colorRotateTransformer.transformColor(color);
 					int rgb = colorToRGB(colorTransformer.transformColor(color));
 					image.setRGB(w, h, rgb);
 				}
@@ -111,6 +119,25 @@ public class Canvas extends JPanel {
     public void setColorTransformer(String transformerName) throws Exception {
     	colorTransformer.changeTransformer(transformerName);
     }
+    
+    public void setColorRotateTransformer(double [][] colorMatrix, double maximumValue) throws Exception {
+    	if (colorRotateTransformer == null) {
+			colorRotateTransformer = new ColorMatrixTransformer();
+    	}
+    	
+    	colorRotateTransformer.updateColorMatrix(colorMatrix, maximumValue);
+    }
+    
+	public void getImageFromClipboard() throws Exception {
+		Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+		if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+			Object obj = transferable.getTransferData(DataFlavor.imageFlavor);
+			if (obj instanceof BufferedImage) {
+				image = (BufferedImage)obj;
+	    		originalImage = clone(image);
+			}
+		}
+	}
 
 	public void loadImage(File file) throws IOException {
     	if (file == null) {
