@@ -33,6 +33,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
@@ -59,6 +60,10 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+	@Override
+	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		super.setRenderDimensions(dimensionLeftX, dimensionTopY, dimensionWidth, dimensionHeight);
 		
 		double boundLeftX = getBoundaryLeft();
@@ -77,6 +82,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	}
 	
 	@Override
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -149,6 +155,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 			return;
 		
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
+=======
+	public void renderComponent(Graphics2D g2d) {
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		for (RendererI renderer : renderers) {
 			renderer.renderComponent(g2d);
 		}
@@ -164,6 +173,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		updateAspectRatio();
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -175,6 +185,8 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 =======
 		updateAspectRatio();
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
 	public double getBoundMinimumXFraction() {

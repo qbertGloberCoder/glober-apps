@@ -42,6 +42,7 @@ public class PolyRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
@@ -61,6 +62,8 @@ public class PolyRenderer extends AbstractFractionRenderer {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	private void initializeList(int count) {
 		lineSegments = new ArrayList<AbstractCoordinateTransformation>();
 		for (int i = 0;i < count;i ++) {
@@ -74,6 +77,7 @@ public class PolyRenderer extends AbstractFractionRenderer {
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -98,6 +102,11 @@ public class PolyRenderer extends AbstractFractionRenderer {
 			return;
 		
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		if (lineSegments == null)
+			return;
+		
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		int left = (int)getBoundaryLeft();
 		int top = (int)getBoundaryTop();
 		int width = (int)getBoundaryWidth();

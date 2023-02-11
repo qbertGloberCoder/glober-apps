@@ -4,6 +4,7 @@ package me.qbert.skywatch.ui.component;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -45,6 +46,11 @@ import java.awt.geom.AffineTransform;
 =======
 import java.awt.image.BufferedImage;
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +74,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class Canvas extends JPanel {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -167,6 +174,13 @@ public class Canvas extends JPanel {
     
     private void renderComponents(Graphics2D g2d, int width, int height) {
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+	private List<RendererI> renderers = new ArrayList<RendererI>();
+
+    private void doDrawing(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g.create();
+
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -175,6 +189,7 @@ public class Canvas extends JPanel {
 
         g2d.setRenderingHints(rh);
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -441,6 +456,22 @@ public class Canvas extends JPanel {
     public void clearRepaintPanelFromImage() {
     	repaintPanelFromImage = false;
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+        int width = getWidth();
+        int height = getHeight();
+
+        for (RendererI renderer : renderers) {
+        	renderer.setRenderDimensions(0, 0, width, height);
+        	renderer.renderComponent(g2d);
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        doDrawing(g);
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
     }
 
 	public List<RendererI> getRenderers() {
@@ -450,6 +481,7 @@ public class Canvas extends JPanel {
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -472,4 +504,6 @@ public class Canvas extends JPanel {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 }

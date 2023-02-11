@@ -23,6 +23,7 @@ public interface RendererI {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public double getAspectRatio();
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -34,5 +35,7 @@ public interface RendererI {
 =======
 	public double getAspectRatio();
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
 }

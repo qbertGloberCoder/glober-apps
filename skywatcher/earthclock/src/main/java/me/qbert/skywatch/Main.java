@@ -4,6 +4,7 @@ package me.qbert.skywatch;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -21,6 +22,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 import me.qbert.skywatch.ui.MainFrame;
 
 /*
@@ -40,6 +43,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class Main {
 	public static void main(String[] args) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -74,6 +78,8 @@ public class Main {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		MainFrame mainFrame = new MainFrame();
 	}
 }
