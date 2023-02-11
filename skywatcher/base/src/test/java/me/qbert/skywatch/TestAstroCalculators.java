@@ -13,8 +13,8 @@ import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.astro.TransactionalStateChangeListener;
-import me.qbert.skywatch.astro.impl.StarObjectImpl;
-import me.qbert.skywatch.astro.impl.SunObjectImpl;
+import me.qbert.skywatch.astro.impl.StarObject;
+import me.qbert.skywatch.astro.impl.SunObject;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.model.CelestialAddress;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
@@ -43,9 +43,9 @@ public class TestAstroCalculators {
 		ObserverLocation myLocation = new ObserverLocation();
 		ObservationTime time = new ObservationTime();
 		time.initTime(TimeZone.getDefault());
-		CelestialObject starObjOne = StarObjectImpl.create().setStarLocation(starOne).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
-		CelestialObject starObjTwo = StarObjectImpl.create().setStarLocation(starTwo).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
-		CelestialObject sun = SunObjectImpl.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+		CelestialObject starObjOne = StarObject.create().setStarLocation(starOne).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+		CelestialObject starObjTwo = StarObject.create().setStarLocation(starTwo).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+		CelestialObject sun = SunObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 
 		transactionalListener.addListener(sun);
 		transactionalListener.addListener(starObjOne);

@@ -4,7 +4,6 @@ import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.CelestialObjectBuilder;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
-import me.qbert.skywatch.astro.TransactionalStateChangeListener;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 import me.qbert.skywatch.model.GeoLocation;
@@ -25,11 +24,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public abstract class AbstractCelestialObjectImpl implements CelestialObject {
+public abstract class AbstractCelestialObject implements CelestialObject {
 	public abstract class AbstractCelestialObjectBuilder implements CelestialObjectBuilder {
 		private ObjectStateChangeListener stateChangeListener = null;
 		
-		protected abstract AbstractCelestialObjectImpl getInstance();
+		protected abstract AbstractCelestialObject getInstance();
 		
 		public AbstractCelestialObjectBuilder setObserverTime(ObservationTime observerTime) {
 			observationTime = observerTime;
@@ -51,7 +50,7 @@ public abstract class AbstractCelestialObjectImpl implements CelestialObject {
 			if ((location == null) || (observationTime == null))
 				throw new UninitializedObject();
 			
-			AbstractCelestialObjectImpl instance = getInstance();
+			AbstractCelestialObject instance = getInstance();
 			instance.location = location;
 			instance.observationTime = observationTime;
 			if (stateChangeListener == null)

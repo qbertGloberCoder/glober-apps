@@ -24,13 +24,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class StarObjectImpl extends AbstractCelestialObjectImpl {
-	private static final Logger logger = LogManager.getLogger(StarObjectImpl.class.getName());
+public class StarObject extends AbstractCelestialObject {
+	private static final Logger logger = LogManager.getLogger(StarObject.class.getName());
 	
 	public class StarObjectBuilder extends AbstractCelestialObjectBuilder {
 		@Override
-		protected StarObjectImpl getInstance() {
-			return new StarObjectImpl();
+		protected StarObject getInstance() {
+			return new StarObject();
 		}
 		
 		public StarObjectBuilder setStarLocation(CelestialAddress starLocationObject) {
@@ -43,7 +43,7 @@ public class StarObjectImpl extends AbstractCelestialObjectImpl {
 			if (starLocation == null)
 				throw new UninitializedObject();
 			
-			StarObjectImpl instance = (StarObjectImpl) super.build();
+			StarObject instance = (StarObject) super.build();
 			
 			instance.starLocation = starLocation;
 			
@@ -58,7 +58,7 @@ public class StarObjectImpl extends AbstractCelestialObjectImpl {
 	private double hourAngle;
 
 	// Not entirely happy with this design
-	private StarObjectImpl() {
+	private StarObject() {
 	}
 
 	private StarObjectBuilder createBuilder() {
@@ -66,7 +66,7 @@ public class StarObjectImpl extends AbstractCelestialObjectImpl {
 	}
 	
 	public static StarObjectBuilder create() {
-		return new StarObjectImpl().createBuilder();
+		return new StarObject().createBuilder();
 	}
 	
 	/*
