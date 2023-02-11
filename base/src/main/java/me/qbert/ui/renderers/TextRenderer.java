@@ -37,24 +37,6 @@ public class TextRenderer extends AbstractFractionRenderer {
 			throw new Exception("coordinates type " + coordinatesType + " is invalid");
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	
-	@Override
-	public double getAspectRatio() {
-		return -1.0;
-	}
-	
-	@Override
-	public double getAspectRatio() {
-		return -1.0;
-	}
-	
-	@Override
-	public double getAspectRatio() {
-		return -1.0;
-	}
 	
 	@Override
 	public double getAspectRatio() {
@@ -66,30 +48,6 @@ public class TextRenderer extends AbstractFractionRenderer {
 		if (! isRenderComponent())
 			return;
 		
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	
-	@Override
-	public void renderComponent(Graphics2D g2d) {
->>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
-=======
->>>>>>> d611045 (many changes in the base UI to support the earth clock app)
-=======
-	
-	@Override
-	public void renderComponent(Graphics2D g2d) {
->>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
-=======
->>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
-=======
-	
-	@Override
-	public void renderComponent(Graphics2D g2d) {
->>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
-=======
->>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 //		System.out.println("??? TEXT RENDERER: " + (int)getBoundaryLeft() + ", + " + (int)getBoundaryTop() + ", + " + (int)getBoundaryWidth() + ", + " + (int)getBoundaryHeight());
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		g2d.drawString(text, p.x, p.y);

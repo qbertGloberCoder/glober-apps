@@ -3,18 +3,6 @@ package me.qbert.ui.coordinates;
 
 import java.awt.Point;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
-=======
->>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
-=======
->>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 /*
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,88 +41,4 @@ public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransfor
 	public void setFloatTransformation(boolean floatTransformation) {
 		this.floatTransformation = floatTransformation;
 	}
-=======
-public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
-	boolean floatTransformation = false;
-	
-	@Override
-	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
-		int x = (int)(getX());
-		int y = (int)(getY());
-		
-		if (! floatTransformation) {
-			x += dimensionLeftX;
-			y += dimensionTopY;
-		}
-		
-		return new Point(x, y);
-	}
-<<<<<<< HEAD
->>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
-=======
-
-	public boolean isFloatTransformation() {
-		return floatTransformation;
-	}
-
-	public void setFloatTransformation(boolean floatTransformation) {
-		this.floatTransformation = floatTransformation;
-	}
->>>>>>> d611045 (many changes in the base UI to support the earth clock app)
-=======
-public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
-	boolean floatTransformation = false;
-	
-	@Override
-	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
-		int x = (int)(getX());
-		int y = (int)(getY());
-		
-		if (! floatTransformation) {
-			x += dimensionLeftX;
-			y += dimensionTopY;
-		}
-		
-		return new Point(x, y);
-	}
-<<<<<<< HEAD
->>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
-=======
-
-	public boolean isFloatTransformation() {
-		return floatTransformation;
-	}
-
-	public void setFloatTransformation(boolean floatTransformation) {
-		this.floatTransformation = floatTransformation;
-	}
->>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
-=======
-public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
-	boolean floatTransformation = false;
-	
-	@Override
-	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
-		int x = (int)(getX());
-		int y = (int)(getY());
-		
-		if (! floatTransformation) {
-			x += dimensionLeftX;
-			y += dimensionTopY;
-		}
-		
-		return new Point(x, y);
-	}
-<<<<<<< HEAD
->>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
-=======
-
-	public boolean isFloatTransformation() {
-		return floatTransformation;
-	}
-
-	public void setFloatTransformation(boolean floatTransformation) {
-		this.floatTransformation = floatTransformation;
-	}
->>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 }
