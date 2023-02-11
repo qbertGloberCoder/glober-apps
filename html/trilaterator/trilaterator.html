@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bert's fancy dandy trilaterator</title>
+<script>
+
+var stars = {"Acamar":[44.565311, -40.304672] ,"Achernar":[24.428523, -57.236753] ,"Achird":[12.276213, 57.815187] ,"Acrab":[241.359300, -19.805453] ,"Acrux":[186.649563, -63.099093] ,"Acubens":[134.621761, 11.857700] ,"Adhafera":[154.172567, 23.417312] ,"Adhara":[104.656453, -28.972086] ,"Adhil":[20.585080, 45.528778] ,"Ain":[67.154163, 19.180435] ,"Ainalrami":[283.542404, -22.744840] ,"Aladfar":[288.439531, 39.145970] ,"Albaldah":[287.440971, -21.023615] ,"Albali":[311.918969, -9.495775] ,"Albireo":[292.680351, 27.959692] ,"Alchiba":[182.103402, -24.728875] ,"Alcor":[201.306403, 54.987954] ,"Alcyone":[56.871152, 24.105136] ,"Aldebaran":[68.980163, 16.509302] ,"Alderamin":[319.644885, 62.585574] ,"Aldhanab":[328.482192, -37.364855] ,"Aldhibah":[257.196650, 65.714684] ,"Aldulfin":[308.303216, 11.303261] ,"Alfirk":[322.164987, 70.560715] ,"Algedi":[304.513566, -12.544852] ,"Algenib":[3.308963, 15.183594] ,"Algieba":[154.993144, 19.841489] ,"Algol":[47.042215, 40.955648] ,"Algorab":[187.466063, -16.515431] ,"Alhena":[99.427960, 16.399280] ,"Alioth":[193.507290, 55.959823] ,"Aljanah":[311.552843, 33.970257] ,"Alkaid":[206.885157, 49.313267] ,"Alkalurops":[231.122618, 37.377169] ,"Alkaphrah":[135.906365, 47.156525] ,"Alkarab":[351.344931, 23.404100] ,"Alkes":[164.943604, -18.298783] ,"Almaaz":[75.492219, 43.823307] ,"Almach":[30.974804, 42.329725] ,"Alnair":[332.058270, -46.960974] ,"Alnasl":[271.452025, -30.424100] ,"Alnilam":[84.053389, -1.201919] ,"Alnitak":[85.189694, -1.942574] ,"Alniyat":[245.297149, -25.592792] ,"Alphard":[141.896847, -8.658602] ,"Alphecca":[233.671950, 26.714693] ,"Alpheratz":[2.096916, 29.090431] ,"Alpherg":[22.870873, 15.345823] ,"Alrakis":[256.333807, 54.470078] ,"Alrescha":[30.511772, 2.763735] ,"Alruba":[265.996568, 53.801715] ,"Alsafi":[293.089960, 69.661176] ,"Alsciaukat":[125.708792, 43.188131] ,"Alsephina":[131.175944, -54.708819] ,"Alshain":[298.828304, 6.406763] ,"Alshat":[305.165898, -12.759079] ,"Altair":[297.695827, 8.868321] ,"Altais":[288.138750, 67.661541] ,"Alterf":[142.930115, 22.967970] ,"Aludra":[111.023760, -29.303106] ,"Alula Australis":[169.545423, 31.529161] ,"Alula Borealis":[169.619737, 33.094305] ,"Alya":[284.054949, 4.203602] ,"Alzirr":[101.322351, 12.895592] ,"Ancha":[334.208485, -7.783291] ,"Angetenar":[42.759674, -21.004018] ,"Ankaa":[6.570939, -42.306084] ,"Anser":[292.176375, 24.664903] ,"Antares":[247.351915, -26.432003] ,"Arcturus":[213.915300, 19.182409] ,"Arkab Posterior":[290.804740, -44.799779] ,"Arkab Prior":[290.659551, -44.458959] ,"Arneb":[83.182567, -17.822289] ,"Ascella":[285.653043, -29.880063] ,"Asellus Australis":[131.171248, 18.154309] ,"Asellus Borealis":[130.821442, 21.468501] ,"Ashlesha":[131.693794, 6.418809] ,"Aspidiske":[139.272529, -59.275232] ,"Asterope":[56.476987, 24.554512] ,"Athebyne":[245.997858, 61.514214] ,"Atik":[56.079720, 32.288240] ,"Atlas":[57.290597, 24.053415] ,"Atria":[252.166229, -69.027712] ,"Avior":[125.628480, -59.509484] ,"Azelfafage":[325.523602, 51.189623] ,"Azha":[44.106873, -8.898145] ,"Azmidi":[117.323563, -24.859786] ,"Barnard's Star":[269.454023, 4.668288] ,"Baten Kaitos":[27.865137, -10.335044] ,"Beemim":[66.009239, -34.016848] ,"Beid":[62.966415, -6.837580] ,"Bellatrix":[81.282764, 6.349703] ,"Betelgeuse":[88.792939, 7.407064] ,"Bharani":[42.495972, 27.260507] ,"Biham":[332.549939, 6.197863] ,"Botein":[47.907356, 19.726674] ,"Brachium":[226.017567, -25.281961] ,"Bunda":[324.437956, -7.854202] ,"Canopus":[95.987958, -52.695661] ,"Capella":[79.172328, 45.997991] ,"Caph":[2.294522, 59.149781] ,"Castor":[113.649428, 31.888276] ,"Castula":[14.166271, 59.181055] ,"Cebalrai":[265.868136, 4.567300] ,"Celaeno":[56.200893, 24.289468] ,"Cervantes":[266.036255, -51.834051] ,"Chalawan":[164.866553, 40.430256] ,"Chamukuy":[67.165586, 15.870882] ,"Chara":[188.435603, 41.357479] ,"Chertan":[168.560019, 15.429571] ,"Copernicus":[133.149212, 28.330820] ,"Cor Caroli":[194.006943, 38.318376] ,"Cujam":[246.353979, 14.033274] ,"Cursa":[76.962440, -5.086446] ,"Dabih":[305.252803, -14.781405] ,"Dalim":[48.018864, -28.987620] ,"Deneb":[310.357980, 45.280339] ,"Deneb Algedi":[326.760184, -16.127287] ,"Denebola":[177.264910, 14.572058] ,"Diadem":[197.497029, 17.529447] ,"Diphda":[10.897379, -17.986606] ,"Dschubba":[240.083359, -22.621710] ,"Dubhe":[165.931965, 61.751035] ,"Dziban":[265.484814, 72.148847] ,"Edasich":[231.232396, 58.966063] ,"Electra":[56.218904, 24.113336] ,"Elgafar":[217.050575, -2.227957] ,"Elkurud":[91.881801, -37.252920] ,"Elnath":[81.572971, 28.607452] ,"Eltanin":[269.151541, 51.488896] ,"Enif":[326.046484, 9.875009] ,"Errai":[354.836655, 77.632313] ,"Fafnir":[276.496406, 65.563480] ,"Fang":[239.712972, -26.114108] ,"Fawaris":[296.243658, 45.130810] ,"Felis":[148.717528, -19.009336] ,"Fomalhaut":[344.412693, -29.622237] ,"Fulu":[9.242851, 53.896908] ,"Fumalsamakah":[345.969225, 3.820045] ,"Furud":[95.078300, -30.063367] ,"Fuyue":[267.464503, -37.043305] ,"Gacrux":[187.791498, -57.113213] ,"Giausar":[172.850920, 69.331075] ,"Gienah":[183.951543, -17.541929] ,"Ginan":[185.340039, -60.401147] ,"Gomeisa":[111.787674, 8.289316] ,"Grumium":[268.382207, 56.872646] ,"Gudja":[237.184903, 18.141564] ,"Guniibuu":[258.837875, -26.598892] ,"Hadar":[210.955856, -60.373035] ,"Haedus":[76.628722, 41.234476] ,"Hamal":[31.793357, 23.462418] ,"Hassaleh":[74.248421, 33.166100] ,"Hatysa":[83.858258, -5.909901] ,"Helvetios":[344.366583, 20.768831] ,"Heze":[203.673300, -0.595820] ,"Homam":[340.365503, 10.831363] ,"Iklil":[239.221151, -29.214073] ,"Imai":[183.786320, -58.748927] ,"Intercrus":[142.166618, 45.601482] ,"Izar":[221.246763, 27.074207] ,"Jabbah":[242.998894, -19.460708] ,"Jishui":[114.791387, 34.584346] ,"Kaffaljidhma":[40.825163, 3.235816] ,"Kang":[213.223939, -10.273704] ,"Kaus Australis":[276.042993, -34.384616] ,"Kaus Borealis":[276.992668, -25.421701] ,"Kaus Media":[275.248508, -29.828104] ,"Keid":[63.817999, -7.652872] ,"Khambalia":[214.777468, -13.371096] ,"Kitalpha":[318.955949, 5.247865] ,"Kochab":[222.676357, 74.155504] ,"Kornephoros":[247.554998, 21.489611] ,"Kraz":[188.596810, -23.396759] ,"Kurhah":[330.947724, 64.627971] ,"Larawag":[252.540878, -34.293232] ,"La Superba":[191.282615, 45.440257] ,"Lesath":[262.690979, -37.295813] ,"Libertas":[298.562008, 8.461453] ,"Lich":[195.012701, 12.682417] ,"Lilii Borea":[41.977256, 29.247115] ,"Maasym":[262.684626, 26.110645] ,"Mahasim":[89.930292, 37.212585] ,"Maia":[56.456695, 24.367751] ,"Marfik":[247.728453, 1.983888] ,"Markab":[346.190223, 15.205267] ,"Markeb":[140.528407, -55.010667] ,"Marsic":[242.018857, 17.046980] ,"Matar":[340.750579, 30.221244] ,"Mebsuta":[100.983026, 25.131127] ,"Megrez":[183.856503, 57.032615] ,"Meissa":[83.784486, 9.934156] ,"Mekbuda":[106.027215, 20.570295] ,"Meleph":[130.112544, 19.544809] ,"Menkalinan":[89.882179, 44.947433] ,"Menkar":[45.569885, 4.089737] ,"Menkent":[211.670617, -36.369958] ,"Menkib":[59.741253, 35.791032] ,"Merak":[165.460319, 56.382426] ,"Merga":[222.327791, 46.116206] ,"Meridiana":[287.368087, -37.904473] ,"Merope":[56.581552, 23.948348] ,"Mesarthim":[28.382560, 19.293852] ,"Miaplacidus":[138.299906, -69.717208] ,"Mimosa":[191.930263, -59.688764] ,"Minchir":[129.689323, 3.341436] ,"Minelauva":[193.900869, 3.397470] ,"Mintaka":[83.001667, -0.299095] ,"Mira":[34.836617, -2.977640] ,"Mirach":[17.433013, 35.620557] ,"Miram":[42.674207, 55.895497] ,"Mirfak":[51.080709, 49.861179] ,"Mirzam":[95.674939, -17.955919] ,"Misam":[47.374048, 44.857541] ,"Mizar":[200.981429, 54.925362] ,"Mothallah":[28.270450, 29.578826] ,"Muliphein":[105.939554, -15.633286] ,"Muphrid":[208.671161, 18.397717] ,"Muscida":[127.566128, 60.718170] ,"Musica":[314.608058, 10.839286] ,"Nahn":[137.339722, 22.045446] ,"Naos":[120.896031, -40.003148] ,"Nashira":[325.022735, -16.662308] ,"Nekkar":[225.486510, 40.390567] ,"Nembus":[24.498154, 48.628214] ,"Nihal":[82.061346, -20.759441] ,"Nunki":[283.816360, -26.296724] ,"Nusakan":[231.957211, 29.105699] ,"Ogma":[247.623409, 38.347311] ,"Okab":[286.352533, 13.863477] ,"Paikauhale":[248.970637, -28.216017] ,"Peacock":[306.411904, -56.735090] ,"Phact":[84.912254, -34.074110] ,"Phecda":[178.457679, 53.694758] ,"Pherkad":[230.182150, 71.834017] ,"Piautos":[125.133901, 24.022311] ,"Pipirima":[253.083939, -38.017535] ,"Pleione":[57.296738, 24.136710] ,"Polaris":[37.954561, 89.264109] ,"Polaris Australis":[317.195164, -88.956499] ,"Polis":[273.440870, -21.058832] ,"Pollux":[116.328958, 28.026199] ,"Porrima":[190.415181, -1.449373] ,"Praecipua":[163.327937, 34.214872] ,"Prima Hyadum":[64.948349, 15.627643] ,"Procyon":[114.825493, 5.224993] ,"Propus":[93.719405, 22.506794] ,"Proxima Centauri":[217.428953, -62.679484] ,"Ran":[53.232687, -9.458259] ,"Rasalas":[148.190903, 26.006953] ,"Rasalgethi":[258.661910, 14.390333] ,"Rasalhague":[263.733627, 12.560035] ,"Rastaban":[262.608174, 52.301389] ,"Regulus":[152.092962, 11.967209] ,"Revati":[18.432864, 7.575354] ,"Rigel":[78.634467, -8.201638] ,"Rigil Kentaurus":[219.902066, -60.833975] ,"Rotanev":[309.387235, 14.595115] ,"Ruchbah":[21.453964, 60.235284] ,"Rukbat":[290.971570, -40.615940] ,"Sabik":[257.594529, -15.724907] ,"Saclateni":[75.619531, 41.075839] ,"Sadachbia":[335.414064, -1.387334] ,"Sadalbari":[342.500809, 24.601577] ,"Sadalmelik":[331.445983, -0.319849] ,"Sadalsuud":[322.889715, -5.571176] ,"Sadr":[305.557091, 40.256679] ,"Saiph":[86.939120, -9.669605] ,"Salm":[350.159341, 23.740336] ,"Sargas":[264.329711, -42.997824] ,"Sarin":[258.757963, 24.839204] ,"Sceptrum":[69.545104, -14.304017] ,"Scheat":[345.943572, 28.082785] ,"Schedar":[10.126838, 56.537331] ,"Secunda Hyadum":[65.733719, 17.542514] ,"Segin":[28.598857, 63.670101] ,"Seginus":[218.019466, 38.308251] ,"Sham":[295.024133, 18.013891] ,"Shaula":[263.402167, -37.103824] ,"Sheliak":[282.519978, 33.362668] ,"Sheratan":[28.660046, 20.808031] ,"Sirius":[101.287155, -16.716116] ,"Situla":[339.439084, -4.228056] ,"Skat":[343.662556, -15.820827] ,"Spica":[201.298247, -11.161319] ,"Sualocin":[309.909530, 15.912073] ,"Subra":[145.287640, 9.892308] ,"Suhail":[136.998993, -43.432589] ,"Sulafat":[284.735928, 32.689557] ,"Syrma":[214.003623, -6.000545] ,"Tabit":[72.460045, 6.961275] ,"Taiyangshou":[176.512559, 47.779406] ,"Taiyi":[193.868951, 65.438474] ,"Talitha":[134.801890, 48.041826] ,"Tania Australis":[155.582250, 41.499519] ,"Tania Borealis":[154.274095, 42.914356] ,"Tarazed":[296.564915, 10.613262] ,"Tarf":[124.128838, 9.185544] ,"Taygeta":[56.302063, 24.467270] ,"Tegmine":[123.053168, 17.647801] ,"Tejat":[95.740112, 22.513583] ,"Terebellum":[298.959838, -26.299534] ,"Theemin":[68.887660, -30.562341] ,"Thuban":[211.097291, 64.375851] ,"Tiaki":[340.666876, -46.884576] ,"Tianguan":[84.411189, 21.142544] ,"Tianyi":[191.893099, 66.790305] ,"Titawin":[24.199342, 41.405457] ,"Toliman":[219.896096, -60.837528] ,"Tonatiuh":[181.312995, 76.905735] ,"Torcular":[26.348466, 9.157737] ,"Tureis":[121.886037, -24.304324] ,"Ukdah":[144.964008, -1.142810] ,"Unukalhai":[236.066976, 6.425629] ,"Unurgunite":[105.429782, -27.934830] ,"Vega":[279.234735, 38.783689] ,"Veritate":[352.822556, 39.236197] ,"Vindemiatrix":[195.544157, 10.959149] ,"Wasat":[110.030749, 21.982316] ,"Wazn":[87.739968, -35.768310] ,"Wezen":[107.097850, -26.393200] ,"Wurren":[17.096173, -55.245758] ,"Xamidimura":[252.967630, -38.047380] ,"Xuange":[214.095912, 46.088306] ,"Yed Posterior":[244.580374, -4.692510] ,"Yed Prior":[243.586411, -3.694323] ,"Yildun":[263.054126, 86.586462] ,"Zaniah":[184.976476, -0.666793] ,"Zaurak":[59.507360, -13.508516] ,"Zavijava":[177.673826, 1.764717] ,"Zhang":[147.869558, -14.846603] ,"Zibal":[48.958436, -8.819731] ,"Zosma":[168.527089, 20.523718] ,"Zubenelgenubi":[222.719638, -16.041777] ,"Zubenelhakrabi":[233.881578, -14.789536] ,"Zubeneschamali":[229.251724, -9.382914]};
+var starList = ["Acamar" ,"Achernar" ,"Achird" ,"Acrab" ,"Acrux" ,"Acubens" ,"Adhafera" ,"Adhara" ,"Adhil" ,"Ain" ,"Ainalrami" ,"Aladfar" ,"Albaldah" ,"Albali" ,"Albireo" ,"Alchiba" ,"Alcor" ,"Alcyone" ,"Aldebaran" ,"Alderamin" ,"Aldhanab" ,"Aldhibah" ,"Aldulfin" ,"Alfirk" ,"Algedi" ,"Algenib" ,"Algieba" ,"Algol" ,"Algorab" ,"Alhena" ,"Alioth" ,"Aljanah" ,"Alkaid" ,"Alkalurops" ,"Alkaphrah" ,"Alkarab" ,"Alkes" ,"Almaaz" ,"Almach" ,"Alnair" ,"Alnasl" ,"Alnilam" ,"Alnitak" ,"Alniyat" ,"Alphard" ,"Alphecca" ,"Alpheratz" ,"Alpherg" ,"Alrakis" ,"Alrescha" ,"Alruba" ,"Alsafi" ,"Alsciaukat" ,"Alsephina" ,"Alshain" ,"Alshat" ,"Altair" ,"Altais" ,"Alterf" ,"Aludra" ,"Alula Australis" ,"Alula Borealis" ,"Alya" ,"Alzirr" ,"Ancha" ,"Angetenar" ,"Ankaa" ,"Anser" ,"Antares" ,"Arcturus" ,"Arkab Posterior" ,"Arkab Prior" ,"Arneb" ,"Ascella" ,"Asellus Australis" ,"Asellus Borealis" ,"Ashlesha" ,"Aspidiske" ,"Asterope" ,"Athebyne" ,"Atik" ,"Atlas" ,"Atria" ,"Avior" ,"Azelfafage" ,"Azha" ,"Azmidi" ,"Barnard's Star" ,"Baten Kaitos" ,"Beemim" ,"Beid" ,"Bellatrix" ,"Betelgeuse" ,"Bharani" ,"Biham" ,"Botein" ,"Brachium" ,"Bunda" ,"Canopus" ,"Capella" ,"Caph" ,"Castor" ,"Castula" ,"Cebalrai" ,"Celaeno" ,"Cervantes" ,"Chalawan" ,"Chamukuy" ,"Chara" ,"Chertan" ,"Copernicus" ,"Cor Caroli" ,"Cujam" ,"Cursa" ,"Dabih" ,"Dalim" ,"Deneb" ,"Deneb Algedi" ,"Denebola" ,"Diadem" ,"Diphda" ,"Dschubba" ,"Dubhe" ,"Dziban" ,"Edasich" ,"Electra" ,"Elgafar" ,"Elkurud" ,"Elnath" ,"Eltanin" ,"Enif" ,"Errai" ,"Fafnir" ,"Fang" ,"Fawaris" ,"Felis" ,"Fomalhaut" ,"Fulu" ,"Fumalsamakah" ,"Furud" ,"Fuyue" ,"Gacrux" ,"Giausar" ,"Gienah" ,"Ginan" ,"Gomeisa" ,"Grumium" ,"Gudja" ,"Guniibuu" ,"Hadar" ,"Haedus" ,"Hamal" ,"Hassaleh" ,"Hatysa" ,"Helvetios" ,"Heze" ,"Homam" ,"Iklil" ,"Imai" ,"Intercrus" ,"Izar" ,"Jabbah" ,"Jishui" ,"Kaffaljidhma" ,"Kang" ,"Kaus Australis" ,"Kaus Borealis" ,"Kaus Media" ,"Keid" ,"Khambalia" ,"Kitalpha" ,"Kochab" ,"Kornephoros" ,"Kraz" ,"Kurhah" ,"Larawag" ,"La Superba" ,"Lesath" ,"Libertas" ,"Lich" ,"Lilii Borea" ,"Maasym" ,"Mahasim" ,"Maia" ,"Marfik" ,"Markab" ,"Markeb" ,"Marsic" ,"Matar" ,"Mebsuta" ,"Megrez" ,"Meissa" ,"Mekbuda" ,"Meleph" ,"Menkalinan" ,"Menkar" ,"Menkent" ,"Menkib" ,"Merak" ,"Merga" ,"Meridiana" ,"Merope" ,"Mesarthim" ,"Miaplacidus" ,"Mimosa" ,"Minchir" ,"Minelauva" ,"Mintaka" ,"Mira" ,"Mirach" ,"Miram" ,"Mirfak" ,"Mirzam" ,"Misam" ,"Mizar" ,"Mothallah" ,"Muliphein" ,"Muphrid" ,"Muscida" ,"Musica" ,"Nahn" ,"Naos" ,"Nashira" ,"Nekkar" ,"Nembus" ,"Nihal" ,"Nunki" ,"Nusakan" ,"Ogma" ,"Okab" ,"Paikauhale" ,"Peacock" ,"Phact" ,"Phecda" ,"Pherkad" ,"Piautos" ,"Pipirima" ,"Pleione" ,"Polaris" ,"Polaris Australis" ,"Polis" ,"Pollux" ,"Porrima" ,"Praecipua" ,"Prima Hyadum" ,"Procyon" ,"Propus" ,"Proxima Centauri" ,"Ran" ,"Rasalas" ,"Rasalgethi" ,"Rasalhague" ,"Rastaban" ,"Regulus" ,"Revati" ,"Rigel" ,"Rigil Kentaurus" ,"Rotanev" ,"Ruchbah" ,"Rukbat" ,"Sabik" ,"Saclateni" ,"Sadachbia" ,"Sadalbari" ,"Sadalmelik" ,"Sadalsuud" ,"Sadr" ,"Saiph" ,"Salm" ,"Sargas" ,"Sarin" ,"Sceptrum" ,"Scheat" ,"Schedar" ,"Secunda Hyadum" ,"Segin" ,"Seginus" ,"Sham" ,"Shaula" ,"Sheliak" ,"Sheratan" ,"Sirius" ,"Situla" ,"Skat" ,"Spica" ,"Sualocin" ,"Subra" ,"Suhail" ,"Sulafat" ,"Syrma" ,"Tabit" ,"Taiyangshou" ,"Taiyi" ,"Talitha" ,"Tania Australis" ,"Tania Borealis" ,"Tarazed" ,"Tarf" ,"Taygeta" ,"Tegmine" ,"Tejat" ,"Terebellum" ,"Theemin" ,"Thuban" ,"Tiaki" ,"Tianguan" ,"Tianyi" ,"Titawin" ,"Toliman" ,"Tonatiuh" ,"Torcular" ,"Tureis" ,"Ukdah" ,"Unukalhai" ,"Unurgunite" ,"Vega" ,"Veritate" ,"Vindemiatrix" ,"Wasat" ,"Wazn" ,"Wezen" ,"Wurren" ,"Xamidimura" ,"Xuange" ,"Yed Posterior" ,"Yed Prior" ,"Yildun" ,"Zaniah" ,"Zaurak" ,"Zavijava" ,"Zhang" ,"Zibal" ,"Zosma" ,"Zubenelgenubi" ,"Zubenelhakrabi" ,"Zubeneschamali"];
+
+var starRaDecs = [];
+var starGPs = [];
+var starGPRadii = [];
+var starGPBearings = [];
+var starGPPerimeters = [];
+var starElevations = [];
+
+var estimatedObserver = [];
+
+var setObserverLocation = [0, 0];
+
+var starLocated = [0, 0, 0];
+
+var FORTYFIVEDEGREES_DISTANCE = 5004.0;
+
+var GLOBE_MODEL = 1;
+var FLAT_MODEL = 2;
+
+var model = GLOBE_MODEL;
+
+function radiansToDegrees(radians)
+{
+  var pi = Math.PI;
+  return radians / (pi/180);
+}
+
+function degreesToRadians(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
+<!-- GLOBE FUNCTIONS HERE -->
+
+function globeGetCoordinateFromLocationgAndBearing(lat, lon, distance, bearing) {
+	var lat2 = radiansToDegrees(Math.asin(Math.sin(degreesToRadians(lat))*Math.cos(distance/6371) +
+					Math.cos(degreesToRadians(lat))*Math.sin(distance/6371)*Math.cos(degreesToRadians(bearing))));
+	var lon2 = lon+radiansToDegrees(Math.atan2(Math.sin(degreesToRadians(bearing))*Math.sin(distance/6371)*Math.cos(degreesToRadians(lat)),
+			Math.cos(distance/6371)-Math.sin(degreesToRadians(lat))*Math.sin(degreesToRadians(lat2))));
+	
+	lon2 = (-180.0 + ((lon2 + 540.0) % 360.0));
+	
+	
+	var coord = [];
+	
+	coord[0] = lat2;
+	coord[1] = lon2;
+	
+	return coord;
+	
+}
+
+function globeGetGreatCircleDistance(lat1, lon1, lat2, lon2) {
+	var radiusMeters = 6371; // metres
+	var theta1 = degreesToRadians(lat1); // φ, λ in radians
+	var theta2 = degreesToRadians(lat2);
+	var deltaTheta = degreesToRadians(lat2-lat1);
+	var deltaLamda = degreesToRadians(lon2-lon1);
+
+	var a = Math.sin(deltaTheta/2) * Math.sin(deltaTheta/2) +
+	          Math.cos(theta1) * Math.cos(theta2) *
+	          Math.sin(deltaLamda/2) * Math.sin(deltaLamda/2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+	return radiusMeters * c;
+}
+
+function globeGetBearing(lat1, lon1, lat2, lon2) {
+	return radiansToDegrees(Math.atan2(Math.sin(degreesToRadians(lon2-lon1))*Math.cos(degreesToRadians(lat2)),
+			Math.cos(degreesToRadians(lat1))*Math.sin(degreesToRadians(lat2))-Math.sin(degreesToRadians(lat1))*Math.cos(degreesToRadians(lat2))*Math.cos(degreesToRadians(lon2-lon1))));	
+}
+
+function raDeclinationToAltitudeAzimuth(rightAscension, declination, latitude, longitude) {
+
+	var useLat = latitude;
+	while ((useLat > 89.999) && (useLat < 90.001))
+		useLat -= 0.0001;
+	while ((useLat < -89.999) && (useLat > -90.001))
+		useLat += 0.0001;
+	var latRad = degreesToRadians(useLat);
+	var raRad = degreesToRadians(rightAscension);
+	var decRad = degreesToRadians(declination);
+
+	var altRad = Math.asin(Math.sin(latRad) * Math.sin(decRad) + Math.cos(latRad) * Math.cos(decRad) * Math.cos(raRad));
+	var azRad = (Math.atan2(-1 * Math.sin(raRad),
+			Math.tan(degreesToRadians(declination)) * Math.cos(degreesToRadians(useLat))
+					- Math.sin(degreesToRadians(useLat)) * Math.cos(raRad)));
+	
+	var alt = radiansToDegrees(altRad);
+	var azimuth = radiansToDegrees(azRad);
+	
+	var direction = [];
+	direction[0] = alt;
+	direction[1] = azimuth;
+	
+	return direction;
+}
+
+<!-- FLAT EARTH FUNCTIONS HERE -->
+
+<!-- NOTE: This has the prime meridian to the right. The AE map projection function below has it at the bottom, which is where wikipedia has the prime meridian -->
+function flatGetCoordinateFromLocationgAndBearing(lat, lon, distance, bearing) {
+	// First, each latitude is the radius of the circle. Compute latitude distance
+	// in KM from north pole
+	var objectRadius = (90.0 - lat) * FORTYFIVEDEGREES_DISTANCE / 45.0;
+
+	
+	var xObj = objectRadius * Math.cos(degreesToRadians(lon));
+	var yObj = objectRadius * Math.sin(degreesToRadians(lon));
+
+	xObj += (distance * Math.cos(degreesToRadians(bearing)));
+	yObj += (distance * Math.sin(degreesToRadians(bearing)));
+
+	
+	var lat2 = 90-(Math.sqrt(xObj*xObj+yObj*yObj)*45.0/FORTYFIVEDEGREES_DISTANCE);
+	var lon2 = radiansToDegrees(Math.atan2(yObj, xObj));
+	
+	// =-180+mod((I42+degrees(ATAN2(COS(J42/6371)-SIN(radians(H42))*SIN(radians(K42)),SIN(radians(G42))*SIN(J42/6371)*COS(radians(H42)))))+540,360)
+	lon2 = (-180.0 + ((lon2 + 540.0) % 360.0));
+	
+	var point = [];
+	point[0] = lat2;
+	point[1] = lon2;
+	
+	return point;
+}
+
+function flatGetDistance(observerLatitude, observerLongitude, objectLatitude, objectLongitude) {
+	// First, each latitude is the radius of the circle. Compute latitude distance
+	// in KM from north pole
+	var observerRadius = (90.0 - observerLatitude) * FORTYFIVEDEGREES_DISTANCE / 45.0;
+	var objectRadius = (90.0 - objectLatitude) * FORTYFIVEDEGREES_DISTANCE / 45.0;
+
+	// ORIENT meridian on positive X axis and zero Y. East hemisphere as positive Y
+	var xObs = observerRadius * Math.cos(degreesToRadians(observerLongitude));
+	var yObs = observerRadius * Math.sin(degreesToRadians(observerLongitude));
+
+	var xObj = objectRadius * Math.cos(degreesToRadians(objectLongitude));
+	var yObj = objectRadius * Math.sin(degreesToRadians(objectLongitude));
+
+	var xDelta = xObj - xObs;
+	var yDelta = yObj - yObs;
+
+	return Math.sqrt(xDelta*xDelta + yDelta*yDelta);
+}
+
+function flatGetBearing(observerLatitude, observerLongitude, objectLatitude, objectLongitude) {
+	// First, each latitude is the radius of the circle. Compute latitude distance
+	// in KM from north pole
+	var observerRadius = (90.0 - observerLatitude) * FORTYFIVEDEGREES_DISTANCE / 45.0;
+	var objectRadius = (90.0 - objectLatitude) * FORTYFIVEDEGREES_DISTANCE / 45.0;
+
+	// ORIENT meridian on positive X axis and zero Y. East hemisphere as positive Y
+	var xObs = observerRadius * Math.cos(degreesToRadians(observerLongitude));
+	var yObs = observerRadius * Math.sin(degreesToRadians(observerLongitude));
+
+	var xObj = objectRadius * Math.cos(degreesToRadians(objectLongitude));
+	var yObj = objectRadius * Math.sin(degreesToRadians(objectLongitude));
+	
+	var angleRad = Math.atan2(yObj - yObs, xObj - xObs);
+	
+	return radiansToDegrees(angleRad);
+}
+
+<!-- MODEL SELECTOR FUNCTIONS HERE -->
+
+function getCoordinateFromLocationgAndBearing(lat, lon, distance, bearing) {
+	if (model == FLAT_MODEL)
+		return flatGetCoordinateFromLocationgAndBearing(lat, lon, distance, bearing);
+	return globeGetCoordinateFromLocationgAndBearing(lat, lon, distance, bearing);
+}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+	if (model == FLAT_MODEL)
+		return flatGetDistance(lat1, lon1, lat2, lon2);
+	return globeGetGreatCircleDistance(lat1, lon1, lat2, lon2);
+}
+
+function getBearing(lat1, lon1, lat2, lon2) {
+	if (model == FLAT_MODEL)
+		return flatGetBearing(lat1, lon1, lat2, lon2);
+	return globeGetBearing(lat1, lon1, lat2, lon2);
+}
+
+
+<!-- STAR FUNCTIONS HERE -->
+
+function computeStarGroundPosition(starName, year, month, day, hour, minute, second, tzOffset, outputElement) {
+	// observer is at null island... observer location is not important to compute GAST
+	var observerLat = setObserverLocation[0];
+	var observerLon = setObserverLocation[1];
+	
+	
+	
+	if (month <= 2) {month = month + 12; year = year - 1}
+	
+	var julianDate = Math.floor(365.25*year) + Math.floor(30.6001*(month+1)) - 15 + 1720996.5 + day - tzOffset/24.0;
+	
+	var starRa = stars[starName][0];
+	var starDec = stars[starName][1];
+
+	
+	outputElement.append("Computing ground position for star: " + starName + "\n");
+	outputElement.append("Celestial coordinate of star: " + starRa + " (ra), " + starDec + " (dec)\n");
+	outputElement.append("Date of observation: " + year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + tzOffset + "\n");
+	outputElement.append("Observer location for these calculations (which affects local hour angle) is set to " + observerLat + " (lat), " + observerLon + " (lon)\n");
+	outputElement.append("Julian date = Math.floor(365.25*year) + Math.floor(30.6001*(month+1)) - 15 + 1720996.5 + day - tzOffset/24.0\n");
+	outputElement.append("            = " + julianDate + "\n");
+	outputElement.append("            + ((hour*3600 + minute*60 + second)) / 86400.0)\n");
+
+	julianDate += ((hour*3600 + minute*60 + second) / 86400.0);
+	
+	outputElement.append("            = " + julianDate + "\n");
+	
+	var julianCentury = (julianDate-2451545.0)/36525.0;
+
+	outputElement.append("julianCentury = (julianDate-2451545.0)/36525.0\n");
+	outputElement.append("              = " + julianCentury + "\n");
+	
+	var days = julianDate-2451545;
+	outputElement.append("days = julianDate-2451545\n");
+	outputElement.append("     = " + days + "\n");
+	
+	var gmst = (18.697374558+24.065709824419*days) % 24.0;
+	outputElement.append("gmst = ((18.697374558+24.065709824419*days) % 24.0\n");
+	outputElement.append("     = " + gmst + "\n");
+	
+	var omega = 125.04-0.052954*julianDate;
+	outputElement.append("omega = 125.04-0.052954*julianDate\n");
+	outputElement.append("      = " + omega + "\n");
+	
+	var l = 280.47+0.98565*julianDate;
+	outputElement.append("l = 280.47+0.98565*julianDate      <-- I THINK this was lamda\n");
+	outputElement.append("  = " + l + "\n");
+	
+	var e = 23.4393-0.0000004*julianDate;
+	outputElement.append("e = 23.4393-0.0000004*julianDate      <-- I THINK this was epsilon\n");
+	outputElement.append("  = " + e + "\n");
+	
+	var deltaW = -0.000319*Math.sin(degreesToRadians(omega))-0.000024*Math.sin(degreesToRadians(2*l));
+	outputElement.append("deltaW = -0.000319*Math.sin(Math.toRadians(omega))-0.000024*Math.sin(Math.toRadians(2*l))\n");
+	outputElement.append("       = " + deltaW + "\n");
+	
+	var eqEq = deltaW*Math.cos(degreesToRadians(e));
+	outputElement.append("eqEq = deltaW*Math.cos(Math.toRadians(e))\n");
+	outputElement.append("     = " + eqEq + "\n");
+	
+	var gast = gmst+eqEq;
+	outputElement.append("gast = gmst+eqEq\n");
+	outputElement.append("     = " + gast + "\n");
+	
+	var localHourAngle = ((gast*15)-starRa)+observerLon;
+	outputElement.append("localHourAngle = ((gast*15)-starRa)+observerLon\n");
+	outputElement.append("          = " + localHourAngle + "\n");
+	
+	var groundPosition = [];
+	groundPosition[0] = starDec;
+	groundPosition[1] = (observerLon - localHourAngle);
+	
+	var raDec = [];
+	raDec[0] = localHourAngle;
+	raDec[1] = starDec;
+	
+	outputElement.append("=-=-=-=-=-=-= Ground position =-=-=-=-=-=-=-=\n");
+	outputElement.append("GP Longitude = (longitude-localHourAngle)\n")
+	outputElement.append("Latitude: " + groundPosition[0] + ", Longitude: " + groundPosition[1] + "\n");
+
+	var returnedValues = [];
+	returnedValues[0] = groundPosition;
+	returnedValues[1] = raDec;
+	
+	
+	return returnedValues;
+}
+
+function computeStarNGroundPosition(setBrowserUrl, starNumber) {
+	var e = document.getElementById("star" + starNumber);
+	var starName = e.value;
+	
+	var starIndex = starNumber - 1;
+	
+	if (starName == "Choose a star") {
+		starLocated[starIndex] = 0;
+		return;
+	}
+	
+	var year = parseInt(document.getElementById("year" + starNumber).value);
+	var month = parseInt(document.getElementById("month" + starNumber).value);
+	var day = parseInt(document.getElementById("day" + starNumber).value);
+	var hour = parseInt(document.getElementById("hour" + starNumber).value);
+	var minute = parseInt(document.getElementById("minute" + starNumber).value);
+	var second = parseInt(document.getElementById("second" + starNumber).value);
+	var tzOffset = parseFloat(document.getElementById("tzOffset" + starNumber).value);
+	
+	var outputElement = document.getElementById("mathStar" + starNumber);
+	outputElement.innerHTML = "";
+	
+	var returnedValues = computeStarGroundPosition(starName, year, month, day, hour, minute, second, tzOffset, outputElement);
+	starGPs[starIndex] = returnedValues[0];
+	starRaDecs[starIndex] = returnedValues[1];
+	
+	starLocated[starIndex] = 1;
+	
+	updateExpectedStarAngle(starNumber);
+
+	if (setBrowserUrl) {
+		computeStarDistances(0)
+		updateUrl();
+	}
+}
+
+function updateExpectedStarAngle(starNumber) {
+	var starIndex = starNumber - 1;
+
+	if ((document.getElementById("discoverMode").checked) && (starLocated[starIndex])) {
+		var altAz = raDeclinationToAltitudeAzimuth(starRaDecs[starIndex][0], starRaDecs[starIndex][1], setObserverLocation[0], setObserverLocation[1]);
+
+		var ableToContinue = 1;
+		
+		inputValue = document.getElementById("eyeHeight").value;
+		if (! inputValue) {
+			ableToContinue = 0;
+		}
+		var eyeHeight = parseFloat(inputValue);
+
+		inputValue = document.getElementById("indexError").value;
+		if (! inputValue) {
+			ableToContinue = 0;
+		}
+		var indexError = parseFloat(inputValue) * 1.0;
+		
+		if (ableToContinue) {
+			var earthRadius = 6371.0 * 7 / 6;
+			var dipCorrection = -1.0 * radiansToDegrees(Math.acos(earthRadius / (earthRadius + (eyeHeight / 1000.0))));
+			var refractionCorrection = (0.96 / Math.tan(degreesToRadians(altAz[0])))/-60.0;
+			var measuredAltitude = (altAz[0] - indexError - dipCorrection - refractionCorrection);
+			
+			document.getElementById("measuredAngleStar" + starNumber).value = measuredAltitude;
+		}
+	}
+}
+
+function computeStarDistances(setBrowserUrl) {
+	var outputElement = document.getElementById("mathStarDistances");
+	outputElement.innerHTML = "";
+
+	var ableToContinue = 1;
+	document.getElementById("makeKml").disabled = true; 
+	
+	var inputValue;
+	
+	inputValue = document.getElementById("measuredAngleStar1").value;
+	if (! inputValue) {
+		outputElement.append("Angle to star one cannot be blank.\n");
+		ableToContinue = 0;
+	}
+	var star1Angle = parseFloat(inputValue);
+	inputValue = document.getElementById("measuredAngleStar2").value;
+	if (! inputValue) {
+		outputElement.append("Angle to star two cannot be blank.\n");
+		ableToContinue = 0;
+	}
+	var star2Angle = parseFloat(inputValue);
+	inputValue = document.getElementById("measuredAngleStar3").value;
+	if (! inputValue) {
+		outputElement.append("Angle to star three cannot be blank.\n");
+		ableToContinue = 0;
+	}
+	var star3Angle = parseFloat(inputValue);
+	
+	inputValue = document.getElementById("eyeHeight").value;
+	if (! inputValue) {
+		outputElement.append("Eye height cannot be blank.\n");
+		ableToContinue = 0;
+	}
+	var eyeHeight = parseFloat(inputValue);
+
+	inputValue = document.getElementById("indexError").value;
+	if (! inputValue) {
+		outputElement.append("Index error cannot be blank.\n");
+		ableToContinue = 0;
+	}
+	var indexError = parseFloat(inputValue);
+	
+	if (! starLocated[0]) {
+		outputElement.append("Please select star one\n");
+		ableToContinue = 0;
+	}
+	
+	if (! starLocated[1]) {
+		outputElement.append("Please select star two\n");
+		ableToContinue = 0;
+	}
+	
+	if (! starLocated[2]) {
+		outputElement.append("Please select star three\n");
+		ableToContinue = 0;
+	}
+
+	if (star1Angle < 0.01) {
+		outputElement.append("Star one needs to be higher than 0.01 degrees\n");
+		ableToContinue = 0;
+	}
+
+	if (star2Angle < 0.01) {
+		outputElement.append("Star two needs to be higher than 0.01 degrees\n");
+		ableToContinue = 0;
+	}
+
+	if (star3Angle < 0.01) {
+		outputElement.append("Star three needs to be higher than 0.01 degrees\n");
+		ableToContinue = 0;
+	}
+	
+	if (! ableToContinue) {
+		computeStarPerimeters(0);
+		return;
+	}
+	
+	outputElement.append("Observer height in meters = " + eyeHeight + "\n");
+	
+	var earthRadius = 6371.0 * 7 / 6;
+	outputElement.append("earthRadius = 6371.0 * 7 / 6\n");
+	outputElement.append("            = " + earthRadius + "\n");
+
+	var dipCorrection = -1.0 * radiansToDegrees(Math.acos(earthRadius / (earthRadius + (eyeHeight / 1000.0))));
+	outputElement.append("dipCorrection = -1.0 * radiansToDegrees(Math.acos(earthRadius / (earthRadius + (eyeHeight / 1000.0))))\n");
+	outputElement.append("              = " + dipCorrection + "\n");
+	
+	outputElement.append("indexError = " + indexError + "\n");
+	
+	
+	computeStarNDistance(1, star1Angle, indexError, dipCorrection, outputElement);
+	computeStarNDistance(2, star2Angle, indexError, dipCorrection, outputElement);
+	computeStarNDistance(3, star3Angle, indexError, dipCorrection, outputElement);
+	
+	computeStarPerimeters(1);
+	
+	document.getElementById("makeKml").disabled = false; 
+
+	if (setBrowserUrl)
+		updateUrl();
+}
+
+<!-- UNORDERED LIST OF FUNCTIONS BELOW -->
+
+function setObserverLatitude() {
+	setObserverLocation[0] = parseFloat(document.getElementById("setObsLat").value);
+	
+	computeStarNGroundPosition(0, 1);
+	computeStarNGroundPosition(0, 2);
+	computeStarNGroundPosition(0, 3);
+	
+	computeStarDistances(0)
+}
+
+function setObserverLongitude() {
+	setObserverLocation[1] = parseFloat(document.getElementById("setObsLon").value);
+
+	computeStarNGroundPosition(0, 1);
+	computeStarNGroundPosition(0, 2);
+	computeStarNGroundPosition(0, 3);
+	
+	computeStarDistances(0)
+}
+
+
+function setMathMode(newModel) {
+	model = newModel;
+	computeStarDistances(0);
+}
+
+function computeStarNDistance(starNumber, starAngle, indexError, dipCorrection, outputElement) {
+	var starIndex = starNumber - 1;
+
+	var refractionCorrection;
+	var trueAltitude;
+	var distance;
+	
+	outputElement.append("-----------------\n");
+	outputElement.append("measured angle to " + document.getElementById("star" + starNumber).value + " = " + starAngle + "\n");
+
+	refractionCorrection = (0.96 / Math.tan(degreesToRadians(starAngle)))/-60.0;
+	outputElement.append("refractionCorrection = (0.96 / Math.tan(degreesToRadians(starAngle)))/-60.0\n");
+	outputElement.append("                     = " + refractionCorrection + "\n");
+	
+	trueAltitude = (starAngle + indexError + dipCorrection + refractionCorrection);
+	outputElement.append("trueAltitude = (starAngle + indexError + dipCorrection + refractionCorrection)\n");
+	outputElement.append("             = " + trueAltitude + "\n");
+
+	starElevations[starIndex] = trueAltitude;
+	
+	distance = (90.0 - trueAltitude) * 111.1949266;
+	outputElement.append("distance = (90.0 - trueAltitude) * 111.1949266\n");
+	outputElement.append("         = " + distance + "\n");
+
+	starGPRadii[starIndex] = distance;
+	document.getElementById("distance" + starNumber).innerHTML = distance;
+}
+
+function updateUrl() {
+	var url = location.protocol + '//' + location.host + location.pathname;
+	var sep = "?";
+
+	var e;
+	var starName;
+	var year;
+	var month;
+	var day;
+	var hour;
+	var minute;
+	var second;
+	var tzOffset;
+	var measuredAngle;
+	
+	//trilaterator.html?ma1=16.035&sn2=Canopus&y2=2022&mo2=7&d2=13&h2=11&mn2=23&s2=3&tz2=0&ma2=40.14&sn3=Rigel&y3=2022&mo3=7&d3=13&h3=11&mn3=24&s3=9&tz3=0&ma3=39.3
+	url = url + sep + "eh=" + parseFloat(document.getElementById("eyeHeight").value);
+	sep = "&";
+	url = url + sep + "ie=" + parseFloat(document.getElementById("indexError").value);
+	sep = "&";
+
+	e = document.getElementById("star1");
+	starName = e.value;
+	if (starName != "Choose a star") {
+		year = parseInt(document.getElementById("year1").value);
+		month = parseInt(document.getElementById("month1").value);
+		day = parseInt(document.getElementById("day1").value);
+		hour = parseInt(document.getElementById("hour1").value);
+		minute = parseInt(document.getElementById("minute1").value);
+		second = parseInt(document.getElementById("second1").value);
+		tzOffset = parseFloat(document.getElementById("tzOffset1").value);
+		measuredAngle = parseFloat(document.getElementById("measuredAngleStar1").value);
+		url = url + sep + "sn1=" + starName + "&y1=" + year + "&mo1=" + month + "&d1=" + day + "&h1=" + hour + "&mn1=" + minute + "&s1=" + second + "&tz1=" + tzOffset + "&ma1=" + measuredAngle;
+	}
+	
+	e = document.getElementById("star2");
+	starName = e.value;
+	if (starName != "Choose a star") {
+		year = parseInt(document.getElementById("year2").value);
+		month = parseInt(document.getElementById("month2").value);
+		day = parseInt(document.getElementById("day2").value);
+		hour = parseInt(document.getElementById("hour2").value);
+		minute = parseInt(document.getElementById("minute2").value);
+		second = parseInt(document.getElementById("second2").value);
+		tzOffset = parseFloat(document.getElementById("tzOffset2").value);
+		measuredAngle = parseFloat(document.getElementById("measuredAngleStar2").value);
+		url = url + sep + "sn2=" + starName + "&y2=" + year + "&mo2=" + month + "&d2=" + day + "&h2=" + hour + "&mn2=" + minute + "&s2=" + second + "&tz2=" + tzOffset + "&ma2=" + measuredAngle;
+	}
+	
+	e = document.getElementById("star3");
+	starName = e.value;
+	if (starName != "Choose a star") {
+		year = parseInt(document.getElementById("year3").value);
+		month = parseInt(document.getElementById("month3").value);
+		day = parseInt(document.getElementById("day3").value);
+		hour = parseInt(document.getElementById("hour3").value);
+		minute = parseInt(document.getElementById("minute3").value);
+		second = parseInt(document.getElementById("second3").value);
+		tzOffset = parseFloat(document.getElementById("tzOffset3").value);
+		measuredAngle = parseFloat(document.getElementById("measuredAngleStar3").value);
+		url = url + sep + "sn3=" + starName + "&y3=" + year + "&mo3=" + month + "&d3=" + day + "&h3=" + hour + "&mn3=" + minute + "&s3=" + second + "&tz3=" + tzOffset + "&ma3=" + measuredAngle;
+	}
+	
+	window.history.pushState("", "", url);
+}
+
+function setTimeToNow(starNumber) {
+	var starIndex = starNumber - 1;
+	var d = new Date();
+	var myTZOffset = (d.getTimezoneOffset() / -60);
+	var requestedTZOffset = parseFloat(document.getElementById("tzOffset" + starNumber).value);
+	var daysOffset = parseFloat(document.getElementById("setDayOffset").value)
+	var addSeconds = ((requestedTZOffset - myTZOffset) * 3600000.0);
+	
+	var newDateObj = new Date(d.getTime() + addSeconds - (daysOffset * 86400000));
+	document.getElementById("year" + starNumber).value = newDateObj.getFullYear();
+	document.getElementById("month" + starNumber).value = (newDateObj.getMonth() + 1);
+	document.getElementById("day" + starNumber).value = newDateObj.getDate();
+	document.getElementById("hour" + starNumber).value = newDateObj.getHours();
+	document.getElementById("minute" + starNumber).value = newDateObj.getMinutes();
+	document.getElementById("second" + starNumber).value = newDateObj.getSeconds();
+	
+	computeStarNGroundPosition(1, starNumber);
+}
+
+function init() {
+	var el;
+	var star1 = document.getElementById("star1");
+	var star2 = document.getElementById("star2");
+	var star3 = document.getElementById("star3");
+	for(var i = 0; i < starList.length; i++) {
+	    var opt = starList[i];
+	    // not sure if creating a separate object for each is necessary
+	    el = document.createElement("option");
+	    el.textContent = opt;
+	    el.value = opt;
+	    star1.appendChild(el);
+	    el = document.createElement("option");
+	    el.textContent = opt;
+	    el.value = opt;
+	    star2.appendChild(el);
+	    el = document.createElement("option");
+	    el.textContent = opt;
+	    el.value = opt;
+	    star3.appendChild(el);
+	}
+	
+	document.getElementById("setObsLat").value = setObserverLocation[0];
+	document.getElementById("setObsLon").value = setObserverLocation[1];
+	
+	const d = new Date();
+	
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	setElementValues(urlParams, "y1", "y2", "y3", "year1", "year2", "year3", d.getFullYear());
+	setElementValues(urlParams, "mo1", "mo2", "mo3", "month1", "month2", "month3", d.getMonth() + 1);
+	setElementValues(urlParams, "d1", "d2", "d3", "day1", "day2", "day3", d.getDate());
+	setElementValues(urlParams, "h1", "h2", "h3", "hour1", "hour2", "hour3", d.getHours());
+	setElementValues(urlParams, "mn1", "mn2", "mn3", "minute1", "minute2", "minute3", d.getMinutes());
+	setElementValues(urlParams, "s1", "s2", "s3", "second1", "second2", "second3", d.getSeconds());
+	setElementValues(urlParams, "tz1", "tz2", "tz3", "tzOffset1", "tzOffset2", "tzOffset3", (d.getTimezoneOffset() / -60));
+	
+	var sn;
+	
+	sn = urlParams.get("sn1");
+	if (sn > "") document.getElementById("star1").value = sn;
+	sn = urlParams.get("sn2");
+	if (sn > "") document.getElementById("star2").value = sn;
+	sn = urlParams.get("sn3");
+	if (sn > "") document.getElementById("star3").value = sn;
+	
+	setElementValue(urlParams, "eh", "eyeHeight", "");
+	setElementValue(urlParams, "ie", "indexError", "");
+	
+	setElementValue(urlParams, "ma1", "measuredAngleStar1", "");
+	setElementValue(urlParams, "ma2", "measuredAngleStar2", "");
+	setElementValue(urlParams, "ma3", "measuredAngleStar3", "");
+	
+	updateUrl();
+	
+	computeStarNGroundPosition(0, 1);
+	computeStarNGroundPosition(0, 2);
+	computeStarNGroundPosition(0, 3);
+	
+	computeStarDistances(0)
+	
+}
+
+function setElementValues(urlParams, param1, param2, param3, element1, element2, element3, defaultValue) {
+	setElementValue(urlParams, param1, element1, defaultValue);
+	setElementValue(urlParams, param2, element2, defaultValue);
+	setElementValue(urlParams, param3, element3, defaultValue);
+}
+
+function setElementValue(urlParams, param, element, defaultValue) {
+	var elementVal = urlParams.get(param);
+	if (elementVal <= "") elementVal = defaultValue;
+
+	document.getElementById(element).value = elementVal;
+}
+
+function download(filename, text) {
+	  var element = document.createElement('a');
+	  element.setAttribute('href', 'data:application/vnd.google-earth.kml+xml;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+	  document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+}
+	
+function toggleHidden(anchorId, hideElement) {
+	  var x = document.getElementById(hideElement);
+	  var newLabel;
+	  if (x.style.display === "none") {
+	    x.style.display = "block";
+	    newLabel = "hide";
+	  } else {
+	    x.style.display = "none";
+	    newLabel = "show";
+	  }	
+	  
+	  document.getElementById(anchorId).innerHTML = newLabel;
+}
+
+function transformLatLon(lat, lon) {
+	var xy = [];
+	
+	var radius = Math.abs(300 * (90 - lat) / 180);
+	var angle = degreesToRadians(lon - 90);
+	
+	xy[0] = 300 + radius * Math.cos(angle);
+	xy[1] = 300 - radius * Math.sin(angle);
+
+	return xy;
+}
+
+function drawPerimeters(ctx) {
+	var colors = ["red", "blue", "yellow"];
+
+	
+	var xy;
+	for (var star = 0;star < 3;star ++) {
+		ctx.strokeStyle = colors[star];
+		ctx.beginPath();
+		xy = transformLatLon(starGPPerimeters[star][359][0], starGPPerimeters[star][359][1]);
+		ctx.moveTo(xy[0], xy[1]);
+		for (var bearing = 0; bearing < 360; bearing++) { 
+			xy = transformLatLon(starGPPerimeters[star][bearing][0], starGPPerimeters[star][bearing][1]);
+
+			ctx.lineTo(xy[0], xy[1]);
+		}
+		ctx.stroke();
+	}
+}
+
+function findBestIntersectionFit(outputElement) {
+	var observerPoint
+	var resolution = 1.0;
+	var bearing;
+	var bestBearing;
+	var lastDistanceDelta;
+	
+	var sumCoords = 0;
+	var lats = 0;
+	var lons = 0;
+	
+	var lat;
+	var lon;
+	
+	var loopCount = 0;
+	
+	outputElement.append("Finding the best intersection fit\n");
+	
+	var maxLoops = 12;
+	for (var starLoops = 0;starLoops < maxLoops;starLoops ++) {
+		var star = starLoops % 3;
+		
+		bestBearing = starGPBearings[star];
+		lastDistanceDelta = 99999999;
+		
+		outputElement.append("finding best bearing for " + document.getElementById("star" + (star + 1)).value + "\n");
+		
+		var otherPoints = [];
+		
+
+		for (var otherStars = 0;otherStars < 2;otherStars ++) {
+			var otherStar = (star + 1 + otherStars) % 3;
+			otherPoints[otherStar] = getCoordinateFromLocationgAndBearing(starGPs[otherStar][0], starGPs[otherStar][1], starGPRadii[otherStar], starGPBearings[otherStar]);
+		}
+		
+		while (resolution > 0.00000000001) {
+			var largest = 180 * resolution;
+			
+			var printOutput = 0;
+			var outputText;
+			
+			for (var bearingOffset = -largest; bearingOffset < largest;bearingOffset += resolution) {
+				var newBearing = starGPBearings[star] + bearingOffset;
+				
+				observerPoint = getCoordinateFromLocationgAndBearing(starGPs[star][0], starGPs[star][1], starGPRadii[star], newBearing);
+				
+				var newDistanceDelta = 1.0;
+				
+				for (var otherStars = 0;otherStars < 2;otherStars ++) {
+					var otherStar = (star + 1 + otherStars) % 3;
+					
+					var otherLat;
+					var otherLon;
+
+					var newDistance;
+					if (starLoops < 3) {
+						otherLat = starGPs[otherStar][0];
+						otherLon = starGPs[otherStar][1];
+						newDistance = getDistance(starGPs[otherStar][0], starGPs[otherStar][1], observerPoint[0], observerPoint[1]);
+						newDistance = Math.abs(newDistance - starGPRadii[otherStar])
+					} else {
+						newDistance = getDistance(otherPoints[otherStar][0], otherPoints[otherStar][1], observerPoint[0], observerPoint[1]);
+					}
+					
+					newDistanceDelta *= newDistance;
+				}
+				
+				if (newDistanceDelta < lastDistanceDelta) {
+					outputText = "Better fit found. Bearing: " + newBearing + " with distance delta of: " + newDistanceDelta + " for scan resolution: " + resolution + "\n";
+					printOutput = 1;
+					lastDistanceDelta = newDistanceDelta;
+					bestBearing = newBearing;
+				}
+			}
+			
+			if (printOutput) {
+				outputElement.append(outputText);
+			}
+			
+			resolution /= 2;
+			
+			starGPBearings[star] = bestBearing;
+		}
+
+		resolution = 1;
+
+		observerPoint = getCoordinateFromLocationgAndBearing(starGPs[star][0], starGPs[star][1], starGPRadii[star], starGPBearings[star]);
+		outputElement.append("Observer point" + (star + 1) + "??? " + observerPoint[0] + " (lat), " + observerPoint[1] + " (lon)\n");
+		
+		if (starLoops >= 3) {
+			lat = observerPoint[0];
+			lon = (540.0 + observerPoint[1]) % 360.0;
+		
+			lats += lat;
+			lons += lon;
+			
+			sumCoords ++;
+		}
+
+		if (starLoops == 0) {
+			for (var otherStars = 0;otherStars < 2;otherStars ++) {
+				var otherStar = (star + 1 + otherStars) % 3;
+				starGPBearings[otherStar] = getBearing(starGPs[otherStar][0], starGPs[otherStar][1], observerPoint[0], observerPoint[1]);
+			}
+		}
+	}	
+	
+	lat = lats / sumCoords;
+	lon = ((360.0 + (lons / sumCoords)) % 360.0) - 180.0;
+	estimatedObserver = [lat, lon];
+	outputElement.append("Geolocation of observer? " + estimatedObserver[0] + " (lat), " + estimatedObserver[1] + " (lon)\n");
+	
+	for (var star = 0;star < 3;star ++) {
+		starGPBearings[star] = getBearing(starGPs[star][0], starGPs[star][1], estimatedObserver[0], estimatedObserver[1]);
+	}
+
+	document.getElementById("estLatitude").innerHTML = estimatedObserver[0];
+	document.getElementById("estLongitude").innerHTML = estimatedObserver[1];
+}
+
+function computeStarPerimeters(initialized) {
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	ctx.clearRect(0,0, 600,600);
+	
+	starGPPerimeters = [];
+
+	var outputElement = document.getElementById("mathObserver");
+	outputElement.innerHTML = "";
+	
+	if (initialized) {
+		for (var star = 0;star < 3;star ++) {
+			starGPPerimeters[star] = [];
+			for (var bearing = 0; bearing < 360; bearing++) {
+				starGPPerimeters[star][bearing] = getCoordinateFromLocationgAndBearing(starGPs[star][0], starGPs[star][1], starGPRadii[star], bearing);
+			}
+		}
+		
+		for (var star = 0;star < 3;star ++) {
+			starGPBearings[star] = 0;
+		}
+
+
+		var observerPoint;
+		var xy;
+		
+		findBestIntersectionFit(outputElement);
+
+		ctx.strokeStyle = "white";
+		for (var star = 0;star < 3;star ++) {
+			observerPoint = getCoordinateFromLocationgAndBearing(starGPs[star][0], starGPs[star][1], starGPRadii[star], starGPBearings[star]);
+			
+			ctx.beginPath();
+			xy = transformLatLon(starGPs[star][0], starGPs[star][1]);
+			ctx.moveTo(xy[0], xy[1]);
+			xy = transformLatLon(observerPoint[0], observerPoint[1]);
+			ctx.lineTo(xy[0], xy[1]);
+			ctx.stroke();
+		}
+
+		ctx.strokeStyle = "black";
+		ctx.fillStyle = "black";
+		xy = transformLatLon(estimatedObserver[0], estimatedObserver[1]);
+		ctx.beginPath();
+		ctx.arc(xy[0], xy[1], 5, 0, 2 * Math.PI);
+		ctx.fill();
+		
+		ctx.strokeStyle = "orange";
+		ctx.fillStyle = "orange";
+		xy = transformLatLon(setObserverLocation[0], setObserverLocation[1]);
+		ctx.beginPath();
+		ctx.arc(xy[0], xy[1], 3, 0, 2 * Math.PI);
+		ctx.fill();
+		
+		
+		drawPerimeters(ctx);
+	}
+}
+
+var kmlTemplate="PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGttbCB4bWxucz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC9rbWwvMi4yIj4KICA8RG9jdW1lbnQ+CiAgICA8bmFtZT5FeGFtcGxlIG9mIHRyaWxhdGVyYXRpb248L25hbWU+CiAgICA8ZGVzY3JpcHRpb24+VGhpcyBzaG93cyB0cmlsYXRlcmF0aW9uIG9uIGEgZ2xvYmUgYnkgdGFraW5nIHJlYWRpbmdzIGZyb20gYSBzZXh0YW50IHRvIGdldCBvYnNlcnZlZCBzdGFyIGFsdGl0dWRlcy4gVGhlIG1vZGUgdG8gY29tcHV0ZSB0aGUgZGlzdGFuY2VzIGZyb20gdGhlIEdQIGJhc2VkIG9uIHRoZSBvYnNlcnZlZCBhbmdsZSB0byB0aGUgc3RhcnMgaXMgZ2xvYmUgKGRpc3RhbmNlIGZyb20gR1AgaXMgYWx3YXlzIGNpcmN1bGFyKTwvZGVzY3JpcHRpb24+CiAgICA8U3R5bGUgaWQ9InN0YXJPbmVMaW5lIj4KICAgICAgPExpbmVTdHlsZT4KICAgICAgICA8Y29sb3I+N2ZmZjAwZmY8L2NvbG9yPgogICAgICAgIDx3aWR0aD42PC93aWR0aD4KICAgICAgPC9MaW5lU3R5bGU+CiAgICAgIDxQb2x5U3R5bGU+CiAgICAgICAgPGNvbG9yPjdmZmYwMGZmPC9jb2xvcj4KICAgICAgPC9Qb2x5U3R5bGU+CiAgICA8L1N0eWxlPgogICAgPFN0eWxlIGlkPSJzdGFyVHdvTGluZSI+CiAgICAgIDxMaW5lU3R5bGU+CiAgICAgICAgPGNvbG9yPjdmMDAwMGZmPC9jb2xvcj4KICAgICAgICA8d2lkdGg+Njwvd2lkdGg+CiAgICAgIDwvTGluZVN0eWxlPgogICAgICA8UG9seVN0eWxlPgogICAgICAgIDxjb2xvcj43ZjAwMDBmZjwvY29sb3I+CiAgICAgIDwvUG9seVN0eWxlPgogICAgPC9TdHlsZT4KICAgIDxTdHlsZSBpZD0ic3RhclRocmVlTGluZSI+CiAgICAgIDxMaW5lU3R5bGU+CiAgICAgICAgPGNvbG9yPjdmMDBmZmZmPC9jb2xvcj4KICAgICAgICA8d2lkdGg+Njwvd2lkdGg+CiAgICAgIDwvTGluZVN0eWxlPgogICAgICA8UG9seVN0eWxlPgogICAgICAgIDxjb2xvcj43ZjAwMDBmZjwvY29sb3I+CiAgICAgIDwvUG9seVN0eWxlPgogICAgPC9TdHlsZT4KICAgIDxTdHlsZSBpZD0iYmVhcmluZ0xpbmUiPgogICAgICA8TGluZVN0eWxlPgogICAgICAgIDxjb2xvcj43ZmMwYzBjMDwvY29sb3I+CiAgICAgICAgPHdpZHRoPjM8L3dpZHRoPgogICAgICA8L0xpbmVTdHlsZT4KICAgICAgPFBvbHlTdHlsZT4KICAgICAgICA8Y29sb3I+N2YwMDAwZmY8L2NvbG9yPgogICAgICA8L1BvbHlTdHlsZT4KICAgIDwvU3R5bGU+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5TdGFyIE9uZSBfX1NUQVIxTkFNRV9fPC9uYW1lPgogICAgICA8ZGVzY3JpcHRpb24+QSBkaXN0YW5jZSBhcm91bmQgX19TVEFSMU5BTUVfXyAgd2l0aCB0aGUgR1AgY29vcmRpbmF0ZXMgX19TVEFSMUdQX18sIGRpc3RhbmNlIG9mIF9fU1RBUjFESVNUX18gYW5kIGFuIG9ic2VydmVkIGNvcnJlY3RlZCBhbmdsZSBvZiBfX1NUQVIxRUxFVl9fPC9kZXNjcmlwdGlvbj4KICAgICAgPHN0eWxlVXJsPiNzdGFyT25lTGluZTwvc3R5bGVVcmw+CiAgICAgIDxMaW5lU3RyaW5nPgogICAgICAgIDxleHRydWRlPjE8L2V4dHJ1ZGU+CiAgICAgICAgPHRlc3NlbGxhdGU+MTwvdGVzc2VsbGF0ZT4KICAgICAgICA8YWx0aXR1ZGVNb2RlPmFic29sdXRlPC9hbHRpdHVkZU1vZGU+CiAgICAgICAgPGNvb3JkaW5hdGVzPgoJCV9fU1RBUjFMSU5FU19fCiAgICAgICAgPC9jb29yZGluYXRlcz4KICAgICAgPC9MaW5lU3RyaW5nPgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5TdGFyIFR3byBfX1NUQVIyTkFNRV9fPC9uYW1lPgogICAgICA8ZGVzY3JpcHRpb24+QSBkaXN0YW5jZSBhcm91bmQgX19TVEFSMk5BTUVfXyAgd2l0aCB0aGUgR1AgY29vcmRpbmF0ZXMgX19TVEFSMkdQX18sIGRpc3RhbmNlIG9mIF9fU1RBUjJESVNUX18gYW5kIGFuIG9ic2VydmVkIGNvcnJlY3RlZCBhbmdsZSBvZiBfX1NUQVIyRUxFVl9fPC9kZXNjcmlwdGlvbj4KICAgICAgPHN0eWxlVXJsPiNzdGFyVHdvTGluZTwvc3R5bGVVcmw+CiAgICAgIDxMaW5lU3RyaW5nPgogICAgICAgIDxleHRydWRlPjE8L2V4dHJ1ZGU+CiAgICAgICAgPHRlc3NlbGxhdGU+MTwvdGVzc2VsbGF0ZT4KICAgICAgICA8YWx0aXR1ZGVNb2RlPmFic29sdXRlPC9hbHRpdHVkZU1vZGU+CiAgICAgICAgPGNvb3JkaW5hdGVzPgoJCV9fU1RBUjJMSU5FU19fCiAgICAgICAgPC9jb29yZGluYXRlcz4KICAgICAgPC9MaW5lU3RyaW5nPgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5TdGFyIFRocmVlIF9fU1RBUjNOQU1FX188L25hbWU+CiAgICAgIDxkZXNjcmlwdGlvbj5BIGRpc3RhbmNlIGFyb3VuZCBfX1NUQVIzTkFNRV9fICB3aXRoIHRoZSBHUCBjb29yZGluYXRlcyBfX1NUQVIzR1BfXywgZGlzdGFuY2Ugb2YgX19TVEFSM0RJU1RfXyBhbmQgYW4gb2JzZXJ2ZWQgY29ycmVjdGVkIGFuZ2xlIG9mIF9fU1RBUjNFTEVWX188L2Rlc2NyaXB0aW9uPgogICAgICA8c3R5bGVVcmw+I3N0YXJUaHJlZUxpbmU8L3N0eWxlVXJsPgogICAgICA8TGluZVN0cmluZz4KICAgICAgICA8ZXh0cnVkZT4xPC9leHRydWRlPgogICAgICAgIDx0ZXNzZWxsYXRlPjE8L3Rlc3NlbGxhdGU+CiAgICAgICAgPGFsdGl0dWRlTW9kZT5hYnNvbHV0ZTwvYWx0aXR1ZGVNb2RlPgogICAgICAgIDxjb29yZGluYXRlcz4KCQlfX1NUQVIzTElORVNfXwogICAgICAgIDwvY29vcmRpbmF0ZXM+CiAgICAgIDwvTGluZVN0cmluZz4KICAgIDwvUGxhY2VtYXJrPgogICAgPFBsYWNlbWFyaz4KICAgICAgPG5hbWU+U3RhciBPbmUgQmVhcmluZyBfX1NUQVIxTkFNRV9fPC9uYW1lPgogICAgICA8ZGVzY3JpcHRpb24+QSBiZWFyaW5nIGxpbmUgZnJvbSBfX1NUQVIxTkFNRV9fPC9kZXNjcmlwdGlvbj4KICAgICAgPHN0eWxlVXJsPiNiZWFyaW5nTGluZTwvc3R5bGVVcmw+CiAgICAgIDxMaW5lU3RyaW5nPgogICAgICAgIDxleHRydWRlPjE8L2V4dHJ1ZGU+CiAgICAgICAgPHRlc3NlbGxhdGU+MTwvdGVzc2VsbGF0ZT4KICAgICAgICA8YWx0aXR1ZGVNb2RlPmNsYW1wVG9Hcm91bmQ8L2FsdGl0dWRlTW9kZT4KICAgICAgICA8Y29vcmRpbmF0ZXM+CgkJX19TVEFSMUJFQVJJTkdMSU5FU19fCiAgICAgICAgPC9jb29yZGluYXRlcz4KICAgICAgPC9MaW5lU3RyaW5nPgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5TdGFyIFR3byBCZWFyaW5nIF9fU1RBUjJOQU1FX188L25hbWU+CiAgICAgIDxkZXNjcmlwdGlvbj5BIGJlYXJpbmcgbGluZSBmcm9tIF9fU1RBUjJOQU1FX188L2Rlc2NyaXB0aW9uPgogICAgICA8c3R5bGVVcmw+I2JlYXJpbmdMaW5lPC9zdHlsZVVybD4KICAgICAgPExpbmVTdHJpbmc+CiAgICAgICAgPGV4dHJ1ZGU+MTwvZXh0cnVkZT4KICAgICAgICA8dGVzc2VsbGF0ZT4xPC90ZXNzZWxsYXRlPgogICAgICAgIDxhbHRpdHVkZU1vZGU+Y2xhbXBUb0dyb3VuZDwvYWx0aXR1ZGVNb2RlPgogICAgICAgIDxjb29yZGluYXRlcz4KCQlfX1NUQVIyQkVBUklOR0xJTkVTX18KICAgICAgICA8L2Nvb3JkaW5hdGVzPgogICAgICA8L0xpbmVTdHJpbmc+CiAgICA8L1BsYWNlbWFyaz4KICAgIDxQbGFjZW1hcms+CiAgICAgIDxuYW1lPlN0YXIgVGhyZWUgQmVhcmluZyBfX1NUQVIzTkFNRV9fPC9uYW1lPgogICAgICA8ZGVzY3JpcHRpb24+QSBiZWFyaW5nIGxpbmUgZnJvbSBfX1NUQVIzTkFNRV9fPC9kZXNjcmlwdGlvbj4KICAgICAgPHN0eWxlVXJsPiNiZWFyaW5nTGluZTwvc3R5bGVVcmw+CiAgICAgIDxMaW5lU3RyaW5nPgogICAgICAgIDxleHRydWRlPjE8L2V4dHJ1ZGU+CiAgICAgICAgPHRlc3NlbGxhdGU+MTwvdGVzc2VsbGF0ZT4KICAgICAgICA8YWx0aXR1ZGVNb2RlPmNsYW1wVG9Hcm91bmQ8L2FsdGl0dWRlTW9kZT4KICAgICAgICA8Y29vcmRpbmF0ZXM+CgkJX19TVEFSM0JFQVJJTkdMSU5FU19fCiAgICAgICAgPC9jb29yZGluYXRlcz4KICAgICAgPC9MaW5lU3RyaW5nPgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5UaGUgR1Agb2YgdGhlIHN0YXIgX19TVEFSMU5BTUVfXzwvbmFtZT4KICAgICAgPGRlc2NyaXB0aW9uPlRoZSBHUCBvZiBzdGFyIG9uZSBhdCB0aGUgb2JzZXJ2ZWQgdGltZTwvZGVzY3JpcHRpb24+CiAgICAgIDxQb2ludD4KICAgICAgICA8Y29vcmRpbmF0ZXM+X19TVEFSMUdQX188L2Nvb3JkaW5hdGVzPgogICAgICA8L1BvaW50PgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5UaGUgR1Agb2YgdGhlIHN0YXIgX19TVEFSMk5BTUVfXzwvbmFtZT4KICAgICAgPGRlc2NyaXB0aW9uPlRoZSBHUCBvZiBzdGFyIHR3byBhdCB0aGUgb2JzZXJ2ZWQgdGltZTwvZGVzY3JpcHRpb24+CiAgICAgIDxQb2ludD4KICAgICAgICA8Y29vcmRpbmF0ZXM+X19TVEFSMkdQX188L2Nvb3JkaW5hdGVzPgogICAgICA8L1BvaW50PgogICAgPC9QbGFjZW1hcms+CiAgICA8UGxhY2VtYXJrPgogICAgICA8bmFtZT5UaGUgR1Agb2YgdGhlIHN0YXIgX19TVEFSM05BTUVfXzwvbmFtZT4KICAgICAgPGRlc2NyaXB0aW9uPlRoZSBHUCBvZiBzdGFyIHRocmVlIGF0IHRoZSBvYnNlcnZlZCB0aW1lPC9kZXNjcmlwdGlvbj4KICAgICAgPFBvaW50PgogICAgICAgIDxjb29yZGluYXRlcz5fX1NUQVIzR1BfXzwvY29vcmRpbmF0ZXM+CiAgICAgIDwvUG9pbnQ+CiAgICA8L1BsYWNlbWFyaz4KICAgIDxQbGFjZW1hcms+CiAgICAgIDxuYW1lPlRoZSBFU1RJTUFURUQgb2JzZXJ2ZXIgbG9jYXRpb248L25hbWU+CiAgICAgIDxkZXNjcmlwdGlvbj5UaGUgbG9jYXRpb24gd2hlcmUgYSByb3VnaCB0cmlsYXRlcmF0aW9uIGF0dGVtcHQgd2FzIGRvbmU8L2Rlc2NyaXB0aW9uPgogICAgICA8UG9pbnQ+CiAgICAgICAgPGNvb3JkaW5hdGVzPl9fT0JTRVJWRVJMT0NfXzwvY29vcmRpbmF0ZXM+CiAgICAgIDwvUG9pbnQ+CiAgICA8L1BsYWNlbWFyaz4KICA8L0RvY3VtZW50Pgo8L2ttbD4K";
+
+function makeKml() {
+	var content = atob(kmlTemplate);
+	var file = "sample.kml";
+	
+	var star1 = document.getElementById("star1").value;
+	var star2 = document.getElementById("star2").value;
+	var star3 = document.getElementById("star3").value;
+
+	var star1gp = starGPs[0][1] + "," + starGPs[0][0];
+	var star2gp = starGPs[1][1] + "," + starGPs[1][0];
+	var star3gp = starGPs[2][1] + "," + starGPs[2][0];
+
+	var observerLocation = estimatedObserver[1] + "," + estimatedObserver[0];
+	
+	content = content.replace(/__STAR1NAME__/g, star1);
+	content = content.replace(/__STAR2NAME__/g, star2);
+	content = content.replace(/__STAR3NAME__/g, star3);
+	
+	content = content.replace(/__STAR1GP__/g, star1gp);
+	content = content.replace(/__STAR2GP__/g, star2gp);
+	content = content.replace(/__STAR3GP__/g, star3gp);
+	
+	content = content.replace(/__STAR1DIST__/g, starGPRadii[0]);
+	content = content.replace(/__STAR2DIST__/g, starGPRadii[1]);
+	content = content.replace(/__STAR3DIST__/g, starGPRadii[2]);
+	
+	content = content.replace(/__STAR1ELEV__/g, starElevations[0]);
+	content = content.replace(/__STAR2ELEV__/g, starElevations[1]);
+	content = content.replace(/__STAR3ELEV__/g, starElevations[2]);
+	
+	var wayPoints = [];
+	for (var star = 0;star < 3;star ++) {
+		wayPoints[star] = "";
+		for (var bearing = 0; bearing < 360; bearing++) { 
+			wayPoints[star] = wayPoints[star] + starGPPerimeters[star][bearing][1] + "," + starGPPerimeters[star][bearing][0] + ",1.0\n";
+		}
+	}
+
+	content = content.replace(/__STAR1LINES__/g, wayPoints[0]);
+	content = content.replace(/__STAR2LINES__/g, wayPoints[1]);
+	content = content.replace(/__STAR3LINES__/g, wayPoints[2]);
+	
+	wayPoints = [];
+	for (var star = 0;star < 3;star ++) {
+		wayPoints[star] = "";
+		wayPoints[star] = wayPoints[star] + starGPs[star][1] + "," + starGPs[star][0] + ",100.0\n";
+		var point = getCoordinateFromLocationgAndBearing(starGPs[star][0], starGPs[star][1], starGPRadii[star], starGPBearings[star])
+		wayPoints[star] = wayPoints[star] + point[1] + "," + point[0] + ",100.0\n";
+	}
+
+	content = content.replace(/__STAR1BEARINGLINES__/g, wayPoints[0]);
+	content = content.replace(/__STAR2BEARINGLINES__/g, wayPoints[1]);
+	content = content.replace(/__STAR3BEARINGLINES__/g, wayPoints[2]);
+	
+	
+	
+
+	content = content.replace(/__OBSERVERLOC__/g, observerLocation);
+	
+	download(file, content);
+}
+
+</script>
+</head>
+<body onload="init()">
+
+<div>
+	<h2>Bert's super duper javascript trilaterator tool</h2>
+
+    <div style="position: absolute; top: 0; right:0;">
+   		<img style="z-index: 1; position: absolute; top: 0; right:0;" id=bgimg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Azimuthal_equidistant_projection_SW.jpg/600px-Azimuthal_equidistant_projection_SW.jpg" with="600" height="600"/>
+    	<canvas style="z-index: 2; position: absolute; top: 0; right:0;" border:1px solid #000000;" id="myCanvas" width="600" height="600"></canvas>
+   	</div>
+	<div><pre id="debug"></pre></div>
+  <p><a href="https://www.youtube.com/channel/UCSAO5wM_vehimkMjyjqIryw">My YouTube channel</a></p>
+  <p><a href="./trilaterator.html">Clear all entries</a>
+  	&nbsp;&nbsp;||&nbsp;&nbsp; <a href="./trilaterator.html?eh=2&ie=0&sn1=Procyon&y1=2022&mo1=3&d1=28&h1=0&mn1=19&s1=51&tz1=-5&ma1=25.2&sn2=Polaris&y2=2022&mo2=3&d2=28&h2=0&mn2=21&s2=45&tz2=-5&ma2=45.64&sn3=Arcturus&y3=2022&mo3=3&d3=28&h3=0&mn3=28&s3=33&tz3=-5&ma3=45.7">McToon's globe sextant challenge</a>
+  	&nbsp;&nbsp;|&nbsp;&nbsp; <a href="./trilaterator.html?eh=32&ie=0.03333333333333&sn1=Atria&y1=2022&mo1=7&d1=13&h1=11&mn1=40&s1=33&tz1=0&ma1=16.035&sn2=Canopus&y2=2022&mo2=7&d2=13&h2=11&mn2=23&s2=3&tz2=0&ma2=40.14&sn3=Rigel&y3=2022&mo3=7&d3=13&h3=11&mn3=24&s3=9&tz3=0&ma3=39.3">Roohif debate example 1</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp; <a href="./trilaterator.html?eh=32&ie=0.03333333333333&sn1=Achernar&y1=2022&mo1=7&d1=14&h1=5&mn1=48&s1=12&tz1=0&ma1=63.285&sn2=Betelgeuse&y2=2022&mo2=7&d2=14&h2=5&mn2=30&s2=42&tz2=0&ma2=22.08333333333333&sn3=Canopus&y3=2022&mo3=7&d3=14&h3=5&mn3=31&s3=48&tz3=0&ma3=38.93333333333333">Roohif debate example 2</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp; <a href="./trilaterator.html?eh=4&ie=-0.08&sn1=Polaris&y1=2022&mo1=8&d1=2&h1=11&mn1=54&s1=49&tz1=0&ma1=34.004&sn2=Arneb&y2=2022&mo2=8&d2=2&h2=11&mn2=55&s2=13&tz2=0&ma2=30.577&sn3=Lich&y3=2022&mo3=8&d3=2&h3=11&mn3=54&s3=17&tz3=0&ma3=14.923">Random sampler 1</a>
+	&nbsp;&nbsp;|&nbsp;&nbsp; <a href="./trilaterator.html?eh=5&ie=-0.018&sn1=Arcturus&y1=2022&mo1=7&d1=9&h1=0&mn1=34&s1=26&tz1=0&ma1=80.265&sn2=Altair&y2=2022&mo2=7&d2=9&h2=0&mn2=34&s2=28&tz2=0&ma2=18.354&sn3=Polaris&y3=2022&mo3=7&d3=9&h3=0&mn3=34&s3=29&tz3=0&ma3=21.851">Random sampler 2</a>
+  </p>
+  <div>
+   <button id="makeKml" disabled="disabled" onclick="makeKml()">Generate a KML file</button> 
+  </div>
+   <br />
+  <div>
+  Trilateration math mode:<input type="radio" id="globe" name="mathMode" value="1" checked="checked" onchange="setMathMode(GLOBE_MODEL)" />
+<label for="globe">Globe</label>
+<input type="radio" id="flat" name="mathMode" value="2" onchange="setMathMode(FLAT_MODEL)" />
+<label for="flat">Flat</label>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+<input type="checkbox" id="discoverMode" name="discoverMode" value="1" />
+<label for="discoverMode">Angle discovery mode</label>
+<hr/>
+<br />
+  OPTIONAL observer location (needed to compute sample readings). Latitude
+   <input type="text" id="setObsLat" name="setObsLat" size="12" onchange="setObserverLatitude()">
+  Longitude:
+   <input type="text" id="setObsLon" name="setObsLat" size="12" onchange="setObserverLongitude()">
+  Minus days:
+   <input type="text" id="setDayOffset" name="setDayOffset" size="12" value="0.0">
+   <hr/>
+  Eye height in meters
+   <input type="text" id="eyeHeight" name="eyeHeight" size="12" onchange="computeStarDistances(1)">
+  Index error
+   <input type="text" id="indexError" name="indexError" size="12" onchange="computeStarDistances(1)">
+  <br />
+  <select id="star1" onchange="computeStarNGroundPosition(1, 1)">
+    <option>Choose a star</option>
+  </select>
+  Year
+  <input type="text" id="year1" name="year1" size="5" onchange="computeStarNGroundPosition(1, 1)">
+  Month
+  <input type="text" id="month1" name="month1" size="3" onchange="computeStarNGroundPosition(1, 1)">
+  Day
+  <input type="text" id="day1" name="day1" size="3" onchange="computeStarNGroundPosition(1, 1)">
+  Hour
+  <input type="text" id="hour1" name="hour1" size="3" onchange="computeStarNGroundPosition(1, 1)">
+  Minute
+  <input type="text" id="minute1" name="minute1" size="3" onchange="computeStarNGroundPosition(1, 1)">
+  Second
+  <input type="text" id="second1" name="second1" size="3" onchange="computeStarNGroundPosition(1, 1)">
+  UTC offset (hours)
+  <input type="text" id="tzOffset1" name="tzOffset1" size="6" onchange="computeStarNGroundPosition(1, 1)">
+  <button id="setNow1" onclick="setTimeToNow(1)">Set Now</button> 
+  <br />Measured Angle to the star <input type="text" id="measuredAngleStar1" name="measuredAngleStar1" size="15" onchange="computeStarDistances(1)">
+  Estimated distance to the star <span id="distance1"></span>
+</div>
+<div>
+  <select id="star2" onchange="computeStarNGroundPosition(1, 2)">
+    <option>Choose a star</option>
+  </select>
+  Year
+  <input type="text" id="year2" name="year2" size="5" onchange="computeStarNGroundPosition(1, 2)">
+  Month
+  <input type="text" id="month2" name="month2" size="3" onchange="computeStarNGroundPosition(1, 2)">
+  Day
+  <input type="text" id="day2" name="day2" size="3" onchange="computeStarNGroundPosition(1, 2)">
+  Hour
+  <input type="text" id="hour2" name="hour2" size="3" onchange="computeStarNGroundPosition(1, 2)">
+  Minute
+  <input type="text" id="minute2" name="minute2" size="3" onchange="computeStarNGroundPosition(1, 2)">
+  Second
+  <input type="text" id="second2" name="second2" size="3" onchange="computeStarNGroundPosition(1, 2)">
+  UTC offset (hours)
+  <input type="text" id="tzOffset2" name="tzOffset2" size="6" onchange="computeStarNGroundPosition(1, 2)">
+  <button id="setNow2" onclick="setTimeToNow(2)">Set Now</button> 
+  <br />Measured Angle to the star <input type="text" id="measuredAngleStar2" name="measuredAngleStar2" size="15" onchange="computeStarDistances(1)">
+  Estimated distance to the star <span id="distance2"></span>
+</div>
+<div>
+  <select id="star3" onchange="computeStarNGroundPosition(1, 3)">
+    <option>Choose a star</option>
+  </select>
+  Year
+  <input type="text" id="year3" name="year3" size="5" onchange="computeStarNGroundPosition(1, 3)">
+  Month
+  <input type="text" id="month3" name="month3" size="3" onchange="computeStarNGroundPosition(1, 3)">
+  Day
+  <input type="text" id="day3" name="day3" size="3" onchange="computeStarNGroundPosition(1, 3)">
+  Hour
+  <input type="text" id="hour3" name="hour3" size="3" onchange="computeStarNGroundPosition(1, 3)">
+  Minute
+  <input type="text" id="minute3" name="minute3" size="3" onchange="computeStarNGroundPosition(1, 3)">
+  Second
+  <input type="text" id="second3" name="second3" size="3" onchange="computeStarNGroundPosition(1, 3)">
+  UTC offset (hours)
+  <input type="text" id="tzOffset3" name="tzOffset3" size="6" onchange="computeStarNGroundPosition(1, 3)">
+  <button id="setNow3" onclick="setTimeToNow(3)">Set Now</button> 
+  <br />Measured Angle to the star <input type="text" id="measuredAngleStar3" name="measuredAngleStar3" size="15" onchange="computeStarDistances(1)">
+  Estimated distance to the star <span id="distance3"></span>
+  </div>
+</div>
+<div>
+	<p>Estimated latitude: <span id="estLatitude"></span> and Longitude: <span id="estLongitude"></span></p>
+</div>
+<hr />
+<div>
+	<p>Math to derive estimated observer location (<a href="#" id="mathObserverA" onclick="toggleHidden('mathObserverA', 'mathObserver')">show</a>)</p>
+	<pre style="display: none; " id="mathObserver"></pre>
+</div>
+<div>
+	<p>Math to derive distance to star ground positions (<a href="#" id="mathDistanceA1" onclick="toggleHidden('mathDistanceA1', 'mathStarDistances')">show</a>)</p>
+	<pre style="display: none; " id="mathStarDistances"></pre>
+</div>
+<div>
+	<p>Math to derive the ground position for star one (<a href="#" id="mathStarA1" onclick="toggleHidden('mathStarA1', 'mathStar1')">show</a>)</p>
+	<pre style="display: none; " id="mathStar1"></pre>
+</div>
+<div>
+	<p>Math to derive the ground position for star two (<a href="#" id="mathStarA2" onclick="toggleHidden('mathStarA2', 'mathStar2')">show</a>)</p>
+	<pre style="display: none; " id="mathStar2"></pre>
+</div>
+<div>
+	<p>Math to derive the ground position for star three (<a href="#" id="mathStarA3" onclick="toggleHidden('mathStarA3', 'mathStar3')">show</a>)</p>
+	<pre style="display: none; " id="mathStar3"></pre>
+</div>
+
+<div>
+<p><a href="https://github.com/geehalel/npindi/issues/2">A similar set of calculations for the GAST can be found here</a></p>
+<p>DISCLAIMER: This trilateration tool is provided AS IS and is something I threw together one weekend. It was developed primarily with the intent of showing all the mathematic steps required to determine one's geolocation</p>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</div>
+</body>
+</html> 
