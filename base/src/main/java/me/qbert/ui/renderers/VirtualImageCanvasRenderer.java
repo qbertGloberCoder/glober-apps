@@ -49,6 +49,7 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
@@ -62,6 +63,9 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+	
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	public VirtualImageCanvasRenderer() {
 		this(null);
 	}
@@ -75,15 +79,19 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -96,6 +104,8 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	private void resetImage() {
 		double width = getBoundaryWidth();
 		double height = getBoundaryHeight();

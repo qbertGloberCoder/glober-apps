@@ -5,6 +5,7 @@ package me.qbert.ui.renderers;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.image.BufferedImage;
 import java.io.File;
 =======
@@ -42,6 +43,10 @@ import java.io.File;
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+import java.awt.image.BufferedImage;
+import java.io.File;
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -58,6 +63,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -259,46 +265,55 @@ public class ImageRenderer extends AbstractImageRenderer {
 		this.overlayImage = overlayImage;
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 =======
+=======
+public class ImageRenderer extends AbstractImageRenderer {
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	public ImageRenderer(File imageFile) {
 		this(imageFile, null);
 	}
 	
 	public ImageRenderer(File imageFile, File overlayFile) {
-		boundMinimumXFraction = boundMinimumYFraction = 0.0;
-		boundMaximumXFraction = boundMaximumYFraction = 1.0;
+		super();
 
 		reinitImage(imageFile);
 		reinitOverlay(overlayFile);
 	}
 	
 	public void reinitImage(File imageFile) {
+		BufferedImage image;
+		
 		if (imageFile != null) {
 			try {
-				originalImage = loadImageFromFile(imageFile);
+				image = loadImageFromFile(imageFile);
 			} catch (Exception e) {
-				originalImage = null;
+				e.printStackTrace();
+				image = null;
 			}
 		} else {
-			originalImage = null;
+			image = null;
 		}
 <<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 		
-		image = null;
+		setOriginalImage(image);
 	}
 	
 	public void reinitOverlay(File overlayFile) {
+		BufferedImage image;
+		
 		if ((overlayFile != null) && (overlayFile.exists())) {
 			try {
-				overlayImage = loadImageFromFile(overlayFile);
+				image = loadImageFromFile(overlayFile);
 			} catch (Exception e) {
-				overlayImage = null;
+				e.printStackTrace();
+				image = null;
 			}
 		} else {
-			overlayImage = null;
+			image = null;
 		}
 		
+<<<<<<< HEAD
 		image = null;
 	}
 	
@@ -559,5 +574,8 @@ public class ImageRenderer extends AbstractImageRenderer {
 >>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		setOriginalOverlay(image);
+>>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 	}
 }
