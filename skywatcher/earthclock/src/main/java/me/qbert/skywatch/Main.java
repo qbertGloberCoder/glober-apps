@@ -5,6 +5,7 @@ package me.qbert.skywatch;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -24,6 +25,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import me.qbert.skywatch.ui.MainFrame;
 
 /*
@@ -48,10 +54,13 @@ public class Main {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 		if (System.getProperty("os.name").startsWith("Linux")) {
 			if ((args.length < 1) || (! "nogl".equals(args[0]))) {
 		    	System.out.println("setting up opengl");
@@ -70,6 +79,7 @@ public class Main {
 		}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
@@ -80,6 +90,8 @@ public class Main {
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 		MainFrame mainFrame = new MainFrame();
 	}
 }
