@@ -31,6 +31,8 @@ public class ObservationTime {
 	private double utcTime;
 	private double timezoneAdjust;
 	
+	private int timeBiasMillis = 0;
+	
 	private ArrayList<ObjectStateChangeListener> listeners = new ArrayList<ObjectStateChangeListener>();
 	
 	public Calendar getTime() {
@@ -45,7 +47,7 @@ public class ObservationTime {
 	public void setCurrentTime() throws UninitializedObject {
 		Calendar calendar = Calendar.getInstance();
 		
-		this.time.setTimeInMillis(calendar.getTimeInMillis());
+		this.time.setTimeInMillis(calendar.getTimeInMillis() + (long)timeBiasMillis);
 		recompute();
 	}
 	
@@ -109,6 +111,14 @@ public class ObservationTime {
 			listeners.add(stateChangeListener);
 	}
 	
+	public int getTimeBiasMillis() {
+		return timeBiasMillis;
+	}
+
+	public void setTimeBiasMillis(int timeBiasMillis) {
+		this.timeBiasMillis = timeBiasMillis;
+	}
+
 	private void recompute() throws UninitializedObject {
 		if (time == null)
 			throw new UninitializedObject();
