@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0bd861 (add a few stragglers so a fresh checkout can compile without missing dependencies)
 =======
@@ -26,4 +27,6 @@ skywatcher/earthclock/settings.properties
 >>>>>>> 6d985d5 (fix the .gitignore to wildcard ignored files in any directory)
 =======
 >>>>>>> be58656 (add a few stragglers so a fresh checkout can compile without missing dependencies)
+=======
+>>>>>>> ec31a62 (fix the .gitignore to wildcard ignored files in any directory)
 
