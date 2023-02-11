@@ -4,7 +4,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+<<<<<<< HEAD
 import java.awt.Stroke;
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 import java.util.ArrayList;
 
 import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
@@ -27,6 +30,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class LineRenderer extends AbstractFractionRenderer {
+<<<<<<< HEAD
 	private ArrayList<AbstractCoordinateTransformation[]> lineSegments;
 	private Double lineWidth = null;
 	private int lineWidthTransformType;
@@ -46,7 +50,39 @@ public class LineRenderer extends AbstractFractionRenderer {
 		
 		initializeList(1);
 	}
+=======
+	ArrayList<AbstractCoordinateTransformation[]> lineSegments;
 	
+	private int coordinatesType;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+	
+	public LineRenderer(int coordinatesType) throws Exception {
+		if ((coordinatesType == ABSOLUTE_COORDINATES) || (coordinatesType == FRACTIONAL_COORDINATES)) {
+			this.coordinatesType = coordinatesType;
+		} else {
+			throw new Exception("coordinates type " + coordinatesType + " is invalid");
+		}
+		
+		initializeList(1);
+	}
+	
+	private void initializeList(int count) {
+		lineSegments = new ArrayList<AbstractCoordinateTransformation[]>();
+		for (int i = 0;i < count;i ++) {
+			AbstractCoordinateTransformation [] linePair = new AbstractCoordinateTransformation[2];
+			
+			if (coordinatesType == ABSOLUTE_COORDINATES) {
+				linePair[0] = new AbsoluteCoordinateTransformation();
+				linePair[1] = new AbsoluteCoordinateTransformation();
+			} else if (coordinatesType == FRACTIONAL_COORDINATES) {
+				linePair[0] = new FractionCoordinateTransformation();
+				linePair[1] = new FractionCoordinateTransformation();
+			}
+			
+			lineSegments.add(linePair);
+		}
+	}
+
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
@@ -78,12 +114,15 @@ public class LineRenderer extends AbstractFractionRenderer {
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 		if (! isRenderComponent())
 			return;
 		
 		if (alphaChannel <= 0.0)
 			return;
 		
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		if (lineSegments == null)
 			return;
 		
@@ -92,6 +131,7 @@ public class LineRenderer extends AbstractFractionRenderer {
 		int width = (int)getBoundaryWidth();
 		int height = (int)getBoundaryHeight();
 
+<<<<<<< HEAD
 		Stroke savedStroke = null;
 		if ((lineWidth != null) && ((lineWidthTransformType == ABSOLUTE_COORDINATES) || (lineWidthTransformType == FRACTIONAL_COORDINATES))) {
 			savedStroke = g2d.getStroke();
@@ -167,6 +207,15 @@ public class LineRenderer extends AbstractFractionRenderer {
 		
 		if (savedStroke != null)
 			g2d.setStroke(savedStroke);
+=======
+		for (int i = 0;i < lineSegments.size();i ++) {
+			AbstractCoordinateTransformation [] linePair = lineSegments.get(i);
+			
+			Point p1 = linePair[0].transform(left, top, width, height);
+			Point p2 = linePair[1].transform(left, top, width, height);
+			g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+		}
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
 	public double getX1() {
@@ -265,6 +314,7 @@ public class LineRenderer extends AbstractFractionRenderer {
 			lineSegments.get(i)[1].setY(yArray[i]);
 		}
 	}
+<<<<<<< HEAD
 
 	public Double getLineWidth() {
 		return lineWidth;
@@ -279,4 +329,6 @@ public class LineRenderer extends AbstractFractionRenderer {
 		this.lineWidthTransformType = lineWidthTransformType;
 	}
 	
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 }

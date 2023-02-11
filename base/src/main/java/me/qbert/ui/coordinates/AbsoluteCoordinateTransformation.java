@@ -3,6 +3,7 @@ package me.qbert.ui.coordinates;
 
 import java.awt.Point;
 
+<<<<<<< HEAD
 /*
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,4 +42,14 @@ public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransfor
 	public void setFloatTransformation(boolean floatTransformation) {
 		this.floatTransformation = floatTransformation;
 	}
+=======
+public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
+	@Override
+	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+		int x = dimensionLeftX + (int)(getX());
+		int y = dimensionTopY + (int)(getY());
+		
+		return new Point(x, y);
+	}
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 }

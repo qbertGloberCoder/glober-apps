@@ -85,7 +85,11 @@ public class RenderComponentUtil {
 	}
 	
 	public ArcRenderer drawCircle(double xPercent, double yPercent, int radius) throws Exception {
+<<<<<<< HEAD
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
+=======
+		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();

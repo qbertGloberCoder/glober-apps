@@ -24,13 +24,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class ArcRenderer extends AbstractFractionRenderer {
 	private AbstractCoordinateTransformation coordinate;
+<<<<<<< HEAD
 	private AbstractCoordinateTransformation arcSize;
+=======
+	private int width;
+	private int height;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	private int startAngle;
 	private int arcAngle;
 	
 	private boolean fill;
 
+<<<<<<< HEAD
 	public ArcRenderer(int coordinatesType, int sizeCoordinatesType) throws Exception {
+=======
+	public ArcRenderer(int coordinatesType) throws Exception {
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		if (coordinatesType == ABSOLUTE_COORDINATES) {
 			coordinate = new AbsoluteCoordinateTransformation();
 		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
@@ -38,6 +47,7 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		} else {
 			throw new Exception("coordinates type " + coordinatesType + " is invalid");
 		}
+<<<<<<< HEAD
 		
 		if (sizeCoordinatesType == ABSOLUTE_COORDINATES) {
 			arcSize = new AbsoluteCoordinateTransformation();
@@ -53,17 +63,23 @@ public class ArcRenderer extends AbstractFractionRenderer {
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 		if (! isRenderComponent())
 			return;
 		
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		int x;
 		int y;
 		
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+<<<<<<< HEAD
 		Point s = arcSize.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		
 		x = p.x - ((s.x - 1) / 2) - 1;
@@ -73,6 +89,16 @@ public class ArcRenderer extends AbstractFractionRenderer {
 			g2d.fillArc(x, y, s.x, s.y, startAngle, arcAngle);
 		else
 			g2d.drawArc(x, y, s.x, s.y, startAngle, arcAngle);
+=======
+		
+		x = p.x - ((this.width - 1) / 2);
+		y = p.y - ((this.height - 1) / 2);
+		
+		if (fill)
+			g2d.fillArc(x, y, this.width, this.height, startAngle, arcAngle);
+		else
+			g2d.drawArc(x, y, this.width, this.height, startAngle, arcAngle);
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
 	public double getX() {
@@ -89,6 +115,7 @@ public class ArcRenderer extends AbstractFractionRenderer {
 
 	public void setY(double fractionY) {
 		coordinate.setY(fractionY);
+<<<<<<< HEAD
 	}
 	
 	public double getWidth() {
@@ -97,6 +124,12 @@ public class ArcRenderer extends AbstractFractionRenderer {
 
 	public void setWidth(double width) {
 		arcSize.setX(width);
+=======
+	}
+	
+	public int getWidth() {
+		return width;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
 	public double getHeight() {

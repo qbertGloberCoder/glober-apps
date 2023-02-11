@@ -1,5 +1,6 @@
 package me.qbert.skywatch.ui.component;
 
+<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,6 +8,11 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+=======
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +36,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class Canvas extends JPanel {
+<<<<<<< HEAD
 	/**
 	 * 
 	 */
@@ -57,6 +64,13 @@ public class Canvas extends JPanel {
     }
     
     private void renderComponents(Graphics2D g2d, int width, int height) {
+=======
+	private List<RendererI> renderers = new ArrayList<RendererI>();
+
+    private void doDrawing(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g.create();
+
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -65,6 +79,7 @@ public class Canvas extends JPanel {
 
         g2d.setRenderingHints(rh);
         
+<<<<<<< HEAD
         for (RendererI renderer : renderers) {
         	AffineTransform oldXForm = g2d.getTransform();
         	renderer.setRenderDimensions(0, 0, width, height);
@@ -145,6 +160,22 @@ public class Canvas extends JPanel {
     
     public void clearRepaintPanelFromImage() {
     	repaintPanelFromImage = false;
+=======
+        int width = getWidth();
+        int height = getHeight();
+
+        for (RendererI renderer : renderers) {
+        	renderer.setRenderDimensions(0, 0, width, height);
+        	renderer.renderComponent(g2d);
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        doDrawing(g);
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
     }
 
 	public List<RendererI> getRenderers() {
@@ -154,8 +185,11 @@ public class Canvas extends JPanel {
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
 	}
+<<<<<<< HEAD
 	
 	public boolean isCurrentlyRendering() {
 		return currentlyRendering;
 	}
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 }

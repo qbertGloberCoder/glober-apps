@@ -3,9 +3,12 @@ package me.qbert.ui.renderers;
 import java.awt.Point;
 
 import me.qbert.ui.RendererI;
+<<<<<<< HEAD
 import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
 import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
 import me.qbert.ui.coordinates.FractionCoordinateTransformation;
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -26,11 +29,15 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	public static final int ABSOLUTE_COORDINATES = 1;
 	public static final int FRACTIONAL_COORDINATES = 2;
 	
+<<<<<<< HEAD
 	private boolean renderComponent = true;
 	
 	private boolean maintainAspectRatio = true;
 	private int shiftDirectionX = 0;
 	private int shiftDirectionY = 0;
+=======
+	private boolean maintainAspectRatio = true;
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	
 	private double boundaryLeft = 0;
 	private double boundaryTop = 0;
@@ -40,11 +47,14 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	private Point topLeft;
 	private Point bottomRight;
 	
+<<<<<<< HEAD
 //	private boolean debug = false;
 	
 	private AbsoluteCoordinateTransformation absoluteCoordinate = new AbsoluteCoordinateTransformation();
 	private FractionCoordinateTransformation fractionCoordinate = new FractionCoordinateTransformation();
 	
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	@Override
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 		boundaryLeft = (double)dimensionLeftX;
@@ -52,6 +62,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		boundaryWidth = (double)dimensionWidth;
 		boundaryHeight = (double)dimensionHeight;
 		
+<<<<<<< HEAD
 		double aspectRatio = 1.0;
 		
 		if (maintainAspectRatio) {
@@ -87,11 +98,27 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		
 //		if (debug)
 //			System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
+=======
+		if (maintainAspectRatio) {
+			if (boundaryWidth > boundaryHeight) {
+				// width is greater than height
+				boundaryWidth = boundaryHeight;
+				boundaryLeft = (((double)dimensionWidth - boundaryHeight) / 2.0);
+			} else if (boundaryWidth < boundaryHeight) {
+				// height is greater than width
+				boundaryHeight = boundaryWidth;
+				boundaryTop = (((double)dimensionHeight - boundaryWidth) / 2.0);
+			}
+		}
+		
+//		System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		
 		topLeft = convertFractionToPoint(0.0, 0.0);
 		bottomRight = convertFractionToPoint(1.0, 1.0);
 	}
 	
+<<<<<<< HEAD
 /*	public void setDebug(boolean debug) {
 		this.debug = debug;
 	}
@@ -116,6 +143,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		this.shiftDirectionY = shiftDirectionY;
 	}
 
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	protected Point convertFractionToPoint(double fractionX, double fractionY) {
 		int x = (int)(boundaryLeft + (boundaryWidth * fractionX));
 		int y = (int)(boundaryTop + (boundaryHeight * fractionY));
@@ -125,6 +154,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		return p;
 		
 	}
+<<<<<<< HEAD
 	
 	public Point convertToCoordinates(double x, double y, int coordinatesType, boolean floatConversion) throws Exception {
 		AbstractCoordinateTransformation coordinate = null;
@@ -158,6 +188,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	public void setRenderComponent(boolean renderComponent) {
 		this.renderComponent = renderComponent;
 	}
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 
 	public boolean isMaintainAspectRatio() {
 		return maintainAspectRatio;

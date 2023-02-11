@@ -38,11 +38,14 @@ public class PolyRenderer extends AbstractFractionRenderer {
 		}
 	}
 	
+<<<<<<< HEAD
 	@Override
 	public double getAspectRatio() {
 		return -1.0;
 	}
 	
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	private void initializeList(int count) {
 		lineSegments = new ArrayList<AbstractCoordinateTransformation>();
 		for (int i = 0;i < count;i ++) {
@@ -56,12 +59,18 @@ public class PolyRenderer extends AbstractFractionRenderer {
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 		if (! isRenderComponent())
 			return;
 		
 		if (lineSegments == null)
 			return;
 		
+=======
+		if (lineSegments == null)
+			return;
+		
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		int left = (int)getBoundaryLeft();
 		int top = (int)getBoundaryTop();
 		int width = (int)getBoundaryWidth();

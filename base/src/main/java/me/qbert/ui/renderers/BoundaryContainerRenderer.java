@@ -29,6 +29,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	private double boundMaximumXFraction = 1.0;
 	private double boundMaximumYFraction = 1.0;
 
+<<<<<<< HEAD
 	private double largestAspect = 1.0;
 	
 	private BoundaryContainerRenderer followContainer = null;
@@ -37,6 +38,10 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 		updateAspectRatio();
 		
+=======
+	@Override
+	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		super.setRenderDimensions(dimensionLeftX, dimensionTopY, dimensionWidth, dimensionHeight);
 		
 		double boundLeftX = getBoundaryLeft();
@@ -55,6 +60,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public double getAspectRatio() {
 		if (followContainer != null)
 			return followContainer.getAspectRatio();
@@ -93,6 +99,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 		if ((! isRenderComponent()) || (renderers == null))
 			return;
 		
+=======
+	public void renderComponent(Graphics2D g2d) {
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 		for (RendererI renderer : renderers) {
 			renderer.renderComponent(g2d);
 		}
@@ -104,7 +113,10 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
+<<<<<<< HEAD
 		updateAspectRatio();
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
 	public double getBoundMinimumXFraction() {

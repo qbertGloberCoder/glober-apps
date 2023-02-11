@@ -19,6 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public interface RendererI {
 	public void renderComponent(Graphics2D g2d);
+<<<<<<< HEAD
 	public double getAspectRatio();
+=======
+>>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
 }
