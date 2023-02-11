@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
@@ -35,7 +36,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class TestAstroCalculators {
-	private void test() throws UninitializedObject {
+	private void assertForTest(String failMessage, double computed, double expected) throws AssertionFailedError {
+		Assert.assertTrue(failMessage, (computed == expected ? true : false));
+	}
+	
+	private void assertForTest(String failMessageRa, String failMessageDec, ObjectDirectionRaDec computedDirection, double expectedRa, double expectedDec) throws AssertionFailedError {
+		assertForTest(failMessageRa, computedDirection.getRightAscension(), expectedRa);
+		assertForTest(failMessageDec, computedDirection.getDeclination(), expectedDec);
+	}
+	
+	private void testTransactional() throws UninitializedObject {
 		TransactionalStateChangeListener transactionalListener = new TransactionalStateChangeListener();
 		
 		CelestialAddress starOne = new CelestialAddress();
@@ -80,16 +90,13 @@ public class TestAstroCalculators {
 		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon + ",starRa=" + starRa + ",starDec=" + starDec +
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
 		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("SUN RA is incorrect", (direction.getRightAscension() == 86.37315977385742 ? true : false));
-		Assert.assertTrue("SUN Dec is incorrect", (direction.getDeclination() == 22.007390065626414 ? true : false));
+		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 86.37315977385742, 22.007390065626414);
 		direction = starObjOne.getCurrentDirection();
 		System.out.println("	Star(+0.0, +0.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("Star 1 RA is incorrect", (direction.getRightAscension() == 192.57903308280873 ? true : false));
-		Assert.assertTrue("Star 1 Dec is incorrect", (direction.getDeclination() == 30.0 ? true : false));
+		assertForTest("Star 1 RA is incorrect", "Star 1 Dec is incorrect", direction, 192.57903308280873, 30.0);
 		direction = starObjTwo.getCurrentDirection();
 		System.out.println("	Star(+4.0, -6.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("Star 2 RA is incorrect", (direction.getRightAscension() == 188.57903308280873 ? true : false));
-		Assert.assertTrue("Star 2 Dec is incorrect", (direction.getDeclination() == 24.0 ? true : false));
+		assertForTest("Star 2 RA is incorrect", "Star 2 Dec is incorrect", direction, 188.57903308280873, 24.0);
 		
 		
 		System.out.println("Direction for location: lat=10, lon=20 star: ra=5, dec=30, 2021-07-11 12:31:05 -4 = " + direction.getRightAscension() + ", " + direction.getDeclination());
@@ -120,16 +127,13 @@ public class TestAstroCalculators {
 		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon + ",starRa=" + starRa + ",starDec=" + starDec +
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
 		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("SUN RA is incorrect", (direction.getRightAscension() == 26.366119731594154 ? true : false));
-		Assert.assertTrue("SUN Dec is incorrect", (direction.getDeclination() == 21.973453759061698 ? true : false));
+		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 26.366119731594154, 21.973453759061698);
 		direction = starObjOne.getCurrentDirection();
 		System.out.println("	Star(+0.0, +0.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("Star 1 RA is incorrect", (direction.getRightAscension() == 112.81889224944868 ? true : false));
-		Assert.assertTrue("Star 1 Dec is incorrect", (direction.getDeclination() == 45.0 ? true : false));
+		assertForTest("Star 1 RA is incorrect", "Star 1 Dec is incorrect", direction, 112.81889224944868, 45.0);
 		direction = starObjTwo.getCurrentDirection();
 		System.out.println("	Star(+4.0, -6.0) = " + direction.getRightAscension() + ", " + direction.getDeclination());
-		Assert.assertTrue("Star 2 RA is incorrect", (direction.getRightAscension() == 108.81889224944868 ? true : false));
-		Assert.assertTrue("Star 2 Dec is incorrect", (direction.getDeclination() == 39.0 ? true : false));
+		assertForTest("Star 2 RA is incorrect", "Star 2 Dec is incorrect", direction, 108.81889224944868, 39.0);
 	}
 	
 	public static void main(String[] args) throws UninitializedObject {
@@ -140,6 +144,6 @@ public class TestAstroCalculators {
 		logger.log(Level.ALL, "Test log here");
 
 		TestAstroCalculators tester = new TestAstroCalculators();
-		tester.test();
+		tester.testTransactional();
 	}
 }
