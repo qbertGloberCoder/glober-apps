@@ -113,6 +113,7 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	public void renderComponent(Graphics2D g2d) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if ((! isRenderComponent()) || (renderers == null))
 			return;
 		
@@ -130,6 +131,11 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 =======
 	public void renderComponent(Graphics2D g2d) {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		if (! isRenderComponent())
+			return;
+		
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		for (RendererI renderer : renderers) {
 			renderer.renderComponent(g2d);
 		}

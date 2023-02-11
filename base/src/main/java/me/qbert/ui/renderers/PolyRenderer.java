@@ -71,8 +71,11 @@ public class PolyRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		if (! isRenderComponent())
 			return;
 		

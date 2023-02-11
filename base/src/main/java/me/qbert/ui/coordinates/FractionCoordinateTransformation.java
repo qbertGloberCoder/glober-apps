@@ -76,12 +76,30 @@ public class FractionCoordinateTransformation extends AbstractCoordinateTransfor
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 public class FractionCoordinateTransformation extends AbstractCoordinateTransformation {
+	boolean floatTransformation = false;
+	
 	@Override
 	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
-		int x = dimensionLeftX + (int)(getX() * dimensionWidth);
-		int y = dimensionTopY + (int)(getY() * dimensionHeight);
+		int x = (int)(getX() * dimensionWidth);
+		int y = (int)(getY() * dimensionHeight);
+		
+		if (! floatTransformation) {
+			x += dimensionLeftX;
+			y += dimensionTopY;
+		}
 		
 		return new Point(x, y);
 	}
+<<<<<<< HEAD
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+
+	public boolean isFloatTransformation() {
+		return floatTransformation;
+	}
+
+	public void setFloatTransformation(boolean floatTransformation) {
+		this.floatTransformation = floatTransformation;
+	}
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 }

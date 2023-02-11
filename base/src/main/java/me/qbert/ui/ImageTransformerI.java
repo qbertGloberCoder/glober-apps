@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 /*
@@ -26,6 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 public interface ImageTransformerI {
 	public void transformImage(RendererI renderer, BufferedImage image);
 }

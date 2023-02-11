@@ -7,6 +7,7 @@ import java.awt.Point;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.Stroke;
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -15,6 +16,9 @@ import java.awt.Stroke;
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+import java.awt.Stroke;
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 import java.util.ArrayList;
 
 import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
@@ -40,13 +44,17 @@ public class LineRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 	private ArrayList<AbstractCoordinateTransformation[]> lineSegments;
 	private Double lineWidth = null;
 	private int lineWidthTransformType;
 	
 	private double alphaChannel = 1.0;
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 	private int coordinatesType;
@@ -84,6 +92,8 @@ public class LineRenderer extends AbstractFractionRenderer {
 	}
 =======
 	ArrayList<AbstractCoordinateTransformation[]> lineSegments;
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 	
 	private int coordinatesType;
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
@@ -178,8 +188,11 @@ public class LineRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		if (! isRenderComponent())
 			return;
 		
@@ -187,12 +200,15 @@ public class LineRenderer extends AbstractFractionRenderer {
 			return;
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		if (lineSegments == null)
 			return;
 		
@@ -204,8 +220,11 @@ public class LineRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		Stroke savedStroke = null;
 		if ((lineWidth != null) && ((lineWidthTransformType == ABSOLUTE_COORDINATES) || (lineWidthTransformType == FRACTIONAL_COORDINATES))) {
 			savedStroke = g2d.getStroke();
@@ -231,6 +250,7 @@ public class LineRenderer extends AbstractFractionRenderer {
 			g2d.setColor(c);
 		}
 		
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -290,6 +310,8 @@ public class LineRenderer extends AbstractFractionRenderer {
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		for (int i = 0;i < lineSegments.size();i ++) {
 			AbstractCoordinateTransformation [] linePair = lineSegments.get(i);
 			
@@ -299,8 +321,11 @@ public class LineRenderer extends AbstractFractionRenderer {
 		}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 		
 		if (lastBgColor != null)
 			g2d.setBackground(lastBgColor);
@@ -309,9 +334,12 @@ public class LineRenderer extends AbstractFractionRenderer {
 		
 		if (savedStroke != null)
 			g2d.setStroke(savedStroke);
+<<<<<<< HEAD
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 	}
 
 	public double getX1() {
@@ -413,8 +441,11 @@ public class LineRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 
 	public Double getLineWidth() {
 		return lineWidth;
@@ -430,10 +461,13 @@ public class LineRenderer extends AbstractFractionRenderer {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 }
