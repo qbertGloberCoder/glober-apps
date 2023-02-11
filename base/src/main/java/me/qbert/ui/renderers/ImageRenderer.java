@@ -11,6 +11,7 @@ import java.io.File;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import java.awt.Graphics2D;
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
@@ -19,6 +20,8 @@ import java.awt.Graphics2D;
 =======
 import java.awt.Graphics2D;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -109,6 +112,7 @@ public class ImageRenderer extends AbstractFractionRenderer {
 	private BufferedImage originalImage;
 	private BufferedImage overlayImage;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 public class ImageRenderer extends AbstractFractionRenderer {
 	private BufferedImage originalImage;
@@ -119,6 +123,8 @@ public class ImageRenderer extends AbstractFractionRenderer {
 public class ImageRenderer extends AbstractFractionRenderer {
 	private BufferedImage originalImage;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	private BufferedImage image;
 
 	private double lastRotatedAngle = -9999999999.999;
@@ -254,15 +260,57 @@ public class ImageRenderer extends AbstractImageRenderer {
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 =======
 	public ImageRenderer(File imageFile) {
+		this(imageFile, null);
+	}
+	
+	public ImageRenderer(File imageFile, File overlayFile) {
 		boundMinimumXFraction = boundMinimumYFraction = 0.0;
 		boundMaximumXFraction = boundMaximumYFraction = 1.0;
 
-		try {
-			originalImage = loadImageFromFile(imageFile);
-		} catch (Exception e) {
+		reinitImage(imageFile);
+		reinitOverlay(overlayFile);
+	}
+	
+	public void reinitImage(File imageFile) {
+		if (imageFile != null) {
+			try {
+				originalImage = loadImageFromFile(imageFile);
+			} catch (Exception e) {
+				originalImage = null;
+			}
+		} else {
 			originalImage = null;
 		}
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		
+		image = null;
+	}
+	
+	public void reinitOverlay(File overlayFile) {
+		if ((overlayFile != null) && (overlayFile.exists())) {
+			try {
+				overlayImage = loadImageFromFile(overlayFile);
+			} catch (Exception e) {
+				overlayImage = null;
+			}
+		} else {
+			overlayImage = null;
+		}
+		
+		image = null;
+	}
+	
+	public void setOriginalImage(BufferedImage originalImage) {
+		image = null;
+		this.originalImage = originalImage;
+	}
+
+	public void setOriginalOverlay(BufferedImage overlayImage) {
+		image = null;
+		this.overlayImage = overlayImage;
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	}
 
     private BufferedImage loadImageFromFile(File file) throws NullPointerException,IOException {
@@ -287,6 +335,7 @@ public class ImageRenderer extends AbstractImageRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     protected void resetImage() {
 =======
     private void resetImage() {
@@ -297,12 +346,16 @@ public class ImageRenderer extends AbstractImageRenderer {
 =======
     private void resetImage() {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+    protected void resetImage() {
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
     	image = null;
     	if (originalImage == null)
     		return;
     	
     	lastRotatedAngle = rotateAngle;
     	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -356,6 +409,13 @@ public class ImageRenderer extends AbstractImageRenderer {
 	    Graphics2D g2d = image.createGraphics();
 //	    g2d.drawImage(originalImage, 0, 0, null);
 	    
+=======
+    	image = new BufferedImage((int)getBoundaryWidth(),
+    			(int)getBoundaryHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2d = image.createGraphics();
+//	    g2d.drawImage(originalImage, 0, 0, null);
+	    
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	    AffineTransform oldXForm = null;
 	    
     	if (rotateAngle != 0.0) {
@@ -376,9 +436,12 @@ public class ImageRenderer extends AbstractImageRenderer {
 	    	g2d.drawImage(overlayImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, overlayImage.getWidth(), overlayImage.getHeight(), null);	    	
 	    }
 	    
+<<<<<<< HEAD
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	    g2d.dispose();
     }
     
@@ -387,13 +450,17 @@ public class ImageRenderer extends AbstractImageRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		if (! isRenderComponent())
 			return;
 		
 		if ((image == null) || (lastRotatedAngle != rotateAngle) || ((int)getBoundaryWidth() != image.getWidth()) ||
 				((int)getBoundaryHeight() != image.getHeight())) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 		if ((image == null) || (lastRotatedAngle != rotateAngle)) {
@@ -403,6 +470,8 @@ public class ImageRenderer extends AbstractImageRenderer {
 =======
 		if ((image == null) || (lastRotatedAngle != rotateAngle)) {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 			resetImage();
 		}
 		

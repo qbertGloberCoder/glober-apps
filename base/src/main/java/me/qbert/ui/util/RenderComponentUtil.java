@@ -90,6 +90,7 @@ public class RenderComponentUtil {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
 =======
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
@@ -106,6 +107,9 @@ public class RenderComponentUtil {
 =======
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();

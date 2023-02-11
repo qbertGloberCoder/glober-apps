@@ -52,10 +52,13 @@ public abstract class AbstractFractionRenderer implements RendererI {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 =======
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
+=======
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	private boolean renderComponent = true;
 	
 	private boolean maintainAspectRatio = true;
@@ -388,6 +391,14 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	}
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+
+	public boolean isRenderComponent() {
+		return renderComponent;
+	}
+
+	public void setRenderComponent(boolean renderComponent) {
+		this.renderComponent = renderComponent;
+	}
 
 	public boolean isMaintainAspectRatio() {
 		return maintainAspectRatio;

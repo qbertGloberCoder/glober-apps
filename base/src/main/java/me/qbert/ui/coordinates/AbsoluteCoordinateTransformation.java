@@ -108,12 +108,30 @@ public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransfor
 >>>>>>> 34bfd38 (many changes in the base UI to support the earth clock app)
 =======
 public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
+	boolean floatTransformation = false;
+	
 	@Override
 	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
-		int x = dimensionLeftX + (int)(getX());
-		int y = dimensionTopY + (int)(getY());
+		int x = (int)(getX());
+		int y = (int)(getY());
+		
+		if (! floatTransformation) {
+			x += dimensionLeftX;
+			y += dimensionTopY;
+		}
 		
 		return new Point(x, y);
 	}
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+
+	public boolean isFloatTransformation() {
+		return floatTransformation;
+	}
+
+	public void setFloatTransformation(boolean floatTransformation) {
+		this.floatTransformation = floatTransformation;
+	}
+>>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 }
