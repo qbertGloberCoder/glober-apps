@@ -90,11 +90,19 @@ import javax.swing.JLabel;
 =======
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.Timer;
 
@@ -210,6 +218,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class MainFrame extends JFrame implements KeyListener {
 =======
 public class MainFrame extends JFrame {
@@ -226,11 +235,15 @@ public class MainFrame extends JFrame implements KeyListener {
 =======
 public class MainFrame extends JFrame {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+public class MainFrame extends JFrame implements KeyListener {
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2330068972046366353L;
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -326,10 +339,26 @@ public class MainFrame extends JFrame {
 =======
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
+=======
+	private JMenuBar menubar;
+	
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 	private JCheckBoxMenuItem timerMenu;
 	private JCheckBoxMenuItem railwayStyleMenu;
+	private JCheckBoxMenuItem twentyFourHourStyleMenu;
+	private JCheckBoxMenuItem zenithAnglesMenu;
+	private JCheckBoxMenuItem [] speedSettings;
 	
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+    private JCheckBoxMenuItem dayNightOffMenu;
+    private JCheckBoxMenuItem dayNightPartialMenu;
+    private JCheckBoxMenuItem dayNightFullMenu;
+
+    private JCheckBoxMenuItem mickeyFaceMenu;
+    
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 	private Canvas canvas;
 	
 	private boolean timerRunning = false;
@@ -403,12 +432,19 @@ public class MainFrame extends JFrame {
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
     private CelestialObjects celestialObjects;
+    
+    private boolean mickeyFace = true;
+    
+    private Properties props;
+    private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+    private static File propsFile = new File("settings.properties");
 	
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 	public MainFrame() {
 		super("Multi-transformation earth clock");
 		
         //Creating the MenuBar and adding components
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -648,10 +684,16 @@ public class MainFrame extends JFrame {
         JMenu m1 = new JMenu("File");
         mb.add(m1);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+        menubar = new JMenuBar();
+        JMenu m1 = new JMenu("File");
+        menubar.add(m1);
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         JMenuItem m11 = new JMenuItem("Exit");
         m1.add(m11);
 
         JMenu m2 = new JMenu("Options");
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -661,10 +703,13 @@ public class MainFrame extends JFrame {
 =======
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         menubar.add(m2);
         JMenuItem fullscreenMenu = new JMenuItem("Full screen");
         m2.add(fullscreenMenu);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
@@ -774,6 +819,8 @@ public class MainFrame extends JFrame {
 =======
         mb.add(m2);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         timerMenu = new JCheckBoxMenuItem("Timer");
         m2.add(timerMenu);
         railwayStyleMenu = new JCheckBoxMenuItem("Swiss railway style");
@@ -783,15 +830,19 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         
         twentyFourHourStyleMenu = new JCheckBoxMenuItem("24 hour style clock");
         m2.add(twentyFourHourStyleMenu);
         twentyFourHourStyleMenu.setSelected(true);
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1034,10 +1085,30 @@ public class MainFrame extends JFrame {
         JMenu m3 = new JMenu("Speed");
         mb.add(m3);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+        zenithAnglesMenu = new JCheckBoxMenuItem("Zenith angles");
+        m2.add(zenithAnglesMenu);
+        JMenu speedMenu = new JMenu("day/nights opacity");
+        m2.add(speedMenu);
+        dayNightOffMenu = new JCheckBoxMenuItem("Off");
+        speedMenu.add(dayNightOffMenu);
+        dayNightPartialMenu = new JCheckBoxMenuItem("Partial");
+        speedMenu.add(dayNightPartialMenu);
+        dayNightFullMenu = new JCheckBoxMenuItem("Full");
+        speedMenu.add(dayNightFullMenu);
+        mickeyFaceMenu = new JCheckBoxMenuItem("Mickey Mouse face");
+        m2.add(mickeyFaceMenu);
+        
+        mickeyFaceMenu.setSelected(true);
+
+        JMenu m3 = new JMenu("Speed");
+        menubar.add(m3);
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         JMenuItem timerSpeedDown = new JMenuItem("Slow Down");
         m3.add(timerSpeedDown);
         JMenuItem timerSpeedUp = new JMenuItem("Speed Up");
         m3.add(timerSpeedUp);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1067,6 +1138,12 @@ public class MainFrame extends JFrame {
 =======
         String [] speedLabels = AbstractCelestialObjects.getSpeedLabels();
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+        
+        m3.add(new JSeparator());
+        
+        String [] speedLabels = CelestialObjects.getSpeedLabels();
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         speedSettings = new JCheckBoxMenuItem[speedLabels.length];
         for (int i = 0;i < speedLabels.length;i ++) {
         	speedSettings[i] = new JCheckBoxMenuItem(speedLabels[i]);
@@ -1086,6 +1163,7 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         JMenu m4 = new JMenu("Location");
         menubar.add(m4);
 =======
@@ -1117,6 +1195,11 @@ public class MainFrame extends JFrame {
         JMenu m4 = new JMenu("Location");
         mb.add(m4);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+
+        JMenu m4 = new JMenu("Location");
+        menubar.add(m4);
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         JMenuItem latPicker = new JMenuItem("Latitude");
         m4.add(latPicker);
         JMenuItem lonPicker = new JMenuItem("Longitude");
@@ -1129,6 +1212,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1164,6 +1248,8 @@ public class MainFrame extends JFrame {
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         final Frame thisInstance = this;
         fullscreenMenu.addActionListener(new ActionListener() {
 			@Override
@@ -1173,6 +1259,7 @@ public class MainFrame extends JFrame {
 			}
 		});
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1185,6 +1272,8 @@ public class MainFrame extends JFrame {
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         timerMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1202,10 +1291,13 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 				redrawClock();
 				setRailwayStyle(celestialObjects.isRailwayStyleClock());
 			}
@@ -1225,6 +1317,7 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         renderSunGPGreatCircleRouteMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1354,6 +1447,15 @@ public class MainFrame extends JFrame {
 				redrawClock();
 				setMoonZenithAngles(celestialObjects.isMoonRenderContourLines());
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+        zenithAnglesMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setRenderContourLines(! celestialObjects.isRenderContourLines());
+				zenithAnglesMenu.setSelected(celestialObjects.isRenderContourLines());
+				redrawClock();
+				setZenithAngles(celestialObjects.isRenderContourLines());
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			}
 		});
         
@@ -1399,6 +1501,7 @@ public class MainFrame extends JFrame {
 				setDayNightOpacity(true, celestialObjects.getDayNightFillLevel());
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			}
 		});
         
@@ -1439,6 +1542,8 @@ public class MainFrame extends JFrame {
 				setMoonDayNightOpacity(celestialObjects.isMoonDayNightRendered());
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			}
 		});
         
@@ -1451,6 +1556,7 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				updateSpeedMenu();
 =======
 =======
@@ -1483,6 +1589,9 @@ public class MainFrame extends JFrame {
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+				updateSpeedMenu();
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			}
 		});
         
@@ -1495,6 +1604,7 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				updateSpeedMenu();
 =======
 =======
@@ -1527,6 +1637,9 @@ public class MainFrame extends JFrame {
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+				updateSpeedMenu();
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			}
 		});
         
@@ -1539,10 +1652,13 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			    String latitude = JOptionPane.showInputDialog(f, "Enter Latitude", getPropertiesLatitude().toString());
 			    if (latitude != null) {
 				    try {
@@ -1551,6 +1667,7 @@ public class MainFrame extends JFrame {
 				    	setPropertiesLatitude(d);
 				    } catch (NumberFormatException ex) {
 				    }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 			    }
@@ -1582,6 +1699,10 @@ public class MainFrame extends JFrame {
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+			    }
+				redrawClock();
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			}
 		});
         
@@ -1594,10 +1715,13 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			    String longitude = JOptionPane.showInputDialog(f, "Enter Longitude", getPropertiesLongitude().toString());
 			    if (longitude != null) {
 				    try {
@@ -1607,6 +1731,7 @@ public class MainFrame extends JFrame {
 				    } catch (NumberFormatException ex) {
 				    	
 				    }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 			    }
@@ -1720,16 +1845,17 @@ public class MainFrame extends JFrame {
         
 >>>>>>> af12464 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 =======
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			    }
+				redrawClock();
 			}
 		});
-        
-        updateTimerMenu();
 
         canvas = new Canvas();
         
         //Adding Components to the frame.
-        getContentPane().add(BorderLayout.NORTH, mb);
+        getContentPane().add(BorderLayout.NORTH, menubar);
         getContentPane().add(BorderLayout.CENTER, new JScrollPane(canvas));
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 
@@ -2237,8 +2363,11 @@ public class MainFrame extends JFrame {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         
         updateTimerMenu();
         updateSpeedMenu(0);
@@ -2259,6 +2388,7 @@ public class MainFrame extends JFrame {
 			updateDayNightsMenu();
 		}
 		
+<<<<<<< HEAD
 <<<<<<< HEAD
         updateObjects();
 =======
@@ -3206,12 +3336,195 @@ public class MainFrame extends JFrame {
 		}
 >>>>>>> 1584ba9 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         updateObjects();
         
         if (timerRunning == false)
         	toggleTimer();
+<<<<<<< HEAD
         railwayStyleMenu.setSelected(celestialObjects.isRailwayStyleClock());
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+		
+		addKeyListener(this);
+	}
+	
+	private void saveSettingsToProps() {
+		try {
+			FileOutputStream fos = new FileOutputStream(propsFile);
+			props.store(fos, "");
+			fos.close();
+		} catch (Exception e) {
+		}
+	}
+	
+	private Double getPropertiesLatitude() {
+		Double d;
+		try {
+			d = new Double(props.getProperty("latitude", "0.0"));
+		} catch (Exception e) {
+			d = new Double(0.0);
+		}
+		return d;
+	}
+	
+	private void setPropertiesLatitude(Double d) {
+    	props.setProperty("latitude", d.toString());
+    	saveSettingsToProps();
+	}
+	
+	private Double getPropertiesLongitude() {
+		Double d;
+		try {
+			d = new Double(props.getProperty("longitude", "0.0"));
+		} catch (Exception e) {
+			d = new Double(0.0);
+		}
+		return d;
+	}
+	
+	private void setPropertiesLongitude(Double d) {
+    	props.setProperty("longitude", d.toString());
+    	saveSettingsToProps();
+	}
+	
+	private boolean stringToBoolean(String value) {
+		if ("1".equals(value))
+			return true;
+		
+		return false;
+	}
+	
+	private boolean getRailwayStyle(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("railwaystyle", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setRailwayStyle(boolean selected) {
+    	props.setProperty("railwaystyle", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private boolean getTwentyFourHourStyle(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("twentyfourhourstyle", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setTwentyFourHourStyle(boolean selected) {
+    	props.setProperty("twentyfourhourstyle", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private boolean getZenithAngles(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("showcontourlines", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setZenithAngles(boolean selected) {
+    	props.setProperty("showcontourlines", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private String getDayNightOpacity(String defaultOpacity) {
+		return props.getProperty("daynightopacity", defaultOpacity);
+	}
+	
+	private void setDayNightOpacity(boolean rendered, int fillLevel) {
+		String setting = "0";
+		
+		if (rendered) {
+			if (fillLevel == 224)
+				setting = "1";
+			else if (fillLevel == 255)
+				setting = "2";
+		}
+			
+    	props.setProperty("daynightopacity", setting);
+    	saveSettingsToProps();
+	}
+	
+	private boolean getMickeyFace(boolean defaultSelected) {
+		return stringToBoolean(props.getProperty("usemickeyface", (defaultSelected ? "1" : "0")));
+	}
+	
+	private void setMickeyFace(boolean selected) {
+    	props.setProperty("usemickeyface", (selected ? "1" : "0"));
+    	saveSettingsToProps();
+	}
+	
+	private void setFromProps() {
+		celestialObjects.setLatitude(getPropertiesLatitude());
+		celestialObjects.setLongitude(getPropertiesLongitude());
+		boolean tempBoolean = getRailwayStyle(true);
+		celestialObjects.setRailwayStyleClock(tempBoolean);
+		railwayStyleMenu.setSelected(tempBoolean);
+
+		tempBoolean = getTwentyFourHourStyle(true);
+		celestialObjects.setTwentyFourHourClock(tempBoolean);
+		twentyFourHourStyleMenu.setSelected(tempBoolean);
+
+		tempBoolean = getZenithAngles(true);
+		celestialObjects.setRenderContourLines(tempBoolean);
+		zenithAnglesMenu.setSelected(tempBoolean);
+
+		
+		String opacity = getDayNightOpacity("1");
+		if ("0".equals(opacity)) {
+			celestialObjects.setDayNightRendered(false);
+		} else if ("1".equals(opacity)) {
+			celestialObjects.setDayNightRendered(true);
+			celestialObjects.setDayNightFillLevel(224);
+		} else if ("2".equals(opacity)) {
+			celestialObjects.setDayNightRendered(true);
+			celestialObjects.setDayNightFillLevel(255);
+		}
+		updateDayNightsMenu();
+		
+		mickeyFace = getMickeyFace(true);
+        mickeyFaceMenu.setSelected(mickeyFace);
+        celestialObjects.setClockFace(mickeyFace);
+    }
+	
+	private void updateDayNightsMenu() {
+		if (! celestialObjects.isDayNightRendered()) {
+			dayNightOffMenu.setSelected(true);
+			dayNightPartialMenu.setSelected(false);
+			dayNightFullMenu.setSelected(false);
+		} else {
+			dayNightOffMenu.setSelected(false);
+			
+			if (celestialObjects.getDayNightFillLevel() == 224) {
+				dayNightPartialMenu.setSelected(true);
+				dayNightFullMenu.setSelected(false);
+			}
+			else {
+				dayNightPartialMenu.setSelected(false);
+				dayNightFullMenu.setSelected(true);
+			}				
+		}
+	}
+	
+	private void updateSpeedMenu() {
+		updateSpeedMenu(celestialObjects.getCurrentSpeed());
+	}
+	
+	private void updateSpeedMenu(int speedIndex) {
+		for (int scanSpeeds = 0;scanSpeeds < speedSettings.length;scanSpeeds ++) {
+			speedSettings[scanSpeeds].setSelected(scanSpeeds == speedIndex);
+		}
+		
+		int newInterval;
+		int speedHint = celestialObjects.animateSpeedHint();
+		if (speedHint == 0)
+			newInterval = 1000;
+		else if (speedHint == 1)
+			newInterval = 16;
+		else
+			newInterval = 250;
+		if (newInterval != timerInterval) {
+			timerInterval = newInterval;
+			toggleTimer();
+			toggleTimer();
+		}
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 	}
 	
 	private void updateTimerMenu() {
@@ -3367,7 +3680,15 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 		}
 	}
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+	
+	private void redrawClock() {
+		if ((! timerRunning) && (! canvas.isCurrentlyRendering()))
+			updateObjects();
+	}
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 
 	private void toggleTimer()
 	{
@@ -3409,7 +3730,25 @@ public class MainFrame extends JFrame {
 
 	public void animate(me.qbert.skywatch.util.AnimationTimer timer)
 	{
-		updateObjects();
+		if (! canvas.isCurrentlyRendering())
+			updateObjects();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			device.setFullScreenWindow(null);
+			menubar.setVisible(true);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 <<<<<<< HEAD
 
