@@ -40,6 +40,9 @@ public class TextRenderer extends AbstractFractionRenderer {
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
 //		System.out.println("??? TEXT RENDERER: " + (int)getBoundaryLeft() + ", + " + (int)getBoundaryTop() + ", + " + (int)getBoundaryWidth() + ", + " + (int)getBoundaryHeight());
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		g2d.drawString(text, p.x, p.y);

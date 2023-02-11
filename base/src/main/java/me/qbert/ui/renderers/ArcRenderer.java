@@ -24,14 +24,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class ArcRenderer extends AbstractFractionRenderer {
 	private AbstractCoordinateTransformation coordinate;
-	private int width;
-	private int height;
+	private AbstractCoordinateTransformation arcSize;
 	private int startAngle;
 	private int arcAngle;
 	
 	private boolean fill;
 
-	public ArcRenderer(int coordinatesType) throws Exception {
+	public ArcRenderer(int coordinatesType, int sizeCoordinatesType) throws Exception {
 		if (coordinatesType == ABSOLUTE_COORDINATES) {
 			coordinate = new AbsoluteCoordinateTransformation();
 		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
@@ -39,22 +38,36 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		} else {
 			throw new Exception("coordinates type " + coordinatesType + " is invalid");
 		}
+		
+		if (sizeCoordinatesType == ABSOLUTE_COORDINATES) {
+			arcSize = new AbsoluteCoordinateTransformation();
+			((AbsoluteCoordinateTransformation)arcSize).setFloatTransformation(true);
+		} else if (sizeCoordinatesType == FRACTIONAL_COORDINATES) {
+			arcSize = new FractionCoordinateTransformation();
+			((FractionCoordinateTransformation)arcSize).setFloatTransformation(true);
+		} else {
+			throw new Exception("coordinates type " + sizeCoordinatesType + " is invalid");
+		}
 	}
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
 		int x;
 		int y;
 		
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
+		Point s = arcSize.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		
-		x = p.x - ((this.width - 1) / 2);
-		y = p.y - ((this.height - 1) / 2);
+		x = p.x - ((s.x - 1) / 2) - 1;
+		y = p.y - ((s.y - 1) / 2) - 1;
 		
 		if (fill)
-			g2d.fillArc(x, y, this.width, this.height, startAngle, arcAngle);
+			g2d.fillArc(x, y, s.x, s.y, startAngle, arcAngle);
 		else
-			g2d.drawArc(x, y, this.width, this.height, startAngle, arcAngle);
+			g2d.drawArc(x, y, s.x, s.y, startAngle, arcAngle);
 	}
 
 	public double getX() {
@@ -73,20 +86,20 @@ public class ArcRenderer extends AbstractFractionRenderer {
 		coordinate.setY(fractionY);
 	}
 	
-	public int getWidth() {
-		return width;
+	public double getWidth() {
+		return arcSize.getX();
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setWidth(double width) {
+		arcSize.setX(width);
 	}
 
-	public int getHeight() {
-		return height;
+	public double getHeight() {
+		return arcSize.getY();
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
+	public void setHeight(double height) {
+		arcSize.setY(height);
 	}
 
 	public int getStartAngle() {

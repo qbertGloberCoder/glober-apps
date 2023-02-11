@@ -50,6 +50,9 @@ public class BoundaryContainerRenderer extends AbstractFractionRenderer {
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
 		for (RendererI renderer : renderers) {
 			renderer.renderComponent(g2d);
 		}

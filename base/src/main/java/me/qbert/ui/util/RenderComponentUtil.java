@@ -85,7 +85,7 @@ public class RenderComponentUtil {
 	}
 	
 	public ArcRenderer drawCircle(double xPercent, double yPercent, int radius) throws Exception {
-		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
+		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();

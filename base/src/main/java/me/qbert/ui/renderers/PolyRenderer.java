@@ -51,6 +51,9 @@ public class PolyRenderer extends AbstractFractionRenderer {
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
 		if (lineSegments == null)
 			return;
 		

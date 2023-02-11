@@ -1,7 +1,10 @@
 package me.qbert.ui.renderers;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.util.ArrayList;
 
 import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
@@ -24,7 +27,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class LineRenderer extends AbstractFractionRenderer {
-	ArrayList<AbstractCoordinateTransformation[]> lineSegments;
+	private ArrayList<AbstractCoordinateTransformation[]> lineSegments;
+	private Double lineWidth = null;
+	private int lineWidthTransformType;
+	
+	private double alphaChannel = 1.0;
 	
 	private int coordinatesType;
 	
@@ -57,6 +64,12 @@ public class LineRenderer extends AbstractFractionRenderer {
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
+		if (alphaChannel <= 0.0)
+			return;
+		
 		if (lineSegments == null)
 			return;
 		
@@ -65,6 +78,31 @@ public class LineRenderer extends AbstractFractionRenderer {
 		int width = (int)getBoundaryWidth();
 		int height = (int)getBoundaryHeight();
 
+		Stroke savedStroke = null;
+		if ((lineWidth != null) && ((lineWidthTransformType == ABSOLUTE_COORDINATES) || (lineWidthTransformType == FRACTIONAL_COORDINATES))) {
+			savedStroke = g2d.getStroke();
+			int stroke = 1;
+			if (lineWidthTransformType == ABSOLUTE_COORDINATES)
+				stroke = lineWidth.intValue();
+			else if (lineWidthTransformType == FRACTIONAL_COORDINATES)
+				stroke = (int)(lineWidth * (width + height) / 2);
+			
+			g2d.setStroke(new BasicStroke(stroke));
+		}
+		
+		Color lastBgColor = null;
+		Color lastColor = null;
+		
+		if (alphaChannel <= 1.0) {
+			lastBgColor = g2d.getBackground();
+			lastColor = g2d.getColor();
+			
+			Color c = new Color(lastBgColor.getRed(), lastBgColor.getGreen(), lastBgColor.getBlue(), (int)(255.0 * alphaChannel));
+			g2d.setBackground(c);
+			c = new Color(lastColor.getRed(), lastColor.getGreen(), lastColor.getBlue(), (int)(255.0 * alphaChannel));
+			g2d.setColor(c);
+		}
+		
 		for (int i = 0;i < lineSegments.size();i ++) {
 			AbstractCoordinateTransformation [] linePair = lineSegments.get(i);
 			
@@ -72,6 +110,14 @@ public class LineRenderer extends AbstractFractionRenderer {
 			Point p2 = linePair[1].transform(left, top, width, height);
 			g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
 		}
+		
+		if (lastBgColor != null)
+			g2d.setBackground(lastBgColor);
+		if (lastColor != null)
+			g2d.setColor(lastColor);
+		
+		if (savedStroke != null)
+			g2d.setStroke(savedStroke);
 	}
 
 	public double getX1() {
@@ -170,4 +216,18 @@ public class LineRenderer extends AbstractFractionRenderer {
 			lineSegments.get(i)[1].setY(yArray[i]);
 		}
 	}
+
+	public Double getLineWidth() {
+		return lineWidth;
+	}
+
+	public int getLineWidthTransformType() {
+		return lineWidthTransformType;
+	}
+
+	public void setLineWidth(Double lineWidth, int lineWidthTransformType) {
+		this.lineWidth = lineWidth;
+		this.lineWidthTransformType = lineWidthTransformType;
+	}
+	
 }

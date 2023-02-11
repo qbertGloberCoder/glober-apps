@@ -38,6 +38,9 @@ public class PointRenderer extends AbstractFractionRenderer {
 	
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+		if (! isRenderComponent())
+			return;
+		
 		// Best alternative is to somehow get the canvas and setRGB on the canvas... This is easier
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		g2d.drawLine(p.x, p.y, p.x, p.y);

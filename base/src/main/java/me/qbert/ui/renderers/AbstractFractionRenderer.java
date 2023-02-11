@@ -23,6 +23,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	public static final int ABSOLUTE_COORDINATES = 1;
 	public static final int FRACTIONAL_COORDINATES = 2;
 	
+	private boolean renderComponent = true;
+	
 	private boolean maintainAspectRatio = true;
 	
 	private double boundaryLeft = 0;
@@ -66,6 +68,14 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		
 		return p;
 		
+	}
+
+	public boolean isRenderComponent() {
+		return renderComponent;
+	}
+
+	public void setRenderComponent(boolean renderComponent) {
+		this.renderComponent = renderComponent;
 	}
 
 	public boolean isMaintainAspectRatio() {
