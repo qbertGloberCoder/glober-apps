@@ -2,21 +2,28 @@ package me.qbert.ui.renderers;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.image.BufferedImage;
 import java.io.File;
 =======
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+=======
+import java.awt.Graphics2D;
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 import java.awt.image.BufferedImage;
 import java.io.File;
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -33,6 +40,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 public class ImageRenderer extends AbstractImageRenderer {
@@ -83,6 +91,10 @@ public class ImageRenderer extends AbstractImageRenderer {
 public class ImageRenderer extends AbstractFractionRenderer {
 	private BufferedImage originalImage;
 	private BufferedImage overlayImage;
+=======
+public class ImageRenderer extends AbstractFractionRenderer {
+	private BufferedImage originalImage;
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	private BufferedImage image;
 
 	private double lastRotatedAngle = -9999999999.999;
@@ -95,6 +107,7 @@ public class ImageRenderer extends AbstractFractionRenderer {
 	private double boundMaximumXFraction;
 	private double boundMaximumYFraction;
 	
+<<<<<<< HEAD
 =======
 public class ImageRenderer extends AbstractImageRenderer {
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
@@ -152,6 +165,17 @@ public class ImageRenderer extends AbstractImageRenderer {
 	public void setOriginalOverlay(BufferedImage overlayImage) {
 		image = null;
 		this.overlayImage = overlayImage;
+=======
+	public ImageRenderer(File imageFile) {
+		boundMinimumXFraction = boundMinimumYFraction = 0.0;
+		boundMaximumXFraction = boundMaximumYFraction = 1.0;
+
+		try {
+			originalImage = loadImageFromFile(imageFile);
+		} catch (Exception e) {
+			originalImage = null;
+		}
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	}
 
     private BufferedImage loadImageFromFile(File file) throws NullPointerException,IOException {
@@ -173,13 +197,18 @@ public class ImageRenderer extends AbstractImageRenderer {
     	return newFile;
     }
     
+<<<<<<< HEAD
     protected void resetImage() {
+=======
+    private void resetImage() {
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
     	image = null;
     	if (originalImage == null)
     		return;
     	
     	lastRotatedAngle = rotateAngle;
     	
+<<<<<<< HEAD
     	image = new BufferedImage((int)getBoundaryWidth(),
     			(int)getBoundaryHeight(), BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2d = image.createGraphics();
@@ -205,16 +234,36 @@ public class ImageRenderer extends AbstractImageRenderer {
 	    	g2d.drawImage(overlayImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0, overlayImage.getWidth(), overlayImage.getHeight(), null);	    	
 	    }
 	    
+=======
+    	if (rotateAngle == 0.0)
+    		image = originalImage;
+    	
+    	image = new BufferedImage(originalImage.getWidth(),
+	    		originalImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2d = image.createGraphics();
+//	    g2d.drawImage(originalImage, 0, 0, null);
+	    
+	    if ((rotateX < 0) || (rotateY < 0))
+	    	g2d.rotate(Math.toRadians(rotateAngle), originalImage.getWidth() / 2, originalImage.getHeight() / 2);
+	    else
+	    	g2d.rotate(Math.toRadians(rotateAngle), rotateX, rotateY);
+	    g2d.drawImage(originalImage, null, 0, 0);
+        
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	    g2d.dispose();
     }
     
 	@Override
 	public void renderComponent(Graphics2D g2d) {
+<<<<<<< HEAD
 		if (! isRenderComponent())
 			return;
 		
 		if ((image == null) || (lastRotatedAngle != rotateAngle) || ((int)getBoundaryWidth() != image.getWidth()) ||
 				((int)getBoundaryHeight() != image.getHeight())) {
+=======
+		if ((image == null) || (lastRotatedAngle != rotateAngle)) {
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			resetImage();
 		}
 		
@@ -289,9 +338,12 @@ public class ImageRenderer extends AbstractImageRenderer {
 
 	public void setBoundMaximumYFraction(double boundMaximumYFraction) {
 		this.boundMaximumYFraction = boundMaximumYFraction;
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 		setOriginalOverlay(image);
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	}
 }

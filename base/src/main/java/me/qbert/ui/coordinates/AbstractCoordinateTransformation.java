@@ -4,6 +4,7 @@ import me.qbert.ui.CoordinatesTransformationI;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 /*
@@ -26,6 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 public abstract class AbstractCoordinateTransformation implements CoordinatesTransformationI {
 	private double x;
 	private double y;

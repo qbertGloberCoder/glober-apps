@@ -87,6 +87,7 @@ public class RenderComponentUtil {
 	public ArcRenderer drawCircle(double xPercent, double yPercent, int radius) throws Exception {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
 =======
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
@@ -94,6 +95,9 @@ public class RenderComponentUtil {
 =======
 		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+		ArcRenderer r = new ArcRenderer(ArcRenderer.ABSOLUTE_COORDINATES);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 		
 		int w = targetFrame.getWidth();
 		int h = targetFrame.getWidth();

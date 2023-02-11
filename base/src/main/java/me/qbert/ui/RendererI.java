@@ -21,11 +21,14 @@ public interface RendererI {
 	public void renderComponent(Graphics2D g2d);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public double getAspectRatio();
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 	public double getAspectRatio();
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight);
 }

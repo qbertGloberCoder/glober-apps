@@ -5,6 +5,7 @@ import java.awt.Point;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
 /*
@@ -73,4 +74,14 @@ public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransfor
 		this.floatTransformation = floatTransformation;
 	}
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+public class AbsoluteCoordinateTransformation extends AbstractCoordinateTransformation {
+	@Override
+	public Point transform(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
+		int x = dimensionLeftX + (int)(getX());
+		int y = dimensionTopY + (int)(getY());
+		
+		return new Point(x, y);
+	}
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 }

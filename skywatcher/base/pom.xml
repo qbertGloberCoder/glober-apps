@@ -14,6 +14,7 @@
   <packaging>jar</packaging>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   <version>1.2.0</version>
 =======
   <version>1.1.0</version>
@@ -21,6 +22,9 @@
 =======
   <version>1.2.0</version>
 >>>>>>> 71e1364 (update pom version, add a time bias (or current time shift) to the time, add sun and moon precession calculators)
+=======
+  <version>1.1.0</version>
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
   <name>skywatcher base</name>
   <url>http://maven.apache.org</url>
     <properties>

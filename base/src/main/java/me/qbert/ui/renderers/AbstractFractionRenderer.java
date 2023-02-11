@@ -5,6 +5,7 @@ import java.awt.Point;
 import me.qbert.ui.RendererI;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
 import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
 import me.qbert.ui.coordinates.FractionCoordinateTransformation;
@@ -15,6 +16,8 @@ import me.qbert.ui.coordinates.AbsoluteCoordinateTransformation;
 import me.qbert.ui.coordinates.AbstractCoordinateTransformation;
 import me.qbert.ui.coordinates.FractionCoordinateTransformation;
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -37,6 +40,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
 	private boolean renderComponent = true;
@@ -50,6 +54,9 @@ public abstract class AbstractFractionRenderer implements RendererI {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+	private boolean maintainAspectRatio = true;
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	
 	private double boundaryLeft = 0;
 	private double boundaryTop = 0;
@@ -59,6 +66,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	private Point topLeft;
 	private Point bottomRight;
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -73,6 +81,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	@Override
 	public void setRenderDimensions(int dimensionLeftX, int dimensionTopY, int dimensionWidth, int dimensionHeight) {
 		boundaryLeft = (double)dimensionLeftX;
@@ -80,6 +90,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		boundaryWidth = (double)dimensionWidth;
 		boundaryHeight = (double)dimensionHeight;
 		
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 		double aspectRatio = 1.0;
@@ -160,11 +171,27 @@ public abstract class AbstractFractionRenderer implements RendererI {
 //		if (debug)
 //			System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+		if (maintainAspectRatio) {
+			if (boundaryWidth > boundaryHeight) {
+				// width is greater than height
+				boundaryWidth = boundaryHeight;
+				boundaryLeft = (((double)dimensionWidth - boundaryHeight) / 2.0);
+			} else if (boundaryWidth < boundaryHeight) {
+				// height is greater than width
+				boundaryHeight = boundaryWidth;
+				boundaryTop = (((double)dimensionHeight - boundaryWidth) / 2.0);
+			}
+		}
+		
+//		System.out.println(this.getClass().getName() + " SET: " + dimensionLeftX + ", + " + dimensionTopY + ", + " + dimensionWidth + ", + " + dimensionHeight + " --> " + boundaryLeft + ", + " + boundaryTop+ ", + " + boundaryWidth + ", + " + boundaryHeight);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 		
 		topLeft = convertFractionToPoint(0.0, 0.0);
 		bottomRight = convertFractionToPoint(1.0, 1.0);
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -198,6 +225,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	protected Point convertFractionToPoint(double fractionX, double fractionY) {
 		int x = (int)(boundaryLeft + (boundaryWidth * fractionX));
 		int y = (int)(boundaryTop + (boundaryHeight * fractionY));
@@ -207,6 +236,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		return p;
 		
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -257,6 +287,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	public void setRenderComponent(boolean renderComponent) {
 		this.renderComponent = renderComponent;
 	}
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
 	public boolean isMaintainAspectRatio() {
 		return maintainAspectRatio;

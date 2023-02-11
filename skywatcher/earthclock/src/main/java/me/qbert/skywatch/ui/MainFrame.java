@@ -3,6 +3,7 @@ package me.qbert.skywatch.ui;
 import java.awt.BorderLayout;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
@@ -54,10 +55,26 @@ import javax.swing.JLabel;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.Timer;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 import javax.swing.JScrollBar;
@@ -95,6 +112,26 @@ import me.qbert.ui.util.RenderComponentUtil;
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import me.qbert.skywatch.astro.CelestialObject;
+import me.qbert.skywatch.astro.ObservationTime;
+import me.qbert.skywatch.astro.ObserverLocation;
+import me.qbert.skywatch.astro.impl.SunObject;
+import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.model.ObjectDirectionAltAz;
+import me.qbert.skywatch.service.CelestialObjects;
+import me.qbert.skywatch.ui.component.Canvas;
+import me.qbert.skywatch.util.AnimationTimer;
+import me.qbert.ui.RendererI;
+import me.qbert.ui.renderers.ImageRenderer;
+import me.qbert.ui.util.RenderComponentUtil;
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -113,6 +150,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class MainFrame extends JFrame implements KeyListener {
 =======
 public class MainFrame extends JFrame {
@@ -120,11 +158,15 @@ public class MainFrame extends JFrame {
 =======
 public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+public class MainFrame extends JFrame {
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2330068972046366353L;
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	private JMenuBar menubar;
@@ -192,6 +234,11 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 =======
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+	private JCheckBoxMenuItem timerMenu;
+	private JCheckBoxMenuItem railwayStyleMenu;
+	
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	private Canvas canvas;
 	
 	private boolean timerRunning = false;
@@ -200,6 +247,7 @@ public class MainFrame extends JFrame implements KeyListener {
     
     private int timerInterval = 1000;
     
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     private AbstractCelestialObjects celestialObjects;
@@ -238,10 +286,15 @@ public class MainFrame extends JFrame implements KeyListener {
     private int frame = 1;
     
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+    private CelestialObjects celestialObjects;
+	
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	public MainFrame() {
 		super("Multi-transformation earth clock");
 		
         //Creating the MenuBar and adding components
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         menubar = new JMenuBar();
@@ -462,10 +515,16 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
         JMenu m1 = new JMenu("File");
         menubar.add(m1);
+=======
+        JMenuBar mb = new JMenuBar();
+        JMenu m1 = new JMenu("File");
+        mb.add(m1);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         JMenuItem m11 = new JMenuItem("Exit");
         m1.add(m11);
 
         JMenu m2 = new JMenu("Options");
+<<<<<<< HEAD
 <<<<<<< HEAD
         mb.add(m2);
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -566,10 +625,14 @@ public class MainFrame extends JFrame implements KeyListener {
         m2.add(new JSeparator());
         
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+        mb.add(m2);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         timerMenu = new JCheckBoxMenuItem("Timer");
         m2.add(timerMenu);
         railwayStyleMenu = new JCheckBoxMenuItem("Swiss railway style");
         m2.add(railwayStyleMenu);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -730,10 +793,16 @@ public class MainFrame extends JFrame implements KeyListener {
         JMenu m3 = new JMenu("Speed");
         menubar.add(m3);
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+
+        JMenu m3 = new JMenu("Speed");
+        mb.add(m3);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         JMenuItem timerSpeedDown = new JMenuItem("Slow Down");
         m3.add(timerSpeedDown);
         JMenuItem timerSpeedUp = new JMenuItem("Speed Up");
         m3.add(timerSpeedUp);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         
@@ -781,6 +850,11 @@ public class MainFrame extends JFrame implements KeyListener {
         JMenu m4 = new JMenu("Location");
         menubar.add(m4);
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+
+        JMenu m4 = new JMenu("Location");
+        mb.add(m4);
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         JMenuItem latPicker = new JMenuItem("Latitude");
         m4.add(latPicker);
         JMenuItem lonPicker = new JMenuItem("Longitude");
@@ -793,6 +867,7 @@ public class MainFrame extends JFrame implements KeyListener {
 			}
 		});
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -831,6 +906,8 @@ public class MainFrame extends JFrame implements KeyListener {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         timerMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -843,6 +920,7 @@ public class MainFrame extends JFrame implements KeyListener {
 			public void actionPerformed(ActionEvent e) {
 				celestialObjects.setRailwayStyleClock(! celestialObjects.isRailwayStyleClock());
 				railwayStyleMenu.setSelected(celestialObjects.isRailwayStyleClock());
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1015,6 +1093,8 @@ public class MainFrame extends JFrame implements KeyListener {
 				updateMoonDayNightsMenu();
 				redrawClock();
 				setMoonDayNightOpacity(celestialObjects.isMoonDayNightRendered());
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			}
 		});
         
@@ -1024,8 +1104,11 @@ public class MainFrame extends JFrame implements KeyListener {
 				celestialObjects.speedDown();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				updateSpeedMenu();
 =======
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 				int newInterval;
 				int speedHint = celestialObjects.animateSpeedHint();
 				if (speedHint == 0)
@@ -1039,10 +1122,13 @@ public class MainFrame extends JFrame implements KeyListener {
 					toggleTimer();
 					toggleTimer();
 				}
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 				updateSpeedMenu();
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			}
 		});
         
@@ -1052,8 +1138,11 @@ public class MainFrame extends JFrame implements KeyListener {
 				celestialObjects.speedUp();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				updateSpeedMenu();
 =======
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 				int newInterval;
 				int speedHint = celestialObjects.animateSpeedHint();
 				if (speedHint == 0)
@@ -1067,10 +1156,13 @@ public class MainFrame extends JFrame implements KeyListener {
 					toggleTimer();
 					toggleTimer();
 				}
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 				updateSpeedMenu();
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			}
 		});
         
@@ -1078,6 +1170,7 @@ public class MainFrame extends JFrame implements KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();   
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1094,6 +1187,8 @@ public class MainFrame extends JFrame implements KeyListener {
 			    }
 				redrawClock();
 =======
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			    String latitude = JOptionPane.showInputDialog(f, "Enter Latitude");
 			    try {
 			    	Double d = new Double(latitude);
@@ -1101,11 +1196,14 @@ public class MainFrame extends JFrame implements KeyListener {
 			    } catch (NumberFormatException ex) {
 			    	
 			    }
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 			    }
 				redrawClock();
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			}
 		});
         
@@ -1113,6 +1211,7 @@ public class MainFrame extends JFrame implements KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();   
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1156,12 +1255,15 @@ public class MainFrame extends JFrame implements KeyListener {
 		});
         
 =======
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			    String longitude = JOptionPane.showInputDialog(f, "Enter Longitude");
 			    try {
 			    	Double d = new Double(longitude);
 			    	celestialObjects.setLongitude(d);
 			    } catch (NumberFormatException ex) {
 			    	
+<<<<<<< HEAD
 =======
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 			    }
@@ -1196,6 +1298,19 @@ public class MainFrame extends JFrame implements KeyListener {
 		});
         
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+			    }
+			}
+		});
+        
+        updateTimerMenu();
+
+        canvas = new Canvas();
+        
+        //Adding Components to the frame.
+        getContentPane().add(BorderLayout.NORTH, mb);
+        getContentPane().add(BorderLayout.CENTER, new JScrollPane(canvas));
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(600, 600));
@@ -1209,6 +1324,7 @@ public class MainFrame extends JFrame implements KeyListener {
         pack();       
         setVisible(true);
         
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1683,11 +1799,14 @@ public class MainFrame extends JFrame implements KeyListener {
 			toggleTimer();
 		}
 =======
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
         try {
 			celestialObjects = new CelestialObjects(canvas);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+<<<<<<< HEAD
         
         updateTimerMenu();
         updateSpeedMenu(0);
@@ -2179,12 +2298,20 @@ public class MainFrame extends JFrame implements KeyListener {
 			toggleTimer();
 		}
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+        updateObjects();
+        
+        if (timerRunning == false)
+        	toggleTimer();
+        railwayStyleMenu.setSelected(celestialObjects.isRailwayStyleClock());
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	}
 	
 	private void updateTimerMenu() {
 		timerMenu.setSelected(timerRunning);
 	}
 	
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -2278,11 +2405,20 @@ public class MainFrame extends JFrame implements KeyListener {
 			updateObjects();
 	}
 >>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
+=======
+	private void updateObjects() {
+		try {
+			celestialObjects.updateObjects();
+		} catch (Exception e) {
+		}
+	}
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 
 	private void toggleTimer()
 	{
 		if (! timerRunning)
 		{
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 			celestialObjects.resetDayNightRender();
@@ -2291,6 +2427,8 @@ public class MainFrame extends JFrame implements KeyListener {
 =======
 			celestialObjects.resetDayNightRender();
 >>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 			timerRunning = true;
 			timer = new Timer();
 			animationTimer = new AnimationTimer(this);
@@ -2311,6 +2449,7 @@ public class MainFrame extends JFrame implements KeyListener {
 	{
 		updateObjects();
 	}
+<<<<<<< HEAD
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -2348,4 +2487,6 @@ public class MainFrame extends JFrame implements KeyListener {
 	}
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 }

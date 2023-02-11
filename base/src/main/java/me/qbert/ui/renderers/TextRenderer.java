@@ -38,6 +38,7 @@ public class TextRenderer extends AbstractFractionRenderer {
 		}
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 	@Override
 	public double getAspectRatio() {
@@ -62,6 +63,11 @@ public class TextRenderer extends AbstractFractionRenderer {
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
 =======
 >>>>>>> d611045 (many changes in the base UI to support the earth clock app)
+=======
+	
+	@Override
+	public void renderComponent(Graphics2D g2d) {
+>>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 //		System.out.println("??? TEXT RENDERER: " + (int)getBoundaryLeft() + ", + " + (int)getBoundaryTop() + ", + " + (int)getBoundaryWidth() + ", + " + (int)getBoundaryHeight());
 		Point p = coordinate.transform((int)getBoundaryLeft(), (int)getBoundaryTop(), (int)getBoundaryWidth(), (int)getBoundaryHeight());
 		g2d.drawString(text, p.x, p.y);
