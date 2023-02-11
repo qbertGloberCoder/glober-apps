@@ -3,6 +3,7 @@ package me.qbert.skywatch.ui.component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class Canvas extends JPanel {
 	private List<RendererI> renderers = new ArrayList<RendererI>();
+	
+	private boolean currentlyRendering = false;
 
     private void doDrawing(Graphics g) {
+    	currentlyRendering = true;
+    	
         Graphics2D g2d = (Graphics2D) g.create();
 
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
@@ -43,9 +48,13 @@ public class Canvas extends JPanel {
         int height = getHeight();
 
         for (RendererI renderer : renderers) {
+        	AffineTransform oldXForm = g2d.getTransform();
         	renderer.setRenderDimensions(0, 0, width, height);
         	renderer.renderComponent(g2d);
+        	g2d.setTransform(oldXForm);
         }
+        
+        currentlyRendering = false;
     }
 
     @Override
@@ -61,5 +70,9 @@ public class Canvas extends JPanel {
 
 	public void setRenderers(List<RendererI> renderers) {
 		this.renderers = renderers;
+	}
+	
+	public boolean isCurrentlyRendering() {
+		return currentlyRendering;
 	}
 }
