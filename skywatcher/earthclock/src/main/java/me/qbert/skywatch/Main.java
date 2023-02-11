@@ -1,5 +1,8 @@
 package me.qbert.skywatch;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import me.qbert.skywatch.ui.MainFrame;
 
 /*
@@ -19,6 +22,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class Main {
 	public static void main(String[] args) {
+		if (System.getProperty("os.name").startsWith("Linux")) {
+			if ((args.length < 1) || (! "nogl".equals(args[0]))) {
+		    	System.out.println("setting up opengl");
+		    	
+		    	System.setProperty("sun.java2d.opengl", "True");
+				
+		        // set system look and feel
+		        try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		MainFrame mainFrame = new MainFrame();
 	}
 }
