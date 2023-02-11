@@ -12,7 +12,11 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+<<<<<<< HEAD
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+import java.awt.geom.AffineTransform;
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,8 +70,12 @@ public class Canvas extends JPanel {
     private void renderComponents(Graphics2D g2d, int width, int height) {
 =======
 	private List<RendererI> renderers = new ArrayList<RendererI>();
+	
+	private boolean currentlyRendering = false;
 
     private void doDrawing(Graphics g) {
+    	currentlyRendering = true;
+    	
         Graphics2D g2d = (Graphics2D) g.create();
 
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
@@ -165,9 +173,13 @@ public class Canvas extends JPanel {
         int height = getHeight();
 
         for (RendererI renderer : renderers) {
+        	AffineTransform oldXForm = g2d.getTransform();
         	renderer.setRenderDimensions(0, 0, width, height);
         	renderer.renderComponent(g2d);
+        	g2d.setTransform(oldXForm);
         }
+        
+        currentlyRendering = false;
     }
 
     @Override
@@ -186,10 +198,16 @@ public class Canvas extends JPanel {
 		this.renderers = renderers;
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 	
 	public boolean isCurrentlyRendering() {
 		return currentlyRendering;
 	}
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> e7880d8 (EARTH CLOCK VERSION 1.0 > add various view options, persist the settings)
 }
