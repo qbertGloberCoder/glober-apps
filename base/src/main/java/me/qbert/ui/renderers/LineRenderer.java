@@ -62,6 +62,7 @@ public class LineRenderer extends AbstractFractionRenderer {
 	private int lineConnectionMode = 1;
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public LineRenderer(int coordinatesType) throws Exception {
 		if ((coordinatesType == ABSOLUTE_COORDINATES) || (coordinatesType == FRACTIONAL_COORDINATES)) {
 			this.coordinatesType = coordinatesType;
@@ -98,6 +99,8 @@ public class LineRenderer extends AbstractFractionRenderer {
 	private int coordinatesType;
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	
+=======
+>>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 	public LineRenderer(int coordinatesType) throws Exception {
 		if ((coordinatesType == ABSOLUTE_COORDINATES) || (coordinatesType == FRACTIONAL_COORDINATES)) {
 			this.coordinatesType = coordinatesType;
@@ -106,6 +109,18 @@ public class LineRenderer extends AbstractFractionRenderer {
 		}
 		
 		initializeList(1);
+	}
+	
+	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
+	
+	public void setLineConnectionPacmanMode(boolean pacmanMode) {
+		if (pacmanMode)
+			lineConnectionMode = 2;
+		else
+			lineConnectionMode = 1;
 	}
 	
 	private void initializeList(int count) {
@@ -253,8 +268,11 @@ public class LineRenderer extends AbstractFractionRenderer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 63cfaa2 (new pom version, expand the UI renderers to support earth clock component rendering)
+=======
+>>>>>>> 21e91f4 (new pom version, expand the UI renderers to support earth clock component rendering)
 		if (lineSegments.size() > 0) {
 			double cutoff = Math.sqrt(width * width + height * height) * 2.0 / 3.0;
 

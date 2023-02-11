@@ -53,6 +53,11 @@ public class PointRenderer extends AbstractFractionRenderer {
 >>>>>>> dbf883f (add the first barely adequate version of the multi-transformation earth clock)
 	
 	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
+	
+	@Override
 	public void renderComponent(Graphics2D g2d) {
 		if (! isRenderComponent())
 			return;

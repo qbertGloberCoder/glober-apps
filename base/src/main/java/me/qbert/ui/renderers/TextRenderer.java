@@ -51,6 +51,11 @@ public class TextRenderer extends AbstractFractionRenderer {
 	}
 	
 	@Override
+	public double getAspectRatio() {
+		return -1.0;
+	}
+	
+	@Override
 	public void renderComponent(Graphics2D g2d) {
 		if (! isRenderComponent())
 			return;
