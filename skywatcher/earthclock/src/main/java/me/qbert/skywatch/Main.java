@@ -1,11 +1,17 @@
 package me.qbert.skywatch;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 import me.qbert.skywatch.ui.MainFrame;
 
 /*
@@ -26,6 +32,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 public class Main {
 	public static void main(String[] args) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 		if (System.getProperty("os.name").startsWith("Linux")) {
 			if ((args.length < 1) || (! "nogl".equals(args[0]))) {
 		    	System.out.println("setting up opengl");
@@ -42,8 +51,11 @@ public class Main {
 				}
 			}
 		}
+<<<<<<< HEAD
 =======
 >>>>>>> 701e448 (add the first barely adequate version of the multi-transformation earth clock)
+=======
+>>>>>>> 01fd089 (new pom version, revamp the earth clock to support multiple projections and lots of nifty new features)
 		MainFrame mainFrame = new MainFrame();
 	}
 }
