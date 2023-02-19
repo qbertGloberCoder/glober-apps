@@ -197,9 +197,9 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 		return activeProjection.isPacmanMode();
 	}
 
+
 	@Override
-	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary,
-			int yBoundary, double averageRadiusBoundary) {
-		return activeProjection.isPixelOutOfBounds(cartesianXCoordinate, cartesianYCoordinate, xBoundary, yBoundary, averageRadiusBoundary);
+	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		return activeProjection.getPixelOutOfBoundsXForY(cartesianYCoordinate, xBoundary, yBoundary, averageRadiusBoundary);
 	}
 }

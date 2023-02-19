@@ -1336,8 +1336,6 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			if (dayNightRenderer == moonIlluminationRenderer) {
 				if ((Math.abs(latitude - moonDayNightLatitude) < 0.5) && (Math.abs(longitude - moonDayNightLongitude) < 0.5) &&
 						(lastMoonDayNightDraw > nextDrawTime)) {
-					dayNightRenderer.invalidate();
-	
 					return;
 				}
 				
@@ -1347,8 +1345,6 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			} else {
 				if ((Math.abs(latitude - sunDayNightLatitude) < 0.5) && (Math.abs(longitude - sunDayNightLongitude) < 0.5) &&
 						(lastSunDayNightDraw > nextDrawTime)) {
-					dayNightRenderer.invalidate();
-	
 					return;
 				}
 				
@@ -1641,16 +1637,21 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		} 
 		
 		if (isDrawBoundary()) {
 			for (int y = 0;y < height;y ++) {
 				int cartesianY = y - (height / 2);
-				for (int x = 0;x < width;x ++) {
-					int cartesianX = x - (width / 2);
+				int pixelBoundX = getPixelOutOfBoundsXForY(cartesianY, width / 2, height / 2, averageRadius);
+				int leftBound = (width / 2) - pixelBoundX;
+				int rightBound = pixelBoundX + (width / 2);
+				for (int x = 0;x < leftBound;x ++) {
 					int i = y * width + x;
-					if ((rgbArray[i] != 0x00000000) && (isPixelOutOfBounds(cartesianX, cartesianY, width / 2, height / 2, averageRadius)))
-						rgbArray[i] = 0x00000000;
+					rgbArray[i] = 0x00000000;
+				}
+				for (int x = rightBound;x < width;x ++) {
+					int i = y * width + x;
+					rgbArray[i] = 0x00000000;
 				}
 			}
 		}
@@ -1686,7 +1687,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	}
 	
 	protected abstract boolean isPacmanMode();
-	protected abstract boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary);
+	protected abstract int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary);
 	
 	private void floodFill(int [] rgbArray, int width, int height, int x, int y, int rgbaValue, int fillFromRgba) {
 		boolean pacmanMode = isPacmanMode();
@@ -1730,17 +1731,29 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			if (lineFilled) {
 				if (lastLeftX != -1) {
 					scanX = x;
+					boolean aboveFlooded = false;
+					boolean belowFlooded = false;
 					while (scanX != lastLeftX) {
 						if (y > 0) {
 							if (rgbArray[(y - 1) * width + scanX] == fillFromRgba) {
-								floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
+								if (! aboveFlooded) {
+									floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
+									aboveFlooded = true;
+								}
 							}
+							else
+								aboveFlooded = false;
 						}
 						
 						if (y < height - 1) {
 							if (rgbArray[(y + 1) * width + scanX] == fillFromRgba) {
-								floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
+								if (! belowFlooded) {
+									floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
+									belowFlooded = true;
+								}
 							}
+							else
+								belowFlooded = false;
 						}
 	
 						scanX --;
@@ -1749,19 +1762,31 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 							scanX = width - 1;
 					}
 					
+					aboveFlooded = false;
+					belowFlooded = false;
 					if (lastRightX != -1) {
 						scanX = x + 1;
 						while (scanX != lastRightX) {
 							if (y > 0) {
 								if (rgbArray[(y - 1) * width + scanX] == fillFromRgba) {
-									floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
+									if (! aboveFlooded) {
+										floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
+										aboveFlooded = true;
+									}
 								}
+								else
+									aboveFlooded = false;
 							}
 							
 							if (y < height - 1) {
 								if (rgbArray[(y + 1) * width + scanX] == fillFromRgba) {
-									floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
+									if (! belowFlooded) {
+										floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
+										belowFlooded = true;
+									}
 								}
+								else
+									belowFlooded = false;
 							}
 							
 							scanX ++;

@@ -166,10 +166,7 @@ public class AzimuthalEquidistantNPPObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
-	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
-		double radius = Math.sqrt(cartesianXCoordinate*cartesianXCoordinate+cartesianYCoordinate*cartesianYCoordinate);
-		if (radius > averageRadiusBoundary)
-			return true;
-		return false;
+	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		return (int)Math.sqrt(averageRadiusBoundary*averageRadiusBoundary-cartesianYCoordinate*cartesianYCoordinate);
 	}
 }

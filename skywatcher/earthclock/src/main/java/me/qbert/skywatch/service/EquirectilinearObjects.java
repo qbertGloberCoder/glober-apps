@@ -196,10 +196,11 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 		return true;
 	}
 
+
 	@Override
-	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
-		if ((Math.abs(cartesianXCoordinate) > xBoundary) || (Math.abs(cartesianYCoordinate) > yBoundary))
-			return true;
-		return false;
+	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		if ((Math.abs(cartesianYCoordinate) > yBoundary))
+			return 0;
+		return xBoundary;
 	}
 }
