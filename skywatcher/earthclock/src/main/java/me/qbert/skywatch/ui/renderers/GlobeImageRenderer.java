@@ -85,16 +85,18 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 		
 	    int radius;
 	    
-	    int commonBorder = 5;
+	    int commonBorder = 0;
 	    int borderLeft = commonBorder;
-	    int borderTop = commonBorder;
+	    int borderTop = 128;
 	    int borderRight = commonBorder;
+	    int borderBottom = commonBorder;
 	    
 	    
 	    double latRad = Math.toRadians(latitude);
 	    double lonRad = Math.toRadians(longitude);
 
-		double pixelsPerDegree = (double)((inWidth - borderLeft - borderRight) - 2) / 360.0;
+		double pixelsPerDegreeX = (double)((inWidth - borderLeft - borderRight) - 2) / 360.0;
+		double pixelsPerDegreeY = (double)((inHeight - borderTop - borderBottom) - 2) / 180.0;
 	    
 	    if (outWidth > outHeight)
 	    	radius = outHeight / 2;
@@ -141,8 +143,8 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    		double mLat = Math.toDegrees(Math.atan2(ty,tr));
 	    		double mLon = Math.toDegrees(Math.atan2(tx,tz));
 	    		
-	    		int sx = (int)((inWidth/2.0) + borderLeft - 4 + (mLon * pixelsPerDegree));
-	    		int sy = (int)((inHeight / 2.0) + borderTop - 4 - (mLat * pixelsPerDegree));
+	    		int sx = (int)((inWidth/2.0) + borderLeft - 4 + (mLon * pixelsPerDegreeX));
+	    		int sy = (int)(((inHeight - borderTop - borderBottom) / 2.0) + borderTop - 4 - (mLat * pixelsPerDegreeY));
 	    		
 	    		try {
 	    			int dstX = destCenterX + x;

@@ -1,47 +1,15 @@
 package me.qbert.skywatch.service;
 
-import java.awt.Color;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
-
-import me.qbert.skywatch.astro.CelestialObject;
-import me.qbert.skywatch.astro.ObservationTime;
-import me.qbert.skywatch.astro.ObserverLocation;
-import me.qbert.skywatch.astro.TransactionalStateChangeListener;
-import me.qbert.skywatch.astro.impl.GeoCalculator;
-import me.qbert.skywatch.astro.impl.MoonObject;
-import me.qbert.skywatch.astro.impl.SunObject;
-import me.qbert.skywatch.astro.service.AbstractPrecession.PrecessionData;
-import me.qbert.skywatch.astro.service.MoonPrecession;
-import me.qbert.skywatch.astro.service.SunPrecession;
-import me.qbert.skywatch.exception.UninitializedObject;
-import me.qbert.skywatch.model.GeoLocation;
-import me.qbert.skywatch.model.ObjectDirectionAltAz;
-import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
-import me.qbert.skywatch.service.projections.EquirectilinearTransform;
 import me.qbert.skywatch.service.projections.GlobeTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.ui.renderers.GlobeImageRenderer;
 import me.qbert.skywatch.ui.renderers.RingClockImageRenderer;
-import me.qbert.ui.ImageTransformerI;
 import me.qbert.ui.RendererI;
-import me.qbert.ui.renderers.AbstractFractionRenderer;
 import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.ArcRenderer;
-import me.qbert.ui.renderers.BoundaryContainerRenderer;
-import me.qbert.ui.renderers.ColorRenderer;
-import me.qbert.ui.renderers.ImageRenderer;
-import me.qbert.ui.renderers.LineRenderer;
-import me.qbert.ui.renderers.PolyRenderer;
-import me.qbert.ui.renderers.TextRenderer;
-import me.qbert.ui.renderers.VirtualImageCanvasRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -154,8 +122,23 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	}
 	
 	@Override
-	protected boolean isDrawCircumference() {
-		return true;
+	protected RendererI getFillBoundaryRenderer() throws Exception {
+		ArcRenderer renderer = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.FRACTIONAL_COORDINATES);
+		renderer.setArcAngle(360);
+		renderer.setFill(false);
+		renderer.setMaintainAspectRatio(true);
+		renderer.setWidth(getCircumferenceSizeFraction());
+		renderer.setHeight(getCircumferenceSizeFraction());
+		renderer.setX(0.5);
+		renderer.setY(0.5);
+		
+		return renderer;
+	}
+	
+	@Override
+	protected void setRendererSizeFraction(RendererI renderer, double fraction) {
+		((ArcRenderer)renderer).setWidth(getCircumferenceSizeFraction());
+		((ArcRenderer)renderer).setHeight(getCircumferenceSizeFraction());
 	}
 	
 	@Override
@@ -203,17 +186,17 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
-	protected Double updateLocation(double latitude, double longitude) {
+	public Double updateLocation(double latitude, double longitude) {
 		return updateLocation(latitude, longitude, 0);
 	}
 
 	@Override
-	protected Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
 		return updateLocation(latitude, longitude, 0, renderFullCircumferenceSize);
 	}
 	
 	@Override
-	protected Double updateLocation(double latitude, double longitude, double observerLongitude) {
+	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
 		return updateLocation(latitude, longitude, observerLongitude, false);
 	}
 	
@@ -234,5 +217,13 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	public void setShowClock(boolean showClock) {
 		ringClockRenderer.setRenderComponent(showClock);
 		super.setShowClock(showClock);
+	}
+
+	@Override
+	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		double radius = Math.sqrt(cartesianXCoordinate*cartesianXCoordinate+cartesianYCoordinate*cartesianYCoordinate);
+		if (radius > averageRadiusBoundary)
+			return true;
+		return false;
 	}
 }

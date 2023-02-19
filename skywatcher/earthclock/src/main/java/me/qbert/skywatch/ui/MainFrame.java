@@ -751,28 +751,28 @@ public class MainFrame extends JFrame implements KeyListener {
 			aeMapSProjection.setSelected(false);
 			equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(false);
-			centerMapMenu.setEnabled(true);
+			centerModes[0].setEnabled(false);
 			globeFullSize.setEnabled(false);
         } else if (projectionIndex == 1) {
         	aeMapNProjection.setSelected(false);
 			aeMapSProjection.setSelected(false);
         	equirectilinearMapProjection.setSelected(true);
 			globeProjection.setSelected(false);
-			centerMapMenu.setEnabled(false);
+			centerModes[0].setEnabled(false);
 			globeFullSize.setEnabled(false);
         } else if (projectionIndex == 2) {
         	aeMapNProjection.setSelected(false);
 			aeMapSProjection.setSelected(true);
         	equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(false);
-			centerMapMenu.setEnabled(true);
+			centerModes[0].setEnabled(false);
 			globeFullSize.setEnabled(false);
         } else {
         	aeMapNProjection.setSelected(false);
 			aeMapSProjection.setSelected(false);
         	equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(true);
-			centerMapMenu.setEnabled(true);
+			centerModes[0].setEnabled(true);
 			globeFullSize.setEnabled(true);
         }
 	}

@@ -133,8 +133,13 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 	}
 	
 	@Override
-	protected boolean isDrawCircumference() {
-		return activeProjection.isDrawCircumference();
+	protected RendererI getFillBoundaryRenderer() throws Exception {
+		return activeProjection.getFillBoundaryRenderer();
+	}
+	
+	@Override
+	protected void setRendererSizeFraction(RendererI renderer, double fraction) {
+		activeProjection.setRendererSizeFraction(renderer, fraction);
 	}
 	
 	@Override
@@ -173,22 +178,28 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
-	protected Double updateLocation(double latitude, double longitude) {
+	public Double updateLocation(double latitude, double longitude) {
 		return activeProjection.updateLocation(latitude, longitude);
 	}
 
 	@Override
-	protected Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
 		return activeProjection.updateLocation(latitude, longitude, renderFullCircumferenceSize);
 	}
 	
 	@Override
-	protected Double updateLocation(double latitude, double longitude, double observerLongitude) {
+	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
 		return activeProjection.updateLocation(latitude, longitude, observerLongitude);
 	}
 	
 	@Override
 	protected boolean isPacmanMode() {
 		return activeProjection.isPacmanMode();
+	}
+
+	@Override
+	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary,
+			int yBoundary, double averageRadiusBoundary) {
+		return activeProjection.isPixelOutOfBounds(cartesianXCoordinate, cartesianYCoordinate, xBoundary, yBoundary, averageRadiusBoundary);
 	}
 }

@@ -6,15 +6,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.astro.TransactionalStateChangeListener;
+import me.qbert.skywatch.astro.impl.AbstractCelestialObject;
 import me.qbert.skywatch.astro.impl.MoonObject;
+import me.qbert.skywatch.astro.impl.SolarObjects;
+import me.qbert.skywatch.astro.impl.StarObject;
 import me.qbert.skywatch.astro.impl.SunObject;
+import me.qbert.skywatch.dao.StarsCoordinateDao;
 import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.model.CelestialAddress;
+import me.qbert.skywatch.model.StarCoordinate;
 import me.qbert.skywatch.service.sequence.AltitudeAdvanceSequence;
 import me.qbert.skywatch.service.sequence.AnyAzimuthAdvanceSequence;
 import me.qbert.skywatch.service.sequence.AzimuthAdvanceSequence;
@@ -42,8 +49,10 @@ public class SequenceGenerator {
 	private ObserverLocation myLocation = new ObserverLocation();
 	private TransactionalStateChangeListener transactionalListener = new TransactionalStateChangeListener();
 	private ObservationTime time = new ObservationTime();
-	private CelestialObject sun;
+//	private CelestialObject sun;
 	private CelestialObject moon;
+	private AbstractCelestialObject solarObjects;
+	private List<CelestialObject> stars;
 
 	private int calendarField;
 	
@@ -57,18 +66,33 @@ public class SequenceGenerator {
 	
 	public SequenceGenerator() {
 		try {
-		time.initTime(TimeZone.getDefault());
-		time.setCurrentTime();
-		sun = SunObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
-		moon = MoonObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+			time.initTime(TimeZone.getDefault());
+			time.setCurrentTime();
+			solarObjects = (AbstractCelestialObject) SolarObjects.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+//			sun = SunObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+			moon = MoonObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+			
+			ArrayList<StarCoordinate> starCoordinates = StarsCoordinateDao.getLoadedStars();
+			
+			stars = new ArrayList<CelestialObject>();
+			
+			for (StarCoordinate star : starCoordinates) {
+				CelestialAddress starAddress = new CelestialAddress();
+				starAddress.setAddress(star.getRightAscension(), star.getDeclination());
+				CelestialObject starObj = StarObject.create().setStarLocation(starAddress).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+				transactionalListener.addListener(starObj);
+				stars.add(starObj);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			time = null;
-			sun = null;
+			solarObjects = null;
+//			sun = null;
 			moon = null;
 		}
 		
-		transactionalListener.addListener(sun);
+		transactionalListener.addListener(solarObjects);
+//		transactionalListener.addListener(sun);
 		transactionalListener.addListener(moon);
 		
 		myLocation.setGeoLocation(0.0, 0.0);
@@ -125,7 +149,7 @@ public class SequenceGenerator {
 					SequenceElementI si = null;
 					if (tmp.startsWith("sun ")) {
 						d = new Double(tmp.replaceFirst("^sun  *", ""));
-						si = new AltitudeAdvanceSequence(sun, time, d);
+						si = new AltitudeAdvanceSequence(solarObjects, time, d);
 					} else if (tmp.startsWith("moon ")) {
 						d = new Double(tmp.replaceFirst("^moon  *", ""));
 						si = new AltitudeAdvanceSequence(moon, time, d);
@@ -141,7 +165,7 @@ public class SequenceGenerator {
 					SequenceElementI si = null;
 					if (tmp.startsWith("sun ")) {
 						d = new Double(tmp.replaceFirst("^sun  *", ""));
-						si = new AzimuthAdvanceSequence(sun, time, d);
+						si = new AzimuthAdvanceSequence(solarObjects, time, d);
 					} else if (tmp.startsWith("moon ")) {
 						d = new Double(tmp.replaceFirst("^moon  *", ""));
 						si = new AzimuthAdvanceSequence(moon, time, d);
@@ -165,7 +189,7 @@ public class SequenceGenerator {
 					
 					SequenceElementI si = null;
 					if (whichObj.equals("sun")) {
-						si = new AnyAzimuthAdvanceSequence(sun, time, azimuths);
+						si = new AnyAzimuthAdvanceSequence(solarObjects, time, azimuths);
 					} else if (whichObj.equals("moon")) {
 						si = new AnyAzimuthAdvanceSequence(moon, time, azimuths);
 					}
@@ -371,12 +395,20 @@ public class SequenceGenerator {
 		return time;
 	}
 
-	public CelestialObject getSun() {
+/*	public CelestialObject getSun() {
 		return sun;
-	}
+	} */
 
 	public CelestialObject getMoon() {
 		return moon;
+	}
+	
+	public AbstractCelestialObject getSolarObjects() {
+		return solarObjects;
+	}
+	
+	public List<CelestialObject> getStars() {
+		return stars;
 	}
 	
 	public void speedDown() {

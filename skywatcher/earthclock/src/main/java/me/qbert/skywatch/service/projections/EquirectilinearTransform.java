@@ -25,17 +25,16 @@ public class EquirectilinearTransform implements ProjectionTransformI {
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees) {
 		// 85 pixels per 15 degree markers; image width is 2058
 		// 360/15*85
-		// 2040.00000000000000000000
-		// 2040/2058
-		// .99125364431486880466
-		
+		//
+		// IMAGE REDUCED: 2044x1022 without trim
+		longitude -= observerLongitude;
 		while (longitude > 180.0)
 			longitude -= 360.0;
 		while (longitude < -180.0)
 			longitude += 360;
 
-		double fractionX = 0.5 + (longitude * 85.0 / 30.0)/1029.0;
-		double fractionY = 0.5 - (latitude * 85.0 / 15.0)/1029.0;
+		double fractionX = 0.5 + (longitude * 85.0 / 30.0)/1022.0;
+		double fractionY = 0.556521739130435 - (latitude * 85.0 / 15.0)/1150.0;
 		
 		return new Point2D.Double(fractionX, fractionY);
 	}

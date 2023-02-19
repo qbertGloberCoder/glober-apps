@@ -65,6 +65,9 @@ public abstract class AbstractCelestialObject extends GeoCalculator implements C
 	}
 	protected ObserverLocation location = null;
 	protected ObservationTime observationTime = null;
+
+	public void setObjectIndex(int objectIndex) {
+	}
 	
 	protected double modulus(double value, double max) {
 		value = value % max;

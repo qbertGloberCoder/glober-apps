@@ -86,8 +86,23 @@ public class AzimuthalEquidistantNPPObjects extends AbstractCelestialObjects {
 	}
 	
 	@Override
-	protected boolean isDrawCircumference() {
-		return true;
+	protected RendererI getFillBoundaryRenderer() throws Exception {
+		ArcRenderer renderer = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.FRACTIONAL_COORDINATES);
+		renderer.setArcAngle(360);
+		renderer.setFill(false);
+		renderer.setMaintainAspectRatio(true);
+		renderer.setWidth(getCircumferenceSizeFraction());
+		renderer.setHeight(getCircumferenceSizeFraction());
+		renderer.setX(0.5);
+		renderer.setY(0.5);
+		
+		return renderer;
+	}
+	
+	@Override
+	protected void setRendererSizeFraction(RendererI renderer, double fraction) {
+		((ArcRenderer)renderer).setWidth(getCircumferenceSizeFraction());
+		((ArcRenderer)renderer).setHeight(getCircumferenceSizeFraction());
 	}
 	
 	@Override
@@ -131,22 +146,30 @@ public class AzimuthalEquidistantNPPObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
-	protected Double updateLocation(double latitude, double longitude) {
+	public Double updateLocation(double latitude, double longitude) {
 		return updateLocation(latitude, longitude, getViewRotationAngle());
 	}
 
 	@Override
-	protected Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
 		return updateLocation(latitude, longitude, getViewRotationAngle());
 	}
 	
 	@Override
-	protected Double updateLocation(double latitude, double longitude, double observerLongitude) {
+	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
 		return transform.transform(latitude, longitude, 0, observerLongitude, (getDstRotate() * 15.0));
 	}
 	
 	@Override
 	protected boolean isPacmanMode() {
+		return false;
+	}
+
+	@Override
+	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		double radius = Math.sqrt(cartesianXCoordinate*cartesianXCoordinate+cartesianYCoordinate*cartesianYCoordinate);
+		if (radius > averageRadiusBoundary)
+			return true;
 		return false;
 	}
 }

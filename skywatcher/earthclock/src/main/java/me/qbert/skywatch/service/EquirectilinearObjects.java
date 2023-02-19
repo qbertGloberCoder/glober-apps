@@ -1,42 +1,15 @@
 package me.qbert.skywatch.service;
 
-import java.awt.Color;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
-
-import me.qbert.skywatch.astro.CelestialObject;
-import me.qbert.skywatch.astro.ObservationTime;
-import me.qbert.skywatch.astro.ObserverLocation;
-import me.qbert.skywatch.astro.TransactionalStateChangeListener;
-import me.qbert.skywatch.astro.impl.GeoCalculator;
-import me.qbert.skywatch.astro.impl.MoonObject;
-import me.qbert.skywatch.astro.impl.SunObject;
-import me.qbert.skywatch.astro.service.AbstractPrecession.PrecessionData;
-import me.qbert.skywatch.astro.service.MoonPrecession;
-import me.qbert.skywatch.astro.service.SunPrecession;
-import me.qbert.skywatch.exception.UninitializedObject;
-import me.qbert.skywatch.model.GeoLocation;
-import me.qbert.skywatch.model.ObjectDirectionAltAz;
 import me.qbert.skywatch.service.projections.EquirectilinearTransform;
 import me.qbert.skywatch.ui.component.Canvas;
-import me.qbert.ui.ImageTransformerI;
+import me.qbert.skywatch.ui.renderers.DigitalClockImageRenderer;
+import me.qbert.skywatch.ui.renderers.EquirectilinearScrollImageRenderer;
 import me.qbert.ui.RendererI;
-import me.qbert.ui.renderers.AbstractFractionRenderer;
-import me.qbert.ui.renderers.ArcRenderer;
-import me.qbert.ui.renderers.BoundaryContainerRenderer;
-import me.qbert.ui.renderers.ColorRenderer;
-import me.qbert.ui.renderers.ImageRenderer;
+import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.LineRenderer;
-import me.qbert.ui.renderers.PolyRenderer;
-import me.qbert.ui.renderers.TextRenderer;
-import me.qbert.ui.renderers.VirtualImageCanvasRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -55,13 +28,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class EquirectilinearObjects extends AbstractCelestialObjects {
 	private EquirectilinearTransform transform;
+	private EquirectilinearScrollImageRenderer equirectinearImageRenderer;
+	private DigitalClockImageRenderer clockRenderer;
 
 	public EquirectilinearObjects(Canvas canvas) throws Exception {
 		super(canvas);
 	}
+	
+	@Override
+	protected AbstractImageRenderer getBackgroundImageRenderer() {
+		equirectinearImageRenderer = new EquirectilinearScrollImageRenderer(new File("projections/equirectilinear/map.png"));
+		
+		return equirectinearImageRenderer;
+	}
 
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
+		equirectinearImageRenderer.wrapToCoordinates(longitude);
 	}
 	
 	@Override
@@ -86,9 +69,41 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 	}
 	
 	@Override
-	protected boolean isDrawCircumference() {
-		return false;
+	protected RendererI getFillBoundaryRenderer() throws Exception {
+		LineRenderer renderer = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+		renderer.setX1(0);
+		renderer.setY1(0.11130434782608695652);
+		renderer.setX2(1.0);
+		renderer.setY2(0.11130434782608695652);
+		
+		return renderer;
 	}
+	
+	@Override
+	protected void setRendererSizeFraction(RendererI renderer, double fraction) {
+		((LineRenderer)renderer).setY1(0.11130434782608695652 * fraction);
+		((LineRenderer)renderer).setY2(0.11130434782608695652 * fraction);
+	}
+	
+	@Override
+	protected RendererI getTopLevelRenderer() {
+		File [] digits = new File[10];
+		for (int i = 0;i < 10;i ++) {
+			digits[i] = new File("clocks/digital/digit" + i + ".png");
+		}
+
+		clockRenderer = new DigitalClockImageRenderer(new File("clocks/digital/background.png"),
+				digits, new File("clocks/digital/digit_mask.png"), new File("clocks/digital/decorations.png"),
+				new File("clocks/digital/decorations_mask.png"));
+		clockRenderer.setMaintainAspectRatio(true);
+		clockRenderer.setBoundMinimumXFraction(0);
+		clockRenderer.setBoundMinimumYFraction(0);
+		clockRenderer.setBoundMaximumXFraction(1.0);
+		clockRenderer.setBoundMaximumYFraction(0.11130434782608695652);
+		
+		return clockRenderer;
+	}
+
 	
 	@Override
 	protected double getCircumferenceSizeFraction() {
@@ -97,11 +112,42 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 	
 	@Override
 	protected void setClockLHA(double localHourAngle) {
+	    double fracSec = localHourAngle / 360.0 * 24.0;
+	    fracSec = fracSec + 0.0000000004999;
+	    int hr = (int)(fracSec);
+	    fracSec -= (hr);
+	    fracSec *= 60.0;
+	    int mn = (int)fracSec;
+	    fracSec -= (mn);
+	    fracSec *= 60;
+
+	    int sc = (int)fracSec;
+	    fracSec -= sc;
+		
+	    
+	    Integer fracValue = null;
+	    
+	    if (getCurrentSpeed() != 0)
+	    	fracValue = new Integer((int)(fracSec * 1000.0));
+	    
+	    while (hr > 24)
+	    	hr -= 24;
+	    while (hr < 0)
+	    	hr += 24;
+	    
+		clockRenderer.setAspectRatioOverride(equirectinearImageRenderer.getAspectRatio());
+	    clockRenderer.setTime(new Integer(hr), new Integer(mn), new Integer(sc), fracValue, isTwentyFourHourClock());
 	}
 	
 	@Override
 	protected boolean isShowAnalogClock() {
-		return true;
+		return false;
+	}
+	
+	@Override
+	public void setShowClock(boolean showClock) {
+		clockRenderer.setRenderComponent(showClock);
+		super.setShowClock(showClock);
 	}
 	
 	@Override
@@ -131,22 +177,29 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
-	protected Double updateLocation(double latitude, double longitude) {
+	public Double updateLocation(double latitude, double longitude) {
 		return updateLocation(latitude, longitude, 0);
 	}
 
 	@Override
-	protected Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
 		return updateLocation(latitude, longitude, 0);
 	}
 	
 	@Override
-	protected Double updateLocation(double latitude, double longitude, double observerLongitude) {
-		return transform.transform(latitude, longitude, 0, observerLongitude, 0.0);
+	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
+		return transform.transform(latitude, longitude, 0.0, getViewRotationAngle(), 0.0);
 	}
 	
 	@Override
 	protected boolean isPacmanMode() {
 		return true;
+	}
+
+	@Override
+	protected boolean isPixelOutOfBounds(int cartesianXCoordinate, int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
+		if ((Math.abs(cartesianXCoordinate) > xBoundary) || (Math.abs(cartesianYCoordinate) > yBoundary))
+			return true;
+		return false;
 	}
 }

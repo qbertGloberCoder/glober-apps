@@ -168,7 +168,7 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 		if (middleX < middleY)
 			squareDistance = middleX;
 		
-		double drawRatio = (squareDistance / 2.0 * circumferenceSizeFraction);
+		double drawRatio = (squareDistance / 5.0 * circumferenceSizeFraction);
 		
 		int yTop = (int)(middleY - drawRatio);
 		int yThird = (int)(2.0 * drawRatio / 3.0);
