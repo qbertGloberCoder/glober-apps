@@ -44,6 +44,8 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 	private double boundMaximumXFraction = 1.0;
 	private double boundMaximumYFraction = 1.0;
 	
+	private Double lockApsectRatio;
+	
 	
 	public VirtualImageCanvasRenderer() {
 		this(null);
@@ -51,10 +53,22 @@ public class VirtualImageCanvasRenderer extends AbstractFractionRenderer {
 
 	public VirtualImageCanvasRenderer(ImageTransformerI imageTransformer) {
 		this.imageTransformer = imageTransformer;
+		lockApsectRatio = null;
+	}
+
+	public Double getLockApsectRatio() {
+		return lockApsectRatio;
+	}
+
+	public void setLockApsectRatio(Double lockApsectRatio) {
+		this.lockApsectRatio = lockApsectRatio;
 	}
 
 	@Override
 	public double getAspectRatio() {
+		if (lockApsectRatio != null)
+			return lockApsectRatio.doubleValue();
+		
 		return -1.0;
 	}
 	
