@@ -16,6 +16,7 @@ import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.astro.TransactionalStateChangeListener;
 import me.qbert.skywatch.astro.impl.MoonObject;
+import me.qbert.skywatch.astro.impl.SolarObjects;
 import me.qbert.skywatch.astro.impl.StarObject;
 import me.qbert.skywatch.astro.impl.SunObject;
 import me.qbert.skywatch.exception.UninitializedObject;
@@ -111,7 +112,9 @@ public class TestAstroCalculators {
 		CelestialObject starObjTwo = StarObject.create().setStarLocation(starTwo).setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 		CelestialObject sun = SunObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 		CelestialObject moon = MoonObject.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
+		CelestialObject solar = SolarObjects.create().setStateChangeListener(transactionalListener).setObserverLocation(myLocation).setObserverTime(time).build();
 
+		transactionalListener.addListener(solar);
 		transactionalListener.addListener(sun);
 		transactionalListener.addListener(starObjOne);
 		transactionalListener.addListener(starObjTwo);
@@ -147,8 +150,11 @@ public class TestAstroCalculators {
 		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon + ",starRa=" + starRa + ",starDec=" + starDec +
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
 		direction = sun.getCurrentDirection();
-		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
+		System.out.println("	  Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 86.37315977385742, 22.007390065626414);
+		direction = solar.getCurrentDirection();
+		System.out.println("	SOLAR = " + direction.getRightAscension() + ", " + direction.getDeclination());
+		assertForTest("SOLAR RA is incorrect", "SOLR Dec is incorrect", direction, 86.69111268007, 22.050881625448078);
 		direction = moon.getCurrentDirection();
 		assertForTest("Moon RA is incorrect", "Moon Dec is incorrect", direction, 65.4295572326447, 22.378638038111593);
 		direction = starObjOne.getCurrentDirection();
@@ -189,6 +195,9 @@ public class TestAstroCalculators {
 				"," + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
 		System.out.println("	 Sun = " + direction.getRightAscension() + ", " + direction.getDeclination());
 		assertForTest("SUN RA is incorrect", "SUN Dec is incorrect", direction, 26.366119731594154, 21.973453759061698);
+		direction = solar.getCurrentDirection();
+		System.out.println("	SOLAR = " + direction.getRightAscension() + ", " + direction.getDeclination());
+		assertForTest("SOLAR RA is incorrect", "SOLR Dec is incorrect", direction, 26.67006693336387, 22.01602042362267);
 		direction = moon.getCurrentDirection();
 		assertForTest("Moon RA is incorrect", "Moon Dec is incorrect", direction, 130.54004674997066, -2.52652071586174);
 		direction = starObjOne.getCurrentDirection();
@@ -203,7 +212,7 @@ public class TestAstroCalculators {
 		lon=myTestLongitude;
 		transactionalListener.begin();
 		time.setCurrentTime();
-		time.addTime(-86400*8);
+//		time.addTime(-86400*8);
 		starOne.setAddress(88.792939,7.407064);
 		myLocation.setGeoLocation(lat, lon);
 		transactionalListener.commit();
@@ -228,6 +237,15 @@ public class TestAstroCalculators {
 		ObjectDirectionAltAz altAz = raDeclinationToAltitudeAzimuth(direction.getRightAscension(), direction.getDeclination(), lat, lon);
 		System.out.println(" Altitude: " + angleToDms(altAz.getAltitude()) + " and azimuth: " + angleToDms(altAz.getAzimuth()));
 		
+		direction = solar.getCelestialSphereLocation();
+		System.out.println("computePosition for: lat=" + lat + ", lon=" + lon +
+				"   AT " + String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec));
+		System.out.println(">>>  SOLAR = " + angleToHms(direction.getRightAscension()) + ", " + angleToDms(direction.getDeclination()) + " dec");
+		direction = solar.getCurrentDirection();
+		System.out.println("	  AT = " + angleToHms(direction.getRightAscension()) + " LHA, " + angleToDms(direction.getDeclination()) + " dec");
+		altAz = raDeclinationToAltitudeAzimuth(direction.getRightAscension(), direction.getDeclination(), lat, lon);
+		System.out.println(" Altitude: " + angleToDms(altAz.getAltitude()) + " and azimuth: " + angleToDms(altAz.getAzimuth()));
+		
 		direction = moon.getCelestialSphereLocation();
 		System.out.println(">>> MOON = " + angleToHms(direction.getRightAscension()) + ", " + angleToDms(direction.getDeclination()) + " dec");
 		direction = moon.getCurrentDirection();
@@ -246,7 +264,7 @@ public class TestAstroCalculators {
 	public static void main(String[] args) throws UninitializedObject {
 		Logger logger = LogManager.getLogger(TestAstroCalculators.class.getName());
 		
-		Configurator.setLevel("me.qbert.skywatch", Level.TRACE);
+		Configurator.setLevel("me.qbert.skywatch", Level.DEBUG);
 		
 		logger.log(Level.ALL, "Test log here");
 		

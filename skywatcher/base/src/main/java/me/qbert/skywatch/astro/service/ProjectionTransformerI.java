@@ -21,4 +21,5 @@ public interface ProjectionTransformerI {
 	public Point2D.Double updateLocation(double latitude, double longitude);
 	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize);
 	public Point2D.Double updateLocation(double latitude, double longitude, double observerLongitude);
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize, double overscan);
 }

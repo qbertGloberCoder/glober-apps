@@ -5,6 +5,7 @@ import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import me.qbert.skywatch.astro.impl.SolarObjects.SolarSystemCoordinate;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionRaDec;
 
@@ -37,9 +38,9 @@ public class SolarObjects extends AbstractCelestialObject {
 	}
 	
 	public class SolarSystemCoordinate {
-		double x;
-		double y;
-		double z;
+		private double x;
+		private double y;
+		private double z;
 		
 		public double getX() {
 			return x;
@@ -52,6 +53,19 @@ public class SolarObjects extends AbstractCelestialObject {
 		public double getZ() {
 			return z;
 		}
+		
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("x=");
+			sb.append(x);
+			sb.append("\ny=");
+			sb.append(y);
+			sb.append("\rz=");
+			sb.append(z);
+			
+			return sb.toString();
+		}
 	}
 	
 	private class ObjectInformation {
@@ -61,6 +75,24 @@ public class SolarObjects extends AbstractCelestialObject {
 		
 		SolarSystemCoordinate coordinate;
 		SolarSystemCoordinate coordinateFromEarth;
+		
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("ra=");
+			sb.append(ra);
+			sb.append("\ndec=");
+			sb.append(dec);
+			sb.append("\rvec=");
+			sb.append(rvec);
+			
+			sb.append("\rcoordinate: ");
+			sb.append(coordinate.toString());
+			sb.append("\rcoordinate from earth: ");
+			sb.append(coordinateFromEarth.toString());
+			
+			return sb.toString();
+		}
 	}
 	
 	private class ObjectSettings {
@@ -84,7 +116,8 @@ public class SolarObjects extends AbstractCelestialObject {
 	
     public static final String [] OBJECT_LIST = {"Sun", "Mercury", "Venus",  "Mars", "Jupiter", "Saturn ",  "Uranus", "Neptune", "Pluto"};
     public static final double ONE_AU = 149597871.0;
-    public static final double MAX_AU = ONE_AU * 40.0;
+    public static final double SOLAR_SYSTEM_IN_AUS = 40.0;
+    public static final double MAX_AU = ONE_AU * SOLAR_SYSTEM_IN_AUS;
 	
 	private int objectIndex = 0;
 	private boolean debug = false;
@@ -97,7 +130,10 @@ public class SolarObjects extends AbstractCelestialObject {
 	SolarSystemCoordinate [] objectCoordinatesFromEarth = new SolarSystemCoordinate[9];
 	
 	private double [] calculatedDeclinations = new double[9];
+	private double [] calculatedCelestialRightAscensions = new double[9];
 	private double [] calculatedRightAscensions = new double[9];
+	
+	private ObjectInformation [] objectProfiles = new ObjectInformation[9];
 	
     private ObjectSettings earth;
 	
@@ -392,12 +428,6 @@ public class SolarObjects extends AbstractCelestialObject {
 	    return String.format("%s%2dh %4.1fm", sgn, d, m);
 	}
 	
-	private double julianDay (int date, int month, int year, double timezoneOffset)
-	{
-	    if (month<=2) {month=month+12; year=year-1;}
-	    return (int)(365.25*year) + (int)(30.6001*(month+1)) - 15 + 1720996.5 + date - timezoneOffset/24.0;
-	} 
-
 	@Override
 	public void recompute() {
 		// F2
@@ -406,8 +436,8 @@ public class SolarObjects extends AbstractCelestialObject {
 		logger.trace("Recompute SOLR objects for julian date: " + julianDate);
 
 	    // compute day number for date/time
-	    double dn = day_number( observationTime.getTime() );
-
+	    double dn = julianDate - 2451545.0;
+	    
 		double days = julianDate-2451545;
 		double gmst = modulus(18.697374558+24.065709824419*days,24);
 		double omega = 125.04-0.052954*julianDate;
@@ -439,6 +469,8 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 	    		obj = get_coord(earth, p);   
 	    	else
 	    		obj = get_coord(p, dn);
+	    	
+	    	objectProfiles[p] = obj;
 
 	    	//	    	debug(String.format("%10s%11s%12s%s", args))
 //	    	coord_to_horizon(now, obj.ra, obj.dec, lat, lon, h);
@@ -450,6 +482,7 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 	    	objectCoordinatesFromEarth[p] = obj.coordinateFromEarth;
 	    	
 		    calculatedDeclinations[p] = obj.dec;
+		    calculatedCelestialRightAscensions[p] = obj.ra;
 		    calculatedRightAscensions[p] = ((gast*15)-obj.ra)+location.getLongitude();
 
 	    	debug(OBJECT_LIST[p] + "  " + ha2str(obj.ra) + "  " + dec2str(obj.dec) + "  " + Double.toString(obj.rvec));
@@ -464,6 +497,10 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 		
 		return angle;
 	}
+	
+	public SolarSystemCoordinate[] getSolarSystemObjectCoordinates() {
+		return objectCoordinates;
+	}
 
 	@Override
 	public void setObjectIndex(int objectIndex) {
@@ -473,7 +510,8 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 	
 	@Override
 	public ObjectDirectionRaDec getCelestialSphereLocation() {
-		return makeRaDec(fixRaAndLon(location.getLongitude() - calculatedRightAscensions[objectIndex]), calculatedDeclinations[objectIndex]);
+		logger.trace("[" + objectIndex + "]" + objectProfiles[objectIndex].toString());
+		return makeRaDec(fixRaAndLon(calculatedCelestialRightAscensions[objectIndex]), calculatedDeclinations[objectIndex]);
 	}
 
 	@Override
