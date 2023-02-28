@@ -7,9 +7,11 @@ import me.qbert.skywatch.service.projections.GlobeTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.ui.renderers.GlobeImageRenderer;
 import me.qbert.skywatch.ui.renderers.RingClockImageRenderer;
+import me.qbert.skywatch.ui.renderers.StarClockImageRenderer;
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.ArcRenderer;
+import me.qbert.ui.renderers.BoundaryContainerRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -29,8 +31,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 public class GlobeObjects extends AbstractCelestialObjects {
 	private GlobeTransform transform;
 	private GlobeImageRenderer globeImageRenderer;
-	private RingClockImageRenderer ringClockRenderer;
+	private RingClockImageRenderer slipRingClockRenderer;
+	private StarClockImageRenderer starRingClockRenderer;
 	private double mapCenterLatitude;
+	
+	private RendererI ringClockRenderer;
 	
 	private double circumferenceSizeFraction;
 	
@@ -76,7 +81,12 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	protected void reevaluateComponentSizes() {
 		transform.setZoomLevel(circumferenceSizeFraction);
 		globeImageRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
-		ringClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
+		
+		if (ringClockRenderer.getClass().isInstance(slipRingClockRenderer))
+			slipRingClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
+		if (ringClockRenderer.getClass().isInstance(starRingClockRenderer))
+			starRingClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
+		
 		
 		super.reevaluateComponentSizes();
 	}
@@ -86,16 +96,38 @@ public class GlobeObjects extends AbstractCelestialObjects {
 		return (circumferenceSizeFraction >= 0.95) ? true : false;
 	}
 	
+
+	private RendererI getRingClockRenderer() {
+		if (slipRingClockRenderer == null) {
+			slipRingClockRenderer = new RingClockImageRenderer(new File("clocks/ringclock/numbers.png"));
+			slipRingClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
+		}
+		ringClockRenderer = slipRingClockRenderer;
+		return ringClockRenderer;
+	}
+	
+	private RendererI getStarClockRenderer() {
+		if (starRingClockRenderer == null) {
+			starRingClockRenderer = new StarClockImageRenderer(this);
+			starRingClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
+		}
+		ringClockRenderer = starRingClockRenderer;
+		return ringClockRenderer;
+	}
 	
 	@Override
 	protected RendererI getTopLevelRenderer() {
-		ringClockRenderer = new RingClockImageRenderer(new File("clocks/ringclock/numbers.png"));
-//		ringClockRenderer.setMaintainAspectRatio(false);
-//		ringClockRenderer.setRenderComponent(false);
-		ringClockRenderer.setCircumferenceSizeFraction(circumferenceSizeFraction);
-		return ringClockRenderer;
+		return getStarClockRenderer();
 	}
 
+	public void changeTopLevelRenderer(int topRendererIndex) {
+		if (topRendererIndex == 0) {
+			changeTopLevelRenderer(getStarClockRenderer());
+		}
+		if (topRendererIndex == 1) {
+			changeTopLevelRenderer(getRingClockRenderer());
+		}
+	}
 	
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
@@ -153,7 +185,10 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	
 	@Override
 	protected void setClockLHA(double localHourAngle) {
-		ringClockRenderer.wrapToLHA(localHourAngle);
+		if (ringClockRenderer.getClass().isInstance(slipRingClockRenderer))
+			slipRingClockRenderer.wrapToLHA(localHourAngle);
+		if (ringClockRenderer.getClass().isInstance(starRingClockRenderer))
+			starRingClockRenderer.wrapToLHA(localHourAngle);
 	}
 	
 	@Override
@@ -200,10 +235,19 @@ public class GlobeObjects extends AbstractCelestialObjects {
 		return updateLocation(latitude, longitude, observerLongitude, false);
 	}
 	
+	@Override
+	public Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize, double overscan) {
+		return updateLocation(latitude, longitude, -getViewRotationAngle(), renderFullCircumferenceSize, overscan);
+	}
+	
 	private Double updateLocation(double latitude, double longitude, double observerLongitude, boolean renderFullCircumferenceSize) {
+		return updateLocation(latitude, longitude, observerLongitude, renderFullCircumferenceSize, 1.0);
+	}
+	
+	public Double updateLocation(double latitude, double longitude, double observerLongitude, boolean renderFullCircumferenceSize, double overscan) {
 		if ((renderFullCircumferenceSize) && (circumferenceSizeFraction < 0.95))
 			transform.setZoomedOut(false);
-		Double rval = transform.transform(latitude, longitude, mapCenterLatitude, getViewRotationAngle(), observerLongitude);
+		Double rval = transform.transform(latitude, longitude, mapCenterLatitude, getViewRotationAngle(), observerLongitude, overscan);
 		if (renderFullCircumferenceSize)
 			transform.setZoomedOut(true);
 		return rval;
@@ -215,7 +259,16 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	
 	@Override
 	public void setShowClock(boolean showClock) {
-		ringClockRenderer.setRenderComponent(showClock);
+		if (showClock) {
+			if (ringClockRenderer.getClass().isInstance(slipRingClockRenderer))
+				changeTopLevelRenderer(0);
+			else if (ringClockRenderer.getClass().isInstance(starRingClockRenderer))
+				changeTopLevelRenderer(1);
+		}
+		if (ringClockRenderer.getClass().isInstance(slipRingClockRenderer))
+			slipRingClockRenderer.setRenderComponent(showClock);
+		if (ringClockRenderer.getClass().isInstance(starRingClockRenderer))
+			starRingClockRenderer.setRenderComponent(showClock);
 		super.setShowClock(showClock);
 	}
 

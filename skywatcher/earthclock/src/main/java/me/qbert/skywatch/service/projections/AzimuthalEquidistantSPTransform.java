@@ -28,8 +28,12 @@ public class AzimuthalEquidistantSPTransform implements ProjectionTransformI {
 		return new Point2D.Double(fractionX, fractionY);
 	}
 	
-	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, 1.0);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
 		double angle = Math.toRadians(180.0 - longitude - observerLongitude - 90.0 - extraDstRotationDegrees);
 		double radius = ((90.0 + latitude) / 180.0 * 0.5);
 		

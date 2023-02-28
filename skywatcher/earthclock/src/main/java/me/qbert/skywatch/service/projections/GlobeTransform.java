@@ -44,8 +44,12 @@ public class GlobeTransform implements ProjectionTransformI {
 	}
 
 
-	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, 1.0);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
 		double useLat = latitude;
 		double useLon = longitude - observerLongitude;
 		
@@ -63,9 +67,9 @@ public class GlobeTransform implements ProjectionTransformI {
 		if (zoomedOut)
 			radius *= zoomLevel;
 		
-		double tx = radius * Math.cos(Math.toRadians(useLat)) * Math.cos(Math.toRadians(90 - useLon + extraDstRotationDegrees));
-		double tz = radius * Math.cos(Math.toRadians(useLat)) * Math.sin(Math.toRadians(90 - useLon + extraDstRotationDegrees));
-		double ty = radius * Math.sin(Math.toRadians(useLat));
+		double tx = radius * overscan * Math.cos(Math.toRadians(useLat)) * Math.cos(Math.toRadians(90 - useLon + extraDstRotationDegrees));
+		double tz = radius * overscan * Math.cos(Math.toRadians(useLat)) * Math.sin(Math.toRadians(90 - useLon + extraDstRotationDegrees));
+		double ty = radius * overscan * Math.sin(Math.toRadians(useLat));
 		
 		double tr;
 		double ta;
@@ -78,7 +82,7 @@ public class GlobeTransform implements ProjectionTransformI {
 		
 		boolean showPoint = true;
 		
-		if (Math.sqrt(tx*tx + ty*ty) > radius)
+		if (Math.sqrt(tx*tx + ty*ty) > radius * 2)
 			showPoint = false;
 		
 		if (tz < 0.0) {

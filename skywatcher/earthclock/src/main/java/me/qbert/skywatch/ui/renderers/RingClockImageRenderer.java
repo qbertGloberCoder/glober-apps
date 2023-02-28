@@ -1,6 +1,13 @@
 package me.qbert.skywatch.ui.renderers;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
+import java.awt.image.SinglePixelPackedSampleModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 
 import me.qbert.ui.renderers.AbstractImageRenderer;
@@ -45,6 +52,8 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 	private int mn;
 	private int sc;
 	private double fracSec;
+	
+	private int [] destPixels = null;
 	
 	public RingClockImageRenderer(File numbersImageFile) {
 		if (numbersImageFile != null) {
@@ -143,7 +152,7 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 		int outWidth = Math.max((int)getBoundaryWidth(), 32);
 		int outHeight = Math.max((int)getBoundaryHeight(), 32);
 		
-		lastBi = new BufferedImage(outWidth, outHeight, BufferedImage.TYPE_INT_ARGB);
+//		lastBi = new BufferedImage(outWidth, outHeight, BufferedImage.TYPE_INT_ARGB);
 		
 	    int radius;
 	    
@@ -158,7 +167,8 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 	    getDigits(hourAngle);
 //	    System.out.println("?? DISPLAY TIME: " + String.format("%02d:%02d:%02d AND %8.3g", hr, mn, sc, fracSec));
 	    
-		int [] destPixels = lastBi.getRGB(0, 0, outWidth, outHeight, null, 0, outWidth);
+	    if ((destPixels == null) || ((outWidth * outHeight != destPixels.length)))
+	    		destPixels = new int[outWidth * outHeight];
 		
 		int middleX = outWidth / 2;
 		int middleY = outHeight / 2;
@@ -184,6 +194,8 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 		int leftMarker = middleX - rightMarker;
 		rightMarker += middleX;
 		
+		double [] pixelAngleRads = null;
+		
 		for (int y = yTop;y < outHeight - yTop;y ++) {
 			int band = (y - yTop) / yThird;
 			
@@ -202,29 +214,12 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 			} else if (band == 1) {
 				divideFactor = 0.4;
 				ringRadius = squareDistance;
-//				ringRadius = (squareDistance * 60);
-				
-//				scXBias = 7 * sourceDigitWidth;
-//				lha = lha - (int)lha;
-//				lha *= 360;
-//				lha = lha - 90.0;
 				
 				lha = 90.0 - 360.0*((mn / 60.0) + ((double)sc + fracSec)/3600)/divideFactor;
 			} else {
 				divideFactor = 0.4;
 				ringRadius = squareDistance;
-
-				//				divideFactor = 1800;
-//				ringRadius = (squareDistance * 3600);
-				
-//				lha *= 24;
-//				lha *= 60;
 				lha = 90.0 - 360.0*((double)sc + fracSec) / (60.0 * divideFactor);
-//				scXBias = -8 * sourceDigitWidth;
-//				lha = lha - (int)lha;
-//				lha *= 360.0;
-//				lha = lha - (int)lha;
-//				lha *= 360.0;
 			}
 			
 			boolean overflowed = false;
@@ -234,13 +229,14 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 				setColor = 0xFF000000;
 			
 			if (((y - yTop) <= (yThird / 8)) || (((outHeight - yTop - y) <= (yThird / 8)))) {
-				if (((y - yTop) == (yThird / 8)) || (((outHeight - yTop - y) == (yThird / 8))))
+				if (((y - yTop) == (yThird / 8)) || (((outHeight - yTop - y) == (yThird / 8)))) {
 					setColor = 0xFF000000;
+					pixelAngleRads = null;
+				}
 				else
 					setColor = 0x00000000;
 			}
 			
-//			double latAngleRad = Math.atan2((middleY - y), ringRadius);
 			double circumference = ringRadius;
 			
 			int drawRadius = (int)circumference;
@@ -252,15 +248,18 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 			int leftX =  middleX - drawRadius;
 			int rightX = outWidth - middleX + drawRadius - 1;
 			
+			if (pixelAngleRads == null) {
+				pixelAngleRads = new double[rightX - leftX + 1];
+				for (int x = leftX;x <= rightX; x ++) {
+					pixelAngleRads[x - leftX] = Math.acos(((double)x - (double)middleX) / (double)ringRadius);
+				}
+			}
+			
+			double lhaRad = Math.toRadians(lha);
 			for (int x = leftX;x <= rightX; x ++) {
 				int useColor = setColor;
 				
-				double pixelAngleRad = Math.acos(((double)x - (double)middleX) / (double)ringRadius);
-//				getDigits(hourAngle + Math.toDegrees(pixelAngleRad));
-				
-//				if (y == yTop + yThird + (yThird/2))
-//					System.out.println("?? GOT x: " + (x - middleX) + " and " + ringRadius + " to " + Math.toDegrees(pixelAngleRad));
-				
+				double pixelAngleRad = pixelAngleRads[x - leftX];
 				if ((x > leftMarker) && (x < rightMarker)) {
 					if  ((y - yTop) % yThird == 0)
 						useColor = 0xFF000000;
@@ -271,22 +270,15 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 				if ((x == leftMarker) || (x == rightMarker))
 					destPixels[(int)y * outWidth + x] = 0xFF000000;
 				else if (band < 3) {
-					int spos = (int)(srcDigitsWidth / 2.0 * (double)divideFactor * (Math.PI - (Math.toRadians(lha) + pixelAngleRad))/ (Math.PI)) - scXBias + sourceDigitMiddle; //Math.sin(pixelAngleRad)); //(int)((double)(x - middleX) * Math.cos(pixelAngleRad) * multiplyRatioX) + offset;
+					int spos = (int)(srcDigitsWidth / 2.0 * (double)divideFactor * (Math.PI - (lhaRad + pixelAngleRad))/ (Math.PI)) - scXBias + sourceDigitMiddle;
 					
 					while (spos < 0)
 						spos += srcDigitsWidth;
 					while (spos >= srcDigitsWidth)
 						spos -= srcDigitsWidth;
 					
-/*					while (spos > inWidth)
-						spos -= inWidth;
-					while (spos < 0)
-						spos += inWidth; */
-					
-					int srcOffsetX = spos; //digits[band][digitIdx] * sourceDigitWidth + spos;
+					int srcOffsetX = spos;
 					int srcOffsetY = (int)(((y - yTop) % yThird) * multiplyRatioY);
-					
-//					srcOffsetX = x;
 					
 					if ((srcOffsetY >= 0) && (srcOffsetY < inHeight) && (srcOffsetX >= 0) && (srcOffsetX < srcDigitsWidth)) {
 						if (secondsRing[srcOffsetY][srcOffsetX] != 0x0000000)
@@ -296,7 +288,6 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 					} else {
 						destPixels[(int)y * outWidth + x] = useColor;
 					}
-//					destPixels[(int)y * outWidth + x] = 0xFFA070F0;
 				} else if ((((x == leftX) || (x == rightX)) && (! overflowed)))
 					destPixels[(int)y * outWidth + x] = 0xFF000000;
 				else
@@ -304,7 +295,21 @@ public class RingClockImageRenderer extends AbstractImageRenderer {
 			}
 		}
 	    
-	    lastBi.setRGB(0, 0, outWidth, outHeight, destPixels, 0, outWidth);
+		boolean tryAlt = false;
+		
+		if (tryAlt) {
+			int[] bitMasks = new int[]{0xFF0000, 0xFF00, 0xFF, 0xFF000000};
+			SinglePixelPackedSampleModel sm = new SinglePixelPackedSampleModel(
+			        DataBuffer.TYPE_INT, outWidth, outHeight, bitMasks);
+			DataBufferInt db = new DataBufferInt(destPixels, destPixels.length, 0);
+			WritableRaster wr = Raster.createWritableRaster(sm, db, new Point());
+			lastBi = new BufferedImage(ColorModel.getRGBdefault(), wr, false, null);
+		}
+		else {
+//			if (lastBi == null)
+				lastBi = new BufferedImage(outWidth, outHeight, BufferedImage.TYPE_INT_ARGB);
+		    lastBi.setRGB(0, 0, outWidth, outHeight, destPixels, 0, outWidth);
+		}
 	    
 	    lastZoom = zoomedOut;
 	    lastZoomLevel = zoomLevel;

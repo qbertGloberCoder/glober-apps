@@ -187,7 +187,16 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 	}
 	
 	@Override
+	public Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize, double overscan) {
+		return updateLocation(latitude, longitude, renderFullCircumferenceSize, 1.0);
+	}
+	
+	@Override
 	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
+		return transform.transform(latitude, longitude, 0, observerLongitude, (getDstRotate() * 15.0));
+	}
+	
+	public Double updateLocation(double latitude, double longitude, double observerLongitude, double overscan) {
 		return transform.transform(latitude, longitude, 0.0, getViewRotationAngle(), 0.0);
 	}
 	

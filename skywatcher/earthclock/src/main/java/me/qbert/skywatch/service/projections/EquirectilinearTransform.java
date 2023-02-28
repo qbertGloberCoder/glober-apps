@@ -21,8 +21,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class EquirectilinearTransform implements ProjectionTransformI {
-	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, 1.0);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
 		// 85 pixels per 15 degree markers; image width is 2058
 		// 360/15*85
 		//

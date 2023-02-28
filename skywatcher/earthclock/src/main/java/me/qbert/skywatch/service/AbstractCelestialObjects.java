@@ -12,6 +12,8 @@ import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.astro.impl.AbstractCelestialObject;
 import me.qbert.skywatch.astro.impl.GeoCalculator;
+import me.qbert.skywatch.astro.impl.SolarObjects;
+import me.qbert.skywatch.astro.impl.SolarObjects.SolarSystemCoordinate;
 import me.qbert.skywatch.astro.service.AbstractPrecession.PrecessionData;
 import me.qbert.skywatch.astro.service.ContourLineGenerator;
 import me.qbert.skywatch.astro.service.MoonPrecession;
@@ -22,6 +24,7 @@ import me.qbert.skywatch.model.ObjectDirectionAltAz;
 import me.qbert.skywatch.service.SwitchableProjectionObjects.ProjectionType;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.ui.renderers.PinnableCelestialObject;
+import me.qbert.skywatch.ui.renderers.SolarSystemDateRenderer;
 import me.qbert.ui.ImageTransformerI;
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.AbstractFractionRenderer;
@@ -29,9 +32,11 @@ import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.ArcRenderer;
 import me.qbert.ui.renderers.BoundaryContainerRenderer;
 import me.qbert.ui.renderers.ColorRenderer;
+import me.qbert.ui.renderers.EncapsulatingRenderer;
 import me.qbert.ui.renderers.ImageRenderer;
 import me.qbert.ui.renderers.LineRenderer;
 import me.qbert.ui.renderers.PolyRenderer;
+import me.qbert.ui.renderers.SplitContainerRenderer;
 import me.qbert.ui.renderers.TextRenderer;
 import me.qbert.ui.renderers.VirtualImageCanvasRenderer;
 
@@ -145,7 +150,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	private RendererI sunFillBoundary;
 	private RendererI moonFillBoundary;
 	
-	private RendererI topRenderer;
+	private EncapsulatingRenderer encapsulatingTopRenderer;
 	
 	private SunPrecession sunPrecession;
 	private MoonPrecession moonPrecession;
@@ -167,6 +172,10 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	private String clockFace = "mickeymouse";
 	
 	private MapCenterMode centerMode;
+
+	private SolarSystemDateRenderer solarDateRenderer;
+	
+	private SplitContainerRenderer splitContainer;
 	
 	public AbstractCelestialObjects(Canvas canvas) throws Exception {
 		this.canvas = canvas;
@@ -509,25 +518,11 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         
         renderers.add(foregroundBoundaryRenderer);
         
-        topRenderer = getTopLevelRenderer();
+        encapsulatingTopRenderer = new EncapsulatingRenderer();
+        encapsulatingTopRenderer.setRenderer(getTopLevelRenderer());
         
-        if (topRenderer != null)
-        	renderers.add(topRenderer);
+        renderers.add(encapsulatingTopRenderer);
 
-        colorRenderer = new ColorRenderer();
-        colorRenderer.setBackgroundColor(Color.black);
-        colorRenderer.setForegroundColor(Color.black);
-        renderers.add(colorRenderer);
-        renderers.add(dateRenderer);
-        renderers.add(observerLocationRenderer);
-        renderers.add(subSolarRenderer);
-        renderers.add(sunAltitudeRenderer);
-        renderers.add(sunAzimuthRenderer);
-        renderers.add(subLunarRenderer);
-        renderers.add(moonAltitudeRenderer);
-        renderers.add(moonAzimuthRenderer);
-        renderers.add(moonPhaseRenderer);
-        
         int textY = 20;
         
         dateRenderer.setX(10);
@@ -592,6 +587,51 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         
     	centerMode = MapCenterMode.OBSERVER_LON; //.OBSERVER_LAT_LON;
     	
+    	
+    	splitContainer = new SplitContainerRenderer(SplitContainerRenderer.A_LEFT_OF_B, 0.5);
+
+    	// CLOCK side
+    	splitContainer.setRendererB(renderers);
+    	
+    	// CALENDAR side
+        solarDateRenderer = new SolarSystemDateRenderer();
+        
+    	renderers = new ArrayList<RendererI>();
+    	renderers.add(solarDateRenderer.getRenderer());
+    	splitContainer.setRendererA(renderers);
+    	
+    	renderers = new ArrayList<RendererI>();
+    	
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.lightGray);
+        colorRenderer.setForegroundColor(Color.lightGray);
+        renderers.add(colorRenderer);
+    	
+        PolyRenderer background = new PolyRenderer(PolyRenderer.FRACTIONAL_COORDINATES);
+        double [] xArray = {0.0, 1.0, 1.0, 0.0};
+        double [] yArray = {0.0, 0.0, 1.0, 1.0};
+        background.setX(xArray);
+        background.setY(yArray);
+        background.setFill(true);
+        background.setMaintainAspectRatio(false);
+        renderers.add(background);
+    	
+    	renderers.add(splitContainer);
+    	
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.black);
+        colorRenderer.setForegroundColor(Color.black);
+        renderers.add(colorRenderer);
+        renderers.add(dateRenderer);
+        renderers.add(observerLocationRenderer);
+        renderers.add(subSolarRenderer);
+        renderers.add(sunAltitudeRenderer);
+        renderers.add(sunAzimuthRenderer);
+        renderers.add(subLunarRenderer);
+        renderers.add(moonAltitudeRenderer);
+        renderers.add(moonAzimuthRenderer);
+        renderers.add(moonPhaseRenderer);
+        
         canvas.setRenderers(renderers);
 	}
 	
@@ -649,6 +689,14 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	
 	protected RendererI getTopLevelRenderer() {
 		return null;
+	}
+	
+	
+	protected void changeTopLevelRenderer(RendererI topRenderer) {
+		encapsulatingTopRenderer.setRenderer(topRenderer);
+	}
+	
+	public void changeTopLevelRenderer(int topRendererIndex) {
 	}
 	
 	protected abstract boolean isLineRenderPacmanMode();
@@ -1132,8 +1180,34 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         
         updateLocation(observerLocation, sequenceGenerator.getMyLocation().getLatitude(), sequenceGenerator.getMyLocation().getLongitude());
         
+        solarDateRenderer.updateSolarObjects(sequenceGenerator.getTime().getTime().get(Calendar.DAY_OF_YEAR), sequenceGenerator.getSolarSystemObjectCoordinates());
+
         if (repaintCanavas)
         	canvas.repaint();
+	}
+	
+	public void setPlanetsToScale(boolean planetsToScale) {
+		solarDateRenderer.setPlanetsToScale(planetsToScale);
+	}
+	
+	public boolean isPlanetsToScale() {
+		return solarDateRenderer.isPlanetsToScale();
+	}
+	
+	public void setPlanetsVisible(boolean visible) {
+		splitContainer.setRenderA(visible);
+	}
+	
+	public boolean isPlanetsVisible() {
+		return splitContainer.isRenderA();
+	}
+	
+	public void setClockVisible(boolean visible) {
+		splitContainer.setRenderB(visible);
+	}
+	
+	public boolean isClockVisible() {
+		return splitContainer.isRenderB();
 	}
 	
 	protected abstract boolean allowBrokenContourLines();
@@ -1242,7 +1316,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	@Override
 	public void updateLocation(ArcRenderer arc, double latitude, double longitude, int size, boolean renderFullCircumferenceSize) {
 		Point2D.Double p2d = updateLocation(latitude, longitude, renderFullCircumferenceSize);
-		
+
 		if (p2d == null) {
 			arc.setRenderComponent(false);
 			return;
@@ -1731,29 +1805,29 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			if (lineFilled) {
 				if (lastLeftX != -1) {
 					scanX = x;
-					boolean aboveFlooded = false;
-					boolean belowFlooded = false;
+//					boolean aboveFlooded = false;
+//					boolean belowFlooded = false;
 					while (scanX != lastLeftX) {
 						if (y > 0) {
 							if (rgbArray[(y - 1) * width + scanX] == fillFromRgba) {
-								if (! aboveFlooded) {
+//								if (! aboveFlooded) {
 									floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
-									aboveFlooded = true;
-								}
+//									aboveFlooded = true;
+//								}
 							}
-							else
-								aboveFlooded = false;
+//							else
+//								aboveFlooded = false;
 						}
 						
 						if (y < height - 1) {
 							if (rgbArray[(y + 1) * width + scanX] == fillFromRgba) {
-								if (! belowFlooded) {
+//								if (! belowFlooded) {
 									floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
-									belowFlooded = true;
-								}
+//									belowFlooded = true;
+//								}
 							}
-							else
-								belowFlooded = false;
+//							else
+//								belowFlooded = false;
 						}
 	
 						scanX --;
@@ -1762,31 +1836,31 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 							scanX = width - 1;
 					}
 					
-					aboveFlooded = false;
-					belowFlooded = false;
+//					aboveFlooded = false;
+//					belowFlooded = false;
 					if (lastRightX != -1) {
 						scanX = x + 1;
 						while (scanX != lastRightX) {
 							if (y > 0) {
 								if (rgbArray[(y - 1) * width + scanX] == fillFromRgba) {
-									if (! aboveFlooded) {
+//									if (! aboveFlooded) {
 										floodFill(rgbArray, width, height, scanX, y - 1, rgbaValue, fillFromRgba);
-										aboveFlooded = true;
-									}
+//										aboveFlooded = true;
+//									}
 								}
-								else
-									aboveFlooded = false;
+//								else
+//									aboveFlooded = false;
 							}
 							
 							if (y < height - 1) {
 								if (rgbArray[(y + 1) * width + scanX] == fillFromRgba) {
-									if (! belowFlooded) {
+//									if (! belowFlooded) {
 										floodFill(rgbArray, width, height, scanX, y + 1, rgbaValue, fillFromRgba);
-										belowFlooded = true;
-									}
+//										belowFlooded = true;
+//									}
 								}
-								else
-									belowFlooded = false;
+//								else
+//									belowFlooded = false;
 							}
 							
 							scanX ++;

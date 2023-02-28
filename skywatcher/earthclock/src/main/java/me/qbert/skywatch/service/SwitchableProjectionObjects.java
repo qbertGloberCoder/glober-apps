@@ -183,13 +183,18 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 	}
 
 	@Override
+	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
+		return activeProjection.updateLocation(latitude, longitude, observerLongitude);
+	}
+	
+	@Override
 	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize) {
 		return activeProjection.updateLocation(latitude, longitude, renderFullCircumferenceSize);
 	}
 	
 	@Override
-	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
-		return activeProjection.updateLocation(latitude, longitude, observerLongitude);
+	public Point2D.Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize, double overscan) {
+		return activeProjection.updateLocation(latitude, longitude, renderFullCircumferenceSize, overscan);
 	}
 	
 	@Override

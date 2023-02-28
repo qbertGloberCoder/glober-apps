@@ -71,6 +71,10 @@ public class MainFrame extends JFrame implements KeyListener {
 	private JCheckBoxMenuItem [] centerModes;
 	private JCheckBoxMenuItem globeFullSize;
 	private JCheckBoxMenuItem showClockMenu;
+
+	private JCheckBoxMenuItem showSolarSystem;
+	private JCheckBoxMenuItem showPlanetsToScale;
+	private JCheckBoxMenuItem showClock;
 	
 	private JCheckBoxMenuItem timerMenu;
 	private JCheckBoxMenuItem railwayStyleMenu;
@@ -216,7 +220,42 @@ public class MainFrame extends JFrame implements KeyListener {
 				showClockMenu.setSelected(showClock);
 			}
 		});
-
+        
+        
+        showSolarSystem = new JCheckBoxMenuItem("Date (solar system)");
+        m16.add(showSolarSystem);
+        showSolarSystem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean show = !celestialObjects.isPlanetsVisible();
+				celestialObjects.setPlanetsVisible(show);
+				showSolarSystem.setSelected(show);
+			}
+		});
+        
+        
+        showPlanetsToScale = new JCheckBoxMenuItem("Planet orbits to scale");
+        m16.add(showPlanetsToScale);
+        showPlanetsToScale.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean show = !celestialObjects.isPlanetsToScale();
+				celestialObjects.setPlanetsToScale(show);
+				showPlanetsToScale.setSelected(show);
+			}
+		});
+        
+        showClock = new JCheckBoxMenuItem("Time (Earth clock)");
+        m16.add(showClock);
+        showClock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean show = !celestialObjects.isClockVisible();
+				celestialObjects.setClockVisible(show);
+				showClock.setSelected(show);
+			}
+		});
+        
         JMenu exportSizeMenu = new JMenu("Export size");
         m16.add(exportSizeMenu);
 

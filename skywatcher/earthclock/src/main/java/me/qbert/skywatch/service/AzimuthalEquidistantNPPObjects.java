@@ -155,9 +155,19 @@ public class AzimuthalEquidistantNPPObjects extends AbstractCelestialObjects {
 		return updateLocation(latitude, longitude, getViewRotationAngle());
 	}
 	
+	
+	@Override
+	public Double updateLocation(double latitude, double longitude, boolean renderFullCircumferenceSize, double overscan) {
+		return updateLocation(latitude, longitude, renderFullCircumferenceSize, 1.0);
+	}
+	
 	@Override
 	public Double updateLocation(double latitude, double longitude, double observerLongitude) {
 		return transform.transform(latitude, longitude, 0, observerLongitude, (getDstRotate() * 15.0));
+	}
+	
+	public Double updateLocation(double latitude, double longitude, double observerLongitude, double overscan) {
+		return transform.transform(latitude, longitude, 0, observerLongitude, (getDstRotate() * 15.0), overscan);
 	}
 	
 	@Override

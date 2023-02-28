@@ -18,6 +18,7 @@ import me.qbert.skywatch.astro.impl.MoonObject;
 import me.qbert.skywatch.astro.impl.SolarObjects;
 import me.qbert.skywatch.astro.impl.StarObject;
 import me.qbert.skywatch.astro.impl.SunObject;
+import me.qbert.skywatch.astro.impl.SolarObjects.SolarSystemCoordinate;
 import me.qbert.skywatch.dao.StarsCoordinateDao;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.model.CelestialAddress;
@@ -406,6 +407,10 @@ public class SequenceGenerator {
 	public AbstractCelestialObject getSolarObjects() {
 		return solarObjects;
 	}
+	
+	public SolarSystemCoordinate[] getSolarSystemObjectCoordinates() {
+		return ((SolarObjects)solarObjects).getSolarSystemObjectCoordinates();
+	}	
 	
 	public List<CelestialObject> getStars() {
 		return stars;
