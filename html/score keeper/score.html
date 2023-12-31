@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scoreboard</title>
+<script>
+
+var total;
+var categories = new Array();
+var sortidx = new Array();
+
+function redisplay() {
+	total = 0;
+	for (i = 0;i < categories.length;i ++) {
+		document.getElementById("catid_" + i).innerHTML = categories[sortidx[i]][1];
+		total += categories[sortidx[i]][1];
+	}
+	
+	document.getElementById("total").innerHTML = total;
+	document.getElementById("persist").value = JSON.stringify(categories);
+}
+
+function minus(index) {
+	if (categories[index][1] > 0)
+		categories[index][1] --;
+	
+	redisplay();
+}
+
+function plus(index) {
+	categories[index][1] ++;
+	
+	redisplay();
+}
+
+function init() {
+	sortidx = new Array(categories.length);
+	for (i = 0;i < categories.length;i ++) {
+		sortidx[i] = i;
+	}
+	
+	resortIndex();
+	
+	var table = '<table class="board">';
+	for (i = 0;i < categories.length;i ++) {
+		table += '<tr>';
+		table += '<td class="cell centerp"><button id="clear" type="button" class="fullbutton" onclick="minus(' + sortidx[i] + ')">-</button></td>';
+		table += '<td class="cell centerp">' + categories[sortidx[i]][0] + '</td>';
+		table += '<td class="cell centerp"><button id="clear" type="button" class="fullbutton" onclick="plus(' + sortidx[i] + ')">+</button></td>';
+		table += '<td class="cell rightp score"><span id="catid_' + i + '">' + categories[sortidx[i]][1] + '</span></td>';
+		table += '</tr>';
+	}
+	
+	table += '</table>';
+
+	document.getElementById("cattable").innerHTML = table;
+	
+	redisplay();
+}
+
+function newcat() {
+	var catlen = categories.length;
+	
+	categories[catlen] = new Array(2);
+	
+	if (document.getElementById("newcatinput").value !== "") {
+		categories[catlen][0] = document.getElementById("newcatinput").value;
+		categories[catlen][1] = 0;
+	}
+	
+	document.getElementById("newcatinput").value = "";
+	
+	init();
+}
+
+function restore() {
+	categories = JSON.parse(document.getElementById("persist").value);
+	init();
+}
+
+function resortIndex() {
+	if (document.getElementById("sorttimesd").checked)
+		sortByTimesd();
+	else if (document.getElementById("sorttimesa").checked)
+		sortByTimesa();
+	else
+		sortByName();
+}
+
+function sortByName() {
+	sortidx.sort((a, b) => {
+		var la = categories[sortidx[a]][0].toLowerCase();
+		var ra = categories[sortidx[b]][0].toLowerCase();
+		return la.localeCompare(ra);
+	});
+	
+}
+
+function sortByTimesa() {
+	sortidx.sort((a, b) => {
+		return categories[sortidx[a]][1] - categories[sortidx[b]][1];
+	});
+	
+}
+
+function sortByTimesd() {
+	sortidx.sort((a, b) => {
+		return categories[sortidx[b]][1] - categories[sortidx[a]][1];
+	});
+	
+}
+
+document
+.addEventListener("DOMContentLoaded",
+    function () {
+		document.getElementById("newcatinput").value = "";
+		init();
+//		document.getElementById("persist").value = '[["Sample 1",2],["Sample 2",2],["Ad Hom",3],["Poisoning the well",6]]';
+    });
+
+</script>
+
+<style>
+body {
+  background-color: white;
+  padding: 10px;
+}
+
+h1 {
+  color: black;
+  margin-left: 40px;
+}
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+@media screen,print {
+
+.cell {
+  border: 4px;
+  background-color: white;
+    -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+.buttondown {
+  background-color: #9070E0 !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+.centerp {
+  text-align: center;
+}
+
+.rightp {
+  text-align: right;
+}
+
+.fullwidth {
+	width: 100%;
+}
+
+.board {
+	width: 100%;
+	min-height: 100%;
+	height: 100%;
+	background-color: green !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    background: transparent;
+    width: 100%;
+    border: none;
+    border-top: solid 1px #000;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+}
+.score {
+	min-width: 10%;
+}
+
+.fullbutton {
+	width: 3em;
+	min-height: 2em;
+	height: 2em;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.topspacing {
+	margin-top: 1em !important;
+}
+
+.pad3 {
+	padding: 4px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div>
+	<div class="no-print">
+		<h1>Reaction/Analysis Category Scoreboard</h1>
+	</div>
+
+	<div class="fullwidth white">
+		<p class="rightp white">Total: <span id="total">0</span></p>
+		<div id="cattable">
+		</div>
+	</div>
+	
+	<div class="fullwidth white topspacing">
+		<input type="text" id="newcatinput"></input>
+		<button type="button" onclick="newcat()">New category</button>
+	</div>
+
+	<div class="fullwidth white topspacing">
+		<h2>Sort mode</h2>
+		<input type="radio" name="sortmode" value="cat" id="sortcat" checked="checked" onclick="init()"> Category</input>
+		<input type="radio" name="sortmode" value="times" id="sorttimesd" onclick="init()"> Times Descending</input>
+		<input type="radio" name="sortmode" value="times" id="sorttimesa" onclick="init()"> Times Ascending</input>
+	</div>
+
+	<div class="fullwidth white">
+		<h2>State persistence</h2>
+		<p>The text in this input element can be copied and saved somewhere else. Later, it can be pasted back in and the state can be restored.</p>
+		<textarea class="fullwidth" id="persist"></textarea>
+		<button type="button" onclick="restore()">Restore</button>
+	</div>
+
+</div>
+</body>
+</html> 
