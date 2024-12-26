@@ -3,6 +3,7 @@ package me.qbert.skywatch.ui.renderers;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import me.qbert.skywatch.astro.ObservationTime;
@@ -36,14 +37,23 @@ public class SolarSystemDateRenderer {
 	private ArcRenderer [] planetsCalendar;
 	private ArcRenderer [] planetsOrbits;
 	private LineRenderer calendarPointer;
+	private LineRenderer meridianPointer;
+	private LineRenderer horizonPointer;
 	
 	private ArcRenderer circumference;
 	
 	private LineRenderer [] months;
 	
+	private boolean previousCoordsInitialized = false;
+	private LineRenderer [] planetTrails;
+	private double [] previousPlanetXCoords = new double[SolarObjects.OBJECT_LIST.length];
+	private double [] previousPlanetYCoords = new double[SolarObjects.OBJECT_LIST.length];
+	
 	private boolean reinitPlanetOrbits = true;
 	private boolean planetsToScale = false;
 	private EncapsulatingRenderer planetRenderer;
+	
+	private boolean currentSunCentric = true;
 	
 	public SolarSystemDateRenderer() throws Exception {
 		ArrayList<RendererI> renderers = new ArrayList<RendererI>();
@@ -61,6 +71,8 @@ public class SolarSystemDateRenderer {
         background.setMaintainAspectRatio(false);
         renderers.add(background); */
         
+		
+		planetTrails = new LineRenderer[SolarObjects.OBJECT_LIST.length];
         
     	planetsCalendar = new ArcRenderer[SolarObjects.OBJECT_LIST.length + 1];
         colorRenderer = new ColorRenderer();
@@ -124,6 +136,30 @@ public class SolarSystemDateRenderer {
     	calendarPointer.setY2(0.0);
     	renderers.add(calendarPointer);
     	
+    	meridianPointer = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.white);
+        colorRenderer.setForegroundColor(Color.white);
+        renderers.add(colorRenderer);
+    	meridianPointer.setMaintainAspectRatio(true);
+    	meridianPointer.setX1(0.5);
+    	meridianPointer.setY1(0.5);
+    	meridianPointer.setX2(0.5);
+    	meridianPointer.setY2(0.0);
+    	renderers.add(meridianPointer);
+    	
+    	horizonPointer = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.darkGray);
+        colorRenderer.setForegroundColor(Color.darkGray);
+        renderers.add(colorRenderer);
+        horizonPointer.setMaintainAspectRatio(true);
+        horizonPointer.setX1(0.5);
+        horizonPointer.setY1(0.5);
+        horizonPointer.setX2(0.5);
+        horizonPointer.setY2(0.0);
+    	renderers.add(horizonPointer);
+    	
     	initMonths();
     	
         colorRenderer = new ColorRenderer();
@@ -143,6 +179,19 @@ public class SolarSystemDateRenderer {
     	circumference.setFill(false);
     	circumference.setArcAngle(360);
     	renderers.add(circumference);
+    	
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.white);
+        colorRenderer.setForegroundColor(Color.white);
+        renderers.add(colorRenderer);
+
+        for (int i = 0;i < SolarObjects.OBJECT_LIST.length;i ++) {
+    		planetTrails[i] = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+    		planetTrails[i].setRenderComponent(true);
+    		planetTrails[i].setMaintainAspectRatio(true);
+    		renderers.add(planetTrails[i]);
+    	}
+    	
     	
     	planetRenderer = new EncapsulatingRenderer();
     	planetRenderer.setLockApsectRatio(1.0);
@@ -237,16 +286,54 @@ public class SolarSystemDateRenderer {
 		return planetsToScale;
 	}
 
-	public void updateSolarObjects(int dayOfYear, SolarSystemCoordinate[] planetLocations) {
-        
+	public void updateSolarObjects(int dayOfYear, double rightAscension, SolarSystemCoordinate[] planetLocations, boolean solarSystemSunCentric, boolean withPlanetTrails) {
+
         double desiredAngle = Math.toRadians(90.0 + 360.0 * dayOfYear / 365.25);
         double addedAngle = 0.18246472132354;
 		double zoomFactor = 0.5 / SolarObjects.SOLAR_SYSTEM_IN_AUS;
 		double x;
 		double y;
+		double extraZoomFactor = 1.0;
+//		double earthCentricZoom = 0.5 / ((SolarObjects.SOLAR_SYSTEM_IN_AUS + 1) / SolarObjects.SOLAR_SYSTEM_IN_AUS);
+		
+		if (! solarSystemSunCentric) {
+//			if (! planetsToScale)
+				extraZoomFactor = ((SolarObjects.SOLAR_SYSTEM_IN_AUS - 3) / SolarObjects.SOLAR_SYSTEM_IN_AUS);
+//			else
+//				extraZoomFactor = ((SolarObjects.SOLAR_SYSTEM_IN_AUS + 3) / SolarObjects.SOLAR_SYSTEM_IN_AUS);
+			zoomFactor = 0.5 * extraZoomFactor;
+		}
+		
+		calendarPointer.setRenderComponent(solarSystemSunCentric);
+		horizonPointer.setRenderComponent(solarSystemSunCentric);
+		meridianPointer.setRenderComponent(solarSystemSunCentric);
+//    	for (int i = 0;i < SolarObjects.OBJECT_LIST.length;i ++) {
+//    		planetsOrbits[i].setRenderComponent(solarSystemSunCentric);
+//    	}
+        for (int i = 0;i < months.length;i ++) {
+        	months[i].setRenderComponent(solarSystemSunCentric);
+        }
+        
+   		planetsCalendar[0].setX(0.5);
+   		planetsCalendar[0].setY(0.5);
+        
+        if (currentSunCentric != solarSystemSunCentric) {
+ //       	ArcRenderer tempSun = planetsCalendar[0];
+ //       	planetsCalendar[0] = planetsCalendar[1];
+ //       	planetsCalendar[1] = tempSun;
+        	
+ //   		planetsCalendar[0].setX(0.5);
+ //   		planetsCalendar[0].setY(0.5);
+
+    		currentSunCentric = solarSystemSunCentric;
+        }
+        
+        double xp = 0;
+        double yp = 0;
+		
     	for (int i = 0;i < SolarObjects.OBJECT_LIST.length;i ++) {
-    		x = planetLocations[i].getX() * zoomFactor;
-    		y = planetLocations[i].getY() * zoomFactor;
+			x = planetLocations[i].getX() * zoomFactor;
+			y = planetLocations[i].getY() * zoomFactor;
     		
     		double ang = Math.atan2(y, x);
     		double radius = Math.sqrt(x*x+y*y);
@@ -258,6 +345,7 @@ public class SolarSystemDateRenderer {
     //			addedAngle = ang - desiredAngle;
     //		}
     		
+//    		if (solarSystemSunCentric) {
     		if (! planetsToScale) {
     			
     			radius = (double)(i + 1) * 0.5 / (double)SolarObjects.OBJECT_LIST.length;
@@ -267,16 +355,34 @@ public class SolarSystemDateRenderer {
     			if ((i == 1) || (i == 2))
     				radius = (double)i * 0.5 / (double)SolarObjects.OBJECT_LIST.length;
     			
+    			radius *= extraZoomFactor;
+
     			// similar to the orbit of pluto at scale and gives a bit of room for the months marker
     			radius *= 0.8;
     			
     			x = radius * Math.cos(ang - addedAngle);
     			y = radius * Math.sin(ang - addedAngle);
-    		} else if (addedAngle != 0) {
+    		} else if ((addedAngle != 0) || (! solarSystemSunCentric)) {
+    			radius *= extraZoomFactor;
+    			if (! solarSystemSunCentric)
+    				radius /= 31.5;
+
     			x = radius * Math.cos(ang - addedAngle);
     			y = radius * Math.sin(ang- addedAngle);
     		}
+//    		}
     		
+    		if ((! solarSystemSunCentric) && (i == 0)) {
+    			xp = -x;
+    			yp = y;
+    			
+    	   		planetsCalendar[0].setX(0.5 + xp);
+    	   		planetsCalendar[0].setY(0.5 + yp);
+    			
+    		}
+    		
+    		x += xp;
+    		y -= yp;
     		
     		x += 0.5;
     		y = 0.5 - y;
@@ -284,10 +390,23 @@ public class SolarSystemDateRenderer {
     		planetsCalendar[i + 1].setX(x);
     		planetsCalendar[i + 1].setY(y);
     		
-    		if ((planetsToScale != planetsToScale) || (reinitPlanetOrbits)) {
+    		if ((! solarSystemSunCentric) || (reinitPlanetOrbits)) {
 	    		planetsOrbits[i].setWidth(radius * 2);
 	    		planetsOrbits[i].setHeight(radius * 2);
+	    		
+	    		planetsOrbits[i].setX(0.5 + xp);
+	    		planetsOrbits[i].setY(0.5 + yp);
     		}
+    		
+			if (! withPlanetTrails)
+				planetTrails[i].reinitialize();
+			else if (previousCoordsInitialized) {
+				planetTrails[i].addSegment(previousPlanetXCoords[i], previousPlanetYCoords[i], x, y);
+    		}
+    		
+    		previousPlanetXCoords[i] = x;
+    		previousPlanetYCoords[i] = y;
+
 
     		if (i == 0) {
 	    		x = 0.5 * Math.cos(-ang + addedAngle) + 0.5;
@@ -295,9 +414,47 @@ public class SolarSystemDateRenderer {
 	    		
 	        	calendarPointer.setX2(x);
 	        	calendarPointer.setY2(y);
+
+	        	double legAngle = Math.toRadians(rightAscension);
+	        	double angleC = Math.asin(radius*Math.sin(legAngle) / 0.5);
+	        	double angleB = Math.PI - legAngle - angleC;
+	        	double b = 0.5*Math.sin(angleB)/Math.sin(legAngle);
+	        	
+	    		x = b * Math.cos(-ang + addedAngle - Math.toRadians(180.0 + rightAscension)) + planetsCalendar[i + 1].getX();
+	    		y = b * Math.sin(-ang + addedAngle - Math.toRadians(180.0 + rightAscension)) + planetsCalendar[i + 1].getY();
+	    		
+	        	meridianPointer.setX1(planetsCalendar[i + 1].getX());
+	        	meridianPointer.setY1(planetsCalendar[i + 1].getY());
+	        	meridianPointer.setX2(x);
+	        	meridianPointer.setY2(y);
+
+	        	legAngle = Math.toRadians(270.0 + rightAscension);
+	        	angleC = Math.asin(radius*Math.sin(legAngle) / 0.5);
+	        	angleB = Math.PI - legAngle - angleC;
+	        	b = 0.5*Math.sin(angleB)/Math.sin(legAngle);
+	        	
+	    		x = b * Math.cos(-ang + addedAngle - Math.toRadians(90.0 + rightAscension)) + planetsCalendar[i + 1].getX();
+	    		y = b * Math.sin(-ang + addedAngle - Math.toRadians(90.0 + rightAscension)) + planetsCalendar[i + 1].getY();
+	        	horizonPointer.setX1(x);
+	        	horizonPointer.setY1(y);
+	        	
+	        	legAngle = Math.toRadians(90.0 + rightAscension);
+	        	angleC = Math.asin(radius*Math.sin(legAngle) / 0.5);
+	        	angleB = Math.PI - legAngle - angleC;
+	        	b = 0.5*Math.sin(angleB)/Math.sin(legAngle);
+
+	        	x = b * Math.cos(-ang + addedAngle - Math.toRadians(270.0 + rightAscension)) + planetsCalendar[i + 1].getX();
+	    		y = b * Math.sin(-ang + addedAngle - Math.toRadians(270.0 + rightAscension)) + planetsCalendar[i + 1].getY();
+	    		horizonPointer.setX2(x);
+	    		horizonPointer.setY2(y);
     		}
     	}
     	
+		if (withPlanetTrails)
+			previousCoordsInitialized = true;
+		else
+			previousCoordsInitialized = false;
+				
     	reinitPlanetOrbits = false;
 	}
 }

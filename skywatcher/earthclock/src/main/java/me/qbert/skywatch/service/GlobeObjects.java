@@ -1,8 +1,16 @@
 package me.qbert.skywatch.service;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import me.qbert.skywatch.model.GeoLocation;
+import me.qbert.skywatch.model.ObjectDirectionRaDec;
+import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
 import me.qbert.skywatch.service.projections.GlobeTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.ui.renderers.GlobeImageRenderer;
@@ -12,6 +20,7 @@ import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.ArcRenderer;
 import me.qbert.ui.renderers.BoundaryContainerRenderer;
+import me.qbert.ui.renderers.TextRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -29,6 +38,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class GlobeObjects extends AbstractCelestialObjects {
+	private static double MOON_DISTANCE = 384400;
+	private static double MOON_RADIUS = 1737.4;
+	
+	private static double EARTH_RADIUS = 6371.0;
+	
+	private static double SUN_DISTANCE = 149600000;
+	
 	private GlobeTransform transform;
 	private GlobeImageRenderer globeImageRenderer;
 	private RingClockImageRenderer slipRingClockRenderer;
@@ -39,8 +55,15 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	
 	private double circumferenceSizeFraction;
 	
+	private List<RendererI> fullRenderers;
+	
 	public GlobeObjects(Canvas canvas) throws Exception {
 		super(canvas);
+	}
+	
+	public void setStereoVisionRotate(double stereoVisionRotate) {
+		transform.setStereoVisionRotate(stereoVisionRotate);
+		globeImageRenderer.setStereoVisionRotate(stereoVisionRotate);
 	}
 
 	@Override
@@ -245,9 +268,13 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	}
 	
 	public Double updateLocation(double latitude, double longitude, double observerLongitude, boolean renderFullCircumferenceSize, double overscan) {
+		return updateLocation(latitude, longitude, observerLongitude, renderFullCircumferenceSize, overscan, false);
+	}
+	
+	public Double updateLocation(double latitude, double longitude, double observerLongitude, boolean renderFullCircumferenceSize, double overscan, boolean positiveZOnly) {
 		if ((renderFullCircumferenceSize) && (circumferenceSizeFraction < 0.95))
 			transform.setZoomedOut(false);
-		Double rval = transform.transform(latitude, longitude, mapCenterLatitude, getViewRotationAngle(), observerLongitude, overscan);
+		Double rval = transform.transform(latitude, longitude, mapCenterLatitude, getViewRotationAngle(), observerLongitude, overscan, positiveZOnly);
 		if (renderFullCircumferenceSize)
 			transform.setZoomedOut(true);
 		return rval;
@@ -276,4 +303,69 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
 		return (int)Math.sqrt(averageRadiusBoundary*averageRadiusBoundary-cartesianYCoordinate*cartesianYCoordinate);
 	}
+
+	@Override
+	protected void setRenderers(List<RendererI> renderers) {
+		fullRenderers = renderers;
+		//System.out.println("??? MAGIC GLOBE? " + fullRenderers);
+		getCanvas().setRenderers(renderers);
+	}
+	
+	protected List<RendererI> getObjectRenderers() {
+		return fullRenderers;
+	}
+
+	@Override
+	protected void repaintRequest() {
+		getCanvas().repaint();
+	}
+
+	@Override
+	protected Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint) {
+		if (centerMode != MapCenterMode.SUN)
+			return null;
+		
+		Point2D.Double p = updateLocation(subMoonPoint.getLatitude(), subMoonPoint.getLongitude(), 0, false, MOON_DISTANCE/EARTH_RADIUS, true);
+		
+		if (p != null) {
+			Point2D.Double surfacePoint = transform.getOverscanLatLon();
+			
+			if (surfacePoint != null) {
+				Calendar cal = getSequenceGenerator().getTime().getTime();
+
+				int year = cal.get(Calendar.YEAR);
+				int month = cal.get(Calendar.MONTH) + 1;
+				int day = cal.get(Calendar.DAY_OF_MONTH);
+				int hour = cal.get(Calendar.HOUR_OF_DAY);
+				int minute = cal.get(Calendar.MINUTE);
+				int second = cal.get(Calendar.SECOND);
+				
+				String datestamp = String.format("%04d%02d%02d%02d%02d%02d", year, month, day, hour, minute, second);
+				
+//				System.out.println(datestamp + "," + subSunPoint.getLatitude() + "," + subSunPoint.getLongitude()
+//				 		+ "," + subMoonPoint.getLatitude() + "," + subMoonPoint.getLongitude()
+//						+ "," + surfacePoint.x + "," + surfacePoint.y);
+			}
+		}
+		
+		return p;
+	}
+
+	@Override
+	protected boolean updateUserObject(int userObjectIndex, double latitude, double longitude, double altitude, double diameter) {
+		return false;
+	}
+
+	@Override
+	protected ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
+

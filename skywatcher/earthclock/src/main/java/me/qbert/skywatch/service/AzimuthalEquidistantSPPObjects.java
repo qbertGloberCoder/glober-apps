@@ -1,11 +1,21 @@
 package me.qbert.skywatch.service;
 
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.qbert.skywatch.model.GeoLocation;
+import me.qbert.skywatch.model.ObjectDirectionRaDec;
+import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
+import me.qbert.skywatch.service.AbstractCelestialObjects.UserObjectSettings;
 import me.qbert.skywatch.service.projections.AzimuthalEquidistantSPTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.ArcRenderer;
+import me.qbert.ui.renderers.TextRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -24,6 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class AzimuthalEquidistantSPPObjects extends AbstractCelestialObjects {
 	private AzimuthalEquidistantSPTransform transform;
+	private ArcRenderer [] arcRenderers = new ArcRenderer[2];
 
 	public AzimuthalEquidistantSPPObjects(Canvas canvas) throws Exception {
 		super(canvas);
@@ -146,5 +157,65 @@ public class AzimuthalEquidistantSPPObjects extends AbstractCelestialObjects {
 	@Override
 	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
 		return (int)Math.sqrt(averageRadiusBoundary*averageRadiusBoundary-cartesianYCoordinate*cartesianYCoordinate);
+	}
+
+	@Override
+	protected void setRenderers(List<RendererI> renderers) {
+		getCanvas().setRenderers(renderers);
+	}
+
+	@Override
+	protected void repaintRequest() {
+		getCanvas().repaint();
+	}
+
+	@Override
+	protected Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint) {
+		return null;
+	}
+
+	@Override
+	protected boolean updateUserObject(int userObjectIndex, double latitude, double longitude, double altitude, double diameter) {
+		return false;
+	}
+
+	private ArcRenderer createUserObject() throws Exception {
+        ArcRenderer newObject = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.FRACTIONAL_COORDINATES);
+        newObject.setHeight(0.02);
+        newObject.setWidth(0.02);
+        newObject.setX(0.25);
+        newObject.setY(0.5);
+        newObject.setArcAngle(360);
+        newObject.setFill(true);
+        
+        return newObject;
+	}
+	
+	@Override
+	protected ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception {
+		arcRenderers[0] = createUserObject();
+		arcRenderers[1] = createUserObject();
+		arcRenderers[1].setX(0.75);
+		
+		ArrayList<UserObjectSettings> settings = new ArrayList<UserObjectSettings>();
+		
+		UserObjectSettings userObject = new UserObjectSettings();
+		userObject.userObjectColor = Color.blue;
+		userObject.userObject = arcRenderers[1];
+        settings.add(userObject);
+        
+        userObject = new UserObjectSettings();
+		userObject.userObjectColor = Color.yellow;
+		userObject.userObject = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.FRACTIONAL_COORDINATES);
+		userObject.userObject = arcRenderers[0];
+        settings.add(userObject);
+		
+		return settings;
+	}
+
+	@Override
+	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

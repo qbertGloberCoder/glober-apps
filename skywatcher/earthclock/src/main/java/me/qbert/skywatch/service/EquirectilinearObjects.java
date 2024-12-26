@@ -1,8 +1,15 @@
 package me.qbert.skywatch.service;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.qbert.skywatch.model.GeoLocation;
+import me.qbert.skywatch.model.ObjectDirectionRaDec;
+import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
 import me.qbert.skywatch.service.projections.EquirectilinearTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.ui.renderers.DigitalClockImageRenderer;
@@ -10,6 +17,7 @@ import me.qbert.skywatch.ui.renderers.EquirectilinearScrollImageRenderer;
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.AbstractImageRenderer;
 import me.qbert.ui.renderers.LineRenderer;
+import me.qbert.ui.renderers.TextRenderer;
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -44,7 +52,7 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 
 	@Override
 	protected void locationChanged(double latitude, double longitude) {
-		equirectinearImageRenderer.wrapToCoordinates(longitude);
+		equirectinearImageRenderer.wrapToCoordinates(0);
 	}
 	
 	@Override
@@ -211,5 +219,37 @@ public class EquirectilinearObjects extends AbstractCelestialObjects {
 		if ((Math.abs(cartesianYCoordinate) > yBoundary))
 			return 0;
 		return xBoundary;
+	}
+
+	@Override
+	protected void setRenderers(List<RendererI> renderers) {
+		getCanvas().setRenderers(renderers);
+	}
+
+	@Override
+	protected void repaintRequest() {
+		getCanvas().repaint();
+	}
+
+	@Override
+	protected Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint) {
+		return null;
+	}
+
+	@Override
+	protected boolean updateUserObject(int userObjectIndex, double latitude, double longitude, double altitude, double diameter) {
+		return false;
+	}
+
+	@Override
+	protected ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

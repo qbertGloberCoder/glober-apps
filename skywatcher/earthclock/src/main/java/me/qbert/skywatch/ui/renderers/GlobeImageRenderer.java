@@ -29,13 +29,20 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	private double lastLon;
 	private boolean lastZoom = false;
 	private double lastZoomLevel = 0.0;
-	private BufferedImage lastBi;
+	private BufferedImage lastBi = null;
 
 	private boolean zoomedOut = true;
 	private boolean leaveUnwrapped = false;
 	
 	private double circumferenceSizeFraction = 1.0;
 
+	private double stereoVisionRotate = 0.0;
+	private double lastStereoVision = 0.0;
+	
+	public GlobeImageRenderer(BufferedImage equirectinearImage) {
+		this.equirectinearImage = equirectinearImage;
+	}
+	
 	public GlobeImageRenderer(File equirectinearImageFile) {
 		if (equirectinearImageFile != null) {
 			try {
@@ -66,12 +73,25 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 			wrapToCoordinates(lastLat, lastLon);
 	}
 
+	public double getStereoVisionRotate() {
+		return stereoVisionRotate;
+	}
+
+
+	public void setStereoVisionRotate(double stereoVisionRotate) {
+		this.stereoVisionRotate = stereoVisionRotate;
+	}
+	
+	public BufferedImage getLastBi() {
+		return lastBi;
+	}
+
 
 	public void wrapToCoordinates(double latitude, double longitude) {
 		if (leaveUnwrapped)
 			return;
 
-		if ((lastBi != null) && (latitude == lastLat) && (longitude == lastLon) && (zoomedOut == lastZoom) && (zoomLevel == lastZoomLevel))
+		if ((lastBi != null) && (latitude == lastLat) && (longitude == lastLon) && (zoomedOut == lastZoom) && (zoomLevel == lastZoomLevel) && (lastStereoVision == stereoVisionRotate))
 			return;
 		
 		
@@ -94,6 +114,7 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    
 	    double latRad = Math.toRadians(latitude);
 	    double lonRad = Math.toRadians(longitude);
+	    double stereoRad = Math.toRadians(stereoVisionRotate);
 
 		double pixelsPerDegreeX = (double)((inWidth - borderLeft - borderRight) - 2) / 360.0;
 		double pixelsPerDegreeY = (double)((inHeight - borderTop - borderBottom) - 2) / 180.0;
@@ -130,6 +151,14 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    		double tr;
 	    		double ta;
 
+	    		if (stereoVisionRotate != 0.0) {
+		    		tr = Math.sqrt(tx*tx+tz*tz);
+		    		ta = Math.atan2(tz, tx);
+	    			
+	    			tx = tr*Math.cos(ta-stereoRad);
+	    			tz = tr*Math.sin(ta-stereoRad);
+	    		} 
+
 	    		tr = Math.sqrt(ty*ty+tz*tz);
 	    		ta = Math.atan2(tz, ty);
 	    		ty = tr*Math.cos(ta - latRad);
@@ -165,6 +194,7 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    lastLon = longitude;
 	    lastZoom = zoomedOut;
 	    lastZoomLevel = zoomLevel;
+	    lastStereoVision = stereoVisionRotate;
 	    
 	    setOriginalImage(lastBi);
 	}

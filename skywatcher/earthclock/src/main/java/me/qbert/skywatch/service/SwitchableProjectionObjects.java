@@ -25,6 +25,8 @@ import me.qbert.skywatch.astro.service.SunPrecession;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionAltAz;
+import me.qbert.skywatch.model.ObjectDirectionRaDec;
+import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
 import me.qbert.skywatch.service.projections.EquirectilinearTransform;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.ui.ImageTransformerI;
@@ -206,5 +208,35 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 	@Override
 	protected int getPixelOutOfBoundsXForY(int cartesianYCoordinate, int xBoundary, int yBoundary, double averageRadiusBoundary) {
 		return activeProjection.getPixelOutOfBoundsXForY(cartesianYCoordinate, xBoundary, yBoundary, averageRadiusBoundary);
+	}
+
+	@Override
+	protected void setRenderers(List<RendererI> renderers) {
+		getCanvas().setRenderers(renderers);
+	}
+
+	@Override
+	protected void repaintRequest() {
+		getCanvas().repaint();
+	}
+
+	@Override
+	protected Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint) {
+		return activeProjection.getMoonShadowCoordinate(centerMode, subSunPoint, subMoonPoint);
+	}
+
+	@Override
+	protected boolean updateUserObject(int userObjectIndex, double latitude, double longitude, double altitude, double diameter) {
+		return activeProjection.updateUserObject(userObjectIndex, latitude, longitude, altitude, diameter);
+	}
+
+	@Override
+	protected ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception {
+		return activeProjection.getUserArcRenderObjects();
+	}
+
+	@Override
+	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
+		return activeProjection.getExtraTextRenderers();
 	}
 }

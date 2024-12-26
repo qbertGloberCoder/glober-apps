@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObserverLocation;
+import me.qbert.skywatch.astro.ObserverLocation3D;
 import me.qbert.skywatch.astro.impl.AbstractCelestialObject;
 import me.qbert.skywatch.astro.impl.GeoCalculator;
 import me.qbert.skywatch.astro.impl.SolarObjects;
@@ -21,10 +22,13 @@ import me.qbert.skywatch.astro.service.ProjectionTransformerI;
 import me.qbert.skywatch.astro.service.SunPrecession;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionAltAz;
+import me.qbert.skywatch.model.ObjectDirectionRaDec;
 import me.qbert.skywatch.service.SwitchableProjectionObjects.ProjectionType;
 import me.qbert.skywatch.ui.component.Canvas;
+import me.qbert.skywatch.ui.renderers.GlobeImageRenderer;
 import me.qbert.skywatch.ui.renderers.PinnableCelestialObject;
 import me.qbert.skywatch.ui.renderers.SolarSystemDateRenderer;
+import me.qbert.skywatch.util.TrackPathLoader;
 import me.qbert.ui.ImageTransformerI;
 import me.qbert.ui.RendererI;
 import me.qbert.ui.renderers.AbstractFractionRenderer;
@@ -56,6 +60,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public abstract class AbstractCelestialObjects implements ImageTransformerI, ArcRendererLocationSetterI {
+	public enum ClockFaces {
+		NEEDLEHANDS("needle-hand"),
+		MICKEYMOUSE("mickeymouse"),
+		SILLYWALKS("sillywalks");
+		
+	    private String name;
+
+	    private ClockFaces(String stringVal) {
+	        name=stringVal;
+	    }
+	    public String toString(){
+	        return name;
+	    }
+
+	    public static String getEnumByString(String code){
+	        for(ClockFaces e : ClockFaces.values()){
+	            if(e.name.equals(code)) return e.name();
+	        }
+	        return null;
+	    }
+	}
+	
 	public enum MapCenterMode {
 		OBSERVER_LAT_LON("Observer lat/lon"),
 		OBSERVER_LON("Observer longitude"),
@@ -77,6 +103,11 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	        }
 	        return null;
 	    }
+	}
+	
+	protected class UserObjectSettings {
+		protected Color userObjectColor;
+		protected RendererI userObject;
 	}
 
 	public static final MapCenterMode [] MAP_CENTER_MODES = {MapCenterMode.OBSERVER_LAT_LON, MapCenterMode.OBSERVER_LON, MapCenterMode.SUN, MapCenterMode.MOON};
@@ -103,6 +134,9 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	private ImageRenderer minuteHand;
 	private ImageRenderer secondHand;
 	
+	private BoundaryContainerRenderer moonShadowRenderer;
+	private ArcRenderer moonShadowArc;
+
 	private ArcRenderer observerLocation;
 	
 	private PinnableCelestialObject sunObject;
@@ -127,11 +161,15 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	
 	private BoundaryContainerRenderer sunContourLinesContainerRenderer;
 	private BoundaryContainerRenderer moonContourLinesContainerRenderer;
+	private BoundaryContainerRenderer observerContourLinesContainerRenderer;
 	private LineRenderer [] sunlightContourLines = new LineRenderer[CONTOUR_ZENITH_ANGLES.length];
 	private LineRenderer [] moonlightContourLines = new LineRenderer[CONTOUR_ZENITH_ANGLES.length];
+	private LineRenderer observerContourLine;
 	private BoundaryContainerRenderer sunEclipticContainerRenderer;
 	private BoundaryContainerRenderer moonEclipticContainerRenderer;
 	
+	private LineRenderer userTracksLine;
+
 	private LineRenderer userGESunSightLine;
 	private LineRenderer userGEMoonSightLine;
 
@@ -169,13 +207,22 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	private boolean showClock = true;
 	private boolean showArtwork;
 	
-	private String clockFace = "mickeymouse";
+	private ClockFaces clockFace = ClockFaces.MICKEYMOUSE;
 	
 	private MapCenterMode centerMode;
 
 	private SolarSystemDateRenderer solarDateRenderer;
 	
 	private SplitContainerRenderer splitContainer;
+	
+	private BoundaryContainerRenderer userObjectRenderer;
+
+	private double aspectRatioModifier = 1.0; //0.5; //1.0; // 0.5;
+	
+	private ArrayList<GeoLocation> trackPath = null;
+	
+	private boolean showUserTracks = false;
+	private boolean showMoonShadow = false;
 	
 	public AbstractCelestialObjects(Canvas canvas) throws Exception {
 		this.canvas = canvas;
@@ -184,8 +231,18 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	
 	protected abstract void postConstructorInit() throws Exception;
 	
+	protected List<RendererI> getRenderers() {
+		return encapsulatingTopRenderer.getRenderers();
+	}
+	
+	protected void updateSequenceGenerator(SequenceGenerator sequenceGenerator) {
+		this.sequenceGenerator = sequenceGenerator;
+	}
+	
 	protected void init() throws Exception {
 		sequenceGenerator.setCalendarField(-1);
+		
+		trackPath = TrackPathLoader.loadTracks("track.txt");
 		
 		observerLocation = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.ABSOLUTE_COORDINATES);
 		
@@ -227,6 +284,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 		background = getBackgroundImageRenderer();
 		background.setRotateAngle(getRotationAngle(getViewRotationAngle()));
 		background.setMaintainAspectRatio(true);
+		background.setAspectRatioModifier(aspectRatioModifier);
 		
 //		background.setDebug(true);
 		
@@ -342,10 +400,15 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         moonContourLinesContainerRenderer = new BoundaryContainerRenderer();
  //       moonContourLinesContainerRenderer.setMaintainAspectRatio(true);
         
+        observerContourLinesContainerRenderer = new BoundaryContainerRenderer();
+//      observerContourLinesContainerRenderer.setMaintainAspectRatio(true);
+      
         backgroundRenderer.add(sunContourLinesContainerRenderer);
         backgroundRenderer.add(moonContourLinesContainerRenderer);
+        backgroundRenderer.add(observerContourLinesContainerRenderer);
         List<RendererI> sunContourLinesRenderers = new ArrayList<RendererI>();
         List<RendererI> moonContourLinesRenderers = new ArrayList<RendererI>();
+        List<RendererI> observerContourLinesRenderers = new ArrayList<RendererI>();
         
 
 		for (int i = 0;i < CONTOUR_ZENITH_ANGLES.length;i ++) {
@@ -394,9 +457,19 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			moonlightContourLines[i].setRenderComponent(RENDER_MOON_CONTOUR_ZENITH_ANGLES[i]);
 			moonContourLinesRenderers.add(moonlightContourLines[i]);
 		}
+		
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.green);
+        colorRenderer.setForegroundColor(Color.green);
+        observerContourLinesRenderers.add(colorRenderer);
+		observerContourLine = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+		observerContourLine.setLineConnectionPacmanMode(pacmanMode);
+		observerContourLine.setRenderComponent(true);
+		observerContourLinesRenderers.add(observerContourLine);
         
         sunContourLinesContainerRenderer.setRenderers(sunContourLinesRenderers);
         moonContourLinesContainerRenderer.setRenderers(moonContourLinesRenderers);
+        observerContourLinesContainerRenderer.setRenderers(observerContourLinesRenderers);
 
         
 
@@ -405,7 +478,26 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         clockRenderer.add(secondHand);
         clockRenderer.add(swissRailwaySecondRenderer);
         
+      	colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.black);
+        colorRenderer.setForegroundColor(Color.black);
+        foregroundRenderer.add(colorRenderer);
 
+        moonShadowRenderer = new BoundaryContainerRenderer();
+        moonShadowRenderer.setRenderComponent(false);
+        moonShadowArc = new ArcRenderer(ArcRenderer.FRACTIONAL_COORDINATES, ArcRenderer.FRACTIONAL_COORDINATES);
+        moonShadowArc.setHeight(0.05);
+        moonShadowArc.setWidth(0.05);
+        moonShadowArc.setX(0.25);
+        moonShadowArc.setY(0.25);
+        moonShadowArc.setArcAngle(360);
+        moonShadowArc.setFill(true);
+    	renderers = new ArrayList<RendererI>();
+    	renderers.add(moonShadowArc);
+        moonShadowRenderer.setRenderers(renderers);
+        foregroundRenderer.add(moonShadowRenderer);
+        
+        renderers = new ArrayList<RendererI>();
 
       	colorRenderer = new ColorRenderer();
         colorRenderer.setBackgroundColor(Color.gray);
@@ -415,6 +507,15 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         starContainerRenderer = new BoundaryContainerRenderer();
         starContainerRenderer.setRenderComponent(false);
         foregroundRenderer.add(starContainerRenderer);
+
+        colorRenderer = new ColorRenderer();
+        colorRenderer.setBackgroundColor(Color.orange);
+        colorRenderer.setForegroundColor(Color.orange);
+        foregroundRenderer.add(colorRenderer);
+        userTracksLine = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
+        userTracksLine.setLineConnectionPacmanMode(pacmanMode);
+        userTracksLine.setLineWidth(5.0, LineRenderer.ABSOLUTE_COORDINATES);
+        foregroundRenderer.add(userTracksLine);
 
         colorRenderer = new ColorRenderer();
         c = PinnableCelestialObject.brighten(Color.yellow, 2.0/3.0);
@@ -453,11 +554,12 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         foregroundRenderer.add(observerLocation);
         
         colorRenderer = new ColorRenderer();
-        colorRenderer.setBackgroundColor(Color.yellow);
-        colorRenderer.setForegroundColor(Color.yellow);
+        colorRenderer.setBackgroundColor(new Color(192,192, 0));
+        colorRenderer.setForegroundColor(colorRenderer.getBackgroundColor());
         foregroundRenderer.add(colorRenderer);
         userGESunSightLine = new LineRenderer(LineRenderer.FRACTIONAL_COORDINATES);
         userGESunSightLine.setLineConnectionPacmanMode(pacmanMode);
+        userGESunSightLine.setLineWidth(3.0, LineRenderer.ABSOLUTE_COORDINATES);
         foregroundRenderer.add(userGESunSightLine);
 
         colorRenderer = new ColorRenderer();
@@ -469,6 +571,29 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         foregroundRenderer.add(userGEMoonSightLine);
 
         
+        ArrayList<UserObjectSettings> userArcRenderObjects = getUserArcRenderObjects();
+        
+        userObjectRenderer = new BoundaryContainerRenderer();
+        userObjectRenderer.setRenderComponent(false);
+
+        if ((userArcRenderObjects != null) && (userArcRenderObjects.size() > 0)) {
+
+	    	for (int i = 0;i < userArcRenderObjects.size();i ++) {
+	        	UserObjectSettings objSetting = userArcRenderObjects.get(i);
+	        	
+		      	colorRenderer = new ColorRenderer();
+		        colorRenderer.setBackgroundColor(objSetting.userObjectColor);
+		        colorRenderer.setForegroundColor(objSetting.userObjectColor);
+	        	renderers.add(colorRenderer);
+	        	renderers.add(objSetting.userObject);
+	        }
+	    	userObjectRenderer.setRenderers(renderers);
+	        foregroundRenderer.add(userObjectRenderer);
+	        
+	    	renderers = new ArrayList<RendererI>();
+        }
+        
+        
         clockBoundaryRenderer = new BoundaryContainerRenderer();
 		clockBoundaryRenderer.setShiftDirectionX(shiftDirection);
 		clockBoundaryRenderer.setBoundMinimumXFraction(MARGIN_FRACTION);
@@ -476,6 +601,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 		clockBoundaryRenderer.setBoundMinimumYFraction(MARGIN_FRACTION);
 		clockBoundaryRenderer.setBoundMaximumYFraction(1.0 - MARGIN_FRACTION);
 		clockBoundaryRenderer.setMaintainAspectRatio(true);
+		clockBoundaryRenderer.setAspectRatioModifier(aspectRatioModifier);
 		clockBoundaryRenderer.setRenderers(clockRenderer);
 		
         colorRenderer = new ColorRenderer();
@@ -487,6 +613,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         PolyRenderer polyRenderer = new PolyRenderer(PolyRenderer.FRACTIONAL_COORDINATES);
         polyRenderer.setFill(true);
         polyRenderer.setMaintainAspectRatio(false);
+        polyRenderer.setAspectRatioModifier(aspectRatioModifier);
         double [] x = {0.0, 1.0, 1.0, 0.0};
         double [] y = {0.0, 0.0, 1.0, 1.0};
         polyRenderer.setX(x);
@@ -501,6 +628,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         backgroundBoundaryRenderer.setBoundMinimumYFraction(MARGIN_FRACTION);
         backgroundBoundaryRenderer.setBoundMaximumYFraction(1.0 - MARGIN_FRACTION);
         backgroundBoundaryRenderer.setMaintainAspectRatio(true);
+        backgroundBoundaryRenderer.setAspectRatioModifier(aspectRatioModifier);
         backgroundBoundaryRenderer.setRenderers(backgroundRenderer);
         
         renderers.add(backgroundBoundaryRenderer);
@@ -513,6 +641,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         foregroundBoundaryRenderer.setBoundMinimumYFraction(MARGIN_FRACTION);
         foregroundBoundaryRenderer.setBoundMaximumYFraction(1.0 - MARGIN_FRACTION);
         foregroundBoundaryRenderer.setMaintainAspectRatio(true);
+        foregroundBoundaryRenderer.setAspectRatioModifier(aspectRatioModifier);
         foregroundBoundaryRenderer.setRenderers(foregroundRenderer);
         foregroundBoundaryRenderer.setFollowContainer(backgroundBoundaryRenderer);
         
@@ -624,16 +753,39 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         renderers.add(colorRenderer);
         renderers.add(dateRenderer);
         renderers.add(observerLocationRenderer);
-        renderers.add(subSolarRenderer);
-        renderers.add(sunAltitudeRenderer);
-        renderers.add(sunAzimuthRenderer);
-        renderers.add(subLunarRenderer);
-        renderers.add(moonAltitudeRenderer);
-        renderers.add(moonAzimuthRenderer);
-        renderers.add(moonPhaseRenderer);
         
-        canvas.setRenderers(renderers);
+        if (showFullText()) {
+	        renderers.add(subSolarRenderer);
+	        renderers.add(sunAltitudeRenderer);
+	        renderers.add(sunAzimuthRenderer);
+	        renderers.add(subLunarRenderer);
+	        renderers.add(moonAltitudeRenderer);
+	        renderers.add(moonAzimuthRenderer);
+	        renderers.add(moonPhaseRenderer);
+        }
+        
+        ArrayList<TextRenderer> extraTextRenderers = getExtraTextRenderers();
+        
+        if ((extraTextRenderers != null) && (extraTextRenderers.size() > 0)) {
+        	for (TextRenderer renderer : extraTextRenderers) {
+        		renderer.setX(10);
+        		renderer.setY(textY);
+        		renderer.setText("---");
+        		textY += 15;
+        		renderers.add(renderer);
+        	}        	
+        }
+        
+        setRenderers(renderers);
 	}
+
+	protected abstract ArrayList<TextRenderer> getExtraTextRenderers() throws Exception;
+	protected abstract ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception;
+	
+	protected boolean showFullText() {
+		return true;
+	}
+	protected abstract void setRenderers(List<RendererI> renderers);
 	
 	private boolean isDrawBoundary() {
 		return ((sunFillBoundary != null) || (moonFillBoundary != null));
@@ -658,7 +810,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	public boolean isFullSize() {
 		return true;
 	}
-	
+
 	public void setCenterLocation(MapCenterMode centerMode) {
 		MapCenterMode lastMode = this.centerMode;
 		this.centerMode = centerMode;
@@ -717,18 +869,16 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	}
 	
 	public void setTimeBias(int timeBiasSeconds) {
-		sequenceGenerator.getTime().setTimeBiasMillis(timeBiasSeconds * 1000);
+		sequenceGenerator.getTime().setTimeBiasMillis(((long)timeBiasSeconds)); // + (4L*7L*86400L)) * 1000L);
 	}
 
-	public void setClockFace(boolean mickeyFace) {
-		if (mickeyFace) 
-			clockFace = "mickeymouse";
-		else
-			clockFace = "needle-hand";
+	public void setClockFace(ClockFaces clockFace) {
+		this.clockFace = clockFace;
 		
 		File artworkFile = new File("clocks/" + clockFace + "/artwork.png");
+		//System.out.println("??? ARTWORK IS: " + artworkFile);
 		if (artworkFile.exists()) {
-			faceArtwork.reinitOverlay(artworkFile);
+			faceArtwork.reinitImage(artworkFile);
 			faceArtwork.setRenderComponent(true);
 			showArtwork = true;
 		} else {
@@ -929,16 +1079,20 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	protected abstract boolean showObjectsAsPins();
 
 	protected double getViewRotationAngle() {
+		
 		if ((centerMode == MapCenterMode.OBSERVER_LAT_LON) || (centerMode == MapCenterMode.OBSERVER_LON)) {
-			rotateToCoordinate((centerMode == MapCenterMode.OBSERVER_LAT_LON) ? sequenceGenerator.getMyLocation().getLatitude() : 0.0, sequenceGenerator.getMyLocation().getLongitude());
+			rotateToCoordinate(((centerMode == MapCenterMode.OBSERVER_LAT_LON) ? sequenceGenerator.getMyLocation().getLatitude() : 0.0),
+					sequenceGenerator.getMyLocation().getLongitude());
 			return sequenceGenerator.getMyLocation().getLongitude();
 		}
 		
 		if (centerMode == MapCenterMode.SUN) {
 			AbstractCelestialObject solarObjects = sequenceGenerator.getSolarObjects();
 			solarObjects.setObjectIndex(0);
-			rotateToCoordinate(solarObjects.getEarthPositionOverhead().getLatitude(), solarObjects.getEarthPositionOverhead().getLongitude());
-			return solarObjects.getEarthPositionOverhead().getLongitude();
+			double tempLat = sequenceGenerator.getLatitudeBias(solarObjects.getEarthPositionOverhead().getLatitude());
+			double tempLon = sequenceGenerator.getLongitudeBias(solarObjects.getEarthPositionOverhead().getLongitude());
+			rotateToCoordinate(tempLat, tempLon);
+			return tempLon;
 		}
 		
 		if (centerMode == MapCenterMode.MOON) {
@@ -950,6 +1104,13 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	}
 	
 	public void updateObjects(boolean repaintCanavas) throws Exception {
+		updateObjects(repaintCanavas, sequenceGenerator, false);
+	}
+	
+	protected abstract Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint);
+	protected abstract boolean updateUserObject(int userObjectIndex, double latitude, double longitude, double altitude, double diameter);
+	
+	protected void updateObjects(boolean repaintCanavas, SequenceGenerator sequenceGenerator, boolean withDstChange) throws Exception {
         int backgroundRotateDirection = getBackgroundRotateDirection();
         double clockRotate;
         
@@ -960,8 +1121,15 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         
         boolean pacmanMode = isLineRenderPacmanMode();
         
-        if (sequenceGenerator.isInitialized()) {
-        	boolean dstChanged = sequenceGenerator.advanceSequence(dstRotateSetting == 2);
+//        double dstMod = 0.0;
+        
+		boolean showUserObjects = false;
+
+		if (sequenceGenerator.isInitialized()) {
+        	boolean dstChanged = withDstChange;
+        	
+        	if (sequenceGenerator == this.sequenceGenerator)
+        		dstChanged = sequenceGenerator.advanceSequence(dstRotateSetting == 2);
         	
     		Calendar cal = sequenceGenerator.getTime().getTime();
     		
@@ -975,6 +1143,9 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			double tdstOffset = (double)(cal.get(Calendar.DST_OFFSET) / 3600000.0);
 			double tzOffset = (double)(cal.get(Calendar.ZONE_OFFSET) / 3600000.0);
 			double timezoneAdjust = tzOffset + tdstOffset;
+			
+/*			if (tdstOffset != 0)
+				dstMod = 15.0 * tdstOffset; */
 			
 			if (sequenceGenerator.getCalendarField() == -1)
 				milliSecond = 0;
@@ -1035,7 +1206,11 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
     		GeoLocation subObjectPoint;
     		subObjectPoint = solarObjects.getEarthPositionOverhead();
     		
+    		ObjectDirectionRaDec sunRaDec = solarObjects.getCurrentDirection();
+    		
     		boolean showAsPins = showObjectsAsPins();
+    		
+    		GeoLocation subSunPoint = subObjectPoint;
     		
     		sunObject.updatePin(subObjectPoint.getLatitude(), subObjectPoint.getLongitude(), 16, 12, 6, showAsPins);
     		double sunRa = solarObjects.getCurrentDirection().getRightAscension();
@@ -1048,9 +1223,25 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
     		sunAzimuthRenderer.setText("Azimuth: " + altitudeAzimuth.getAzimuth());
             
     		ArrayList<GeoLocation> pathToObject = null;
-    		if ((renderSunGPGreatCircleRoute) && (altitudeAzimuth.getAltitude() >= 0))
-    			pathToObject = GeoCalculator.divideGreatCircle(sequenceGenerator.getMyLocation(), subObjectPoint, 360);
+    		if (renderSunGPGreatCircleRoute) {
+    			if (altitudeAzimuth.getAltitude() >= 0) {
+	    			pathToObject = GeoCalculator.divideGreatCircle(sequenceGenerator.getMyLocation(), subObjectPoint, 360);
+	    			pathToObject.add(pathToObject.get(0));
+	    			showUserObjects = true;
+    			} else {
+    				pathToObject = new ArrayList<GeoLocation>();
+    				GeoLocation geoLoc = new GeoLocation();
+    				geoLoc.setGeoLocation(sequenceGenerator.getMyLocation().getLatitude(), sequenceGenerator.getMyLocation().getLongitude());
+    				pathToObject.add(geoLoc);
+    				geoLoc = new GeoLocation();
+    				geoLoc.setGeoLocation(subObjectPoint.getLatitude(), subObjectPoint.getLongitude());
+    				pathToObject.add(geoLoc);
+    			}
+    		}
     		setLineRendererPathBetweenTwoPoints(userGESunSightLine, pathToObject);
+    		
+    		if (renderSunGPGreatCircleRoute)
+    			setSunAzimuthLine(sequenceGenerator.getMyLocation(), altitudeAzimuth.getAltitude(), altitudeAzimuth.getAzimuth());
     		
     		for (int i = 0;i < planetRenderers.length;i ++) {
     			solarObjects.setObjectIndex(i + 1);
@@ -1060,6 +1251,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
     		
     		
     		CelestialObject moon = sequenceGenerator.getMoon();
+    		GeoLocation subLunarPoint = moon.getEarthPositionOverhead();
     		subObjectPoint = moon.getEarthPositionOverhead();
     		moonObject.updatePin(subObjectPoint.getLatitude(), subObjectPoint.getLongitude(), 16, 12, 6, showAsPins);
     		
@@ -1091,8 +1283,37 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			Color c = new Color(colorValue, colorValue, colorValue);
 			moonDayNightFillColors[0].setBackgroundColor(c);
 			moonDayNightFillColors[0].setForegroundColor(c);
-
+			
+			
+			Point2D.Double moonShadowPoint = getMoonShadowCoordinate(centerMode, subSunPoint, subObjectPoint);
+			if ((moonShadowPoint == null) || (! showMoonShadow)) {
+				moonShadowRenderer.setRenderComponent(false);
+			} else {
+				
+//				System.out.println(String.format("%04d%02d%02d%02d%02d%02d", year, month, day, hour, minute, second) + "," + latPoint + "," + lonPoint);
+				
+				moonShadowRenderer.setRenderComponent(true);
+				moonShadowArc.setX(moonShadowPoint.getX());
+				moonShadowArc.setY(moonShadowPoint.getY());
+			}
+			
+			int userObjectCount = sequenceGenerator.getUserObjectCount();
+			for (int i = 0;i < userObjectCount;i ++) {
+				ObserverLocation3D userObject = sequenceGenerator.getUserObject(i);
+				
+				if (updateUserObject(i, userObject.getLatitude(), userObject.getLongitude(), userObject.getAltitude(), userObject.getDiameter()))
+					showUserObjects = true;
+			}
+			
+			updateContourLine(sequenceGenerator.getMyLocation(), CIRCUMFERENCE / 4.0, observerContourLine);
         }
+		else
+			sequenceGenerator.reset();
+		
+		userObjectRenderer.setRenderComponent(showUserObjects);
+
+        if ((trackPath != null) && (trackPath.size() > 0) && (showUserTracks))
+        	setLineRendererPathBetweenTwoPoints(userTracksLine, trackPath);
         
         List<CelestialObject> stars = sequenceGenerator.getStars();
         List<RendererI> starRenderers = new ArrayList<RendererI>();
@@ -1179,11 +1400,22 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         	background.setRotateAngle(((double)backgroundRotateDirection) * getRotationAngle(getViewRotationAngle()) + (dstRotate * 15.0));
         
         updateLocation(observerLocation, sequenceGenerator.getMyLocation().getLatitude(), sequenceGenerator.getMyLocation().getLongitude());
-        
-        solarDateRenderer.updateSolarObjects(sequenceGenerator.getTime().getTime().get(Calendar.DAY_OF_YEAR), sequenceGenerator.getSolarSystemObjectCoordinates());
+		AbstractCelestialObject solarObjects = sequenceGenerator.getSolarObjects();
+		solarObjects.setObjectIndex(0);
+        double solarDateRa = solarObjects.getCurrentDirection().getRightAscension(); // + sequenceGenerator.getMyLocation().getLongitude(); // + dstMod;
+        solarDateRenderer.updateSolarObjects(sequenceGenerator.getTime().getTime().get(Calendar.DAY_OF_YEAR), 
+        		solarDateRa,
+        		sequenceGenerator.getSolarSystemObjectCoordinates(), sequenceGenerator.isSolarSystemCentric(),
+        		sequenceGenerator.isShowPlanetTrails());
 
         if (repaintCanavas)
-        	canvas.repaint();
+        	repaintRequest();
+	}
+	
+	protected abstract void repaintRequest();
+	
+	protected double getLongitude() {
+		return sequenceGenerator.getMyLocation().getLongitude();
 	}
 	
 	public void setPlanetsToScale(boolean planetsToScale) {
@@ -1219,6 +1451,25 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	
 	protected double getDstRotate() {
 		return dstRotate;
+	}
+	
+	private void setSunAzimuthLine(GeoLocation location, double altitude, double azimuth) {
+		Point2D.Double locatePoint1 = updateLocation(location.getLatitude(), location.getLongitude());
+		Point2D.Double locatePoint2 = updateLocation(-90, location.getLongitude());
+		
+		double angleRad = Math.toRadians(90.0 - azimuth);
+		double radius = Math.sqrt(Math.pow((locatePoint1.x - 0.5) - (locatePoint2.x - 0.5), 2.0) +
+								Math.pow((0.5 - locatePoint1.y) - (0.5 - locatePoint2.y), 2.0));
+		
+//		System.out.println("COMPUTE: " + locatePoint1.x + ", " + locatePoint1.y + " TO " + locatePoint2.x + ", " + locatePoint2.y);
+//		System.out.println("?? RADIUS? " + radius + ", AND angle? " + Math.toDegrees(angleRad) + " FROM " + azimuth);
+		
+		Point2D.Double directionPoint = new Point2D.Double();
+		directionPoint.setLocation(locatePoint1.x + (radius*Math.cos(angleRad)), locatePoint1.y - (radius*Math.sin(angleRad)));
+		setSunAzimuthLine(locatePoint1, directionPoint, altitude > 0.0);
+	}
+	
+	protected void setSunAzimuthLine(Point2D.Double locatePoint1, Point2D.Double locatePoint2, boolean showLine) {
 	}
 
 	private void setLineRendererPathBetweenTwoPoints(LineRenderer lineRenderer, ArrayList<GeoLocation> pathToObject) {
@@ -1353,7 +1604,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			
 			double distance = CIRCUMFERENCE * (double)distanceMarker / 360.0;
 			
-			ArrayList<Double> fractionX1 = new ArrayList<Double>();
+/*			ArrayList<Double> fractionX1 = new ArrayList<Double>();
 			ArrayList<Double> fractionY1 = new ArrayList<Double>();
 			ArrayList<Double> fractionX2 = new ArrayList<Double>();
 			ArrayList<Double> fractionY2 = new ArrayList<Double>();
@@ -1375,11 +1626,39 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 			contourLine[i].setX1Array(arrayListToArray(fractionX1));
 			contourLine[i].setY1Array(arrayListToArray(fractionY1));
 			contourLine[i].setX2Array(arrayListToArray(fractionX2));
-			contourLine[i].setY2Array(arrayListToArray(fractionY2));
+			contourLine[i].setY2Array(arrayListToArray(fractionY2)); */
+			updateContourLine(location, distance, contourLine[i]);
 		}
 
 		if (dayNightContourLines != null)
 			updateDayNight(dayNightRenderer, dayNightContourLines, dayNightFillColors, fillPoints, latitude, longitude);
+	}
+	
+	
+	private void updateContourLine(ObserverLocation location, double distance, LineRenderer contourLine) {
+		ArrayList<Double> fractionX1 = new ArrayList<Double>();
+		ArrayList<Double> fractionY1 = new ArrayList<Double>();
+		ArrayList<Double> fractionX2 = new ArrayList<Double>();
+		ArrayList<Double> fractionY2 = new ArrayList<Double>();
+		
+		ArrayList<Point2D.Double> points = ContourLineGenerator.computeContourLines(this, location, distance);
+		
+		Point2D.Double lastPoint = null;
+		for (Point2D.Double point : points) {
+			if (lastPoint != null) {
+				fractionX1.add(lastPoint.x);
+				fractionY1.add(lastPoint.y);
+				fractionX2.add(point.x);
+				fractionY2.add(point.y);
+			}
+			
+			lastPoint = point;
+		}
+		
+		contourLine.setX1Array(arrayListToArray(fractionX1));
+		contourLine.setY1Array(arrayListToArray(fractionY1));
+		contourLine.setX2Array(arrayListToArray(fractionX2));
+		contourLine.setY2Array(arrayListToArray(fractionY2));
 	}
 	
 	private void invalidateDayNight() {
@@ -1705,7 +1984,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 					
 //						System.out.println("??? ALPHA FOR " + i + "??? " + Integer.toHexString(alpha));
 					
-						floodFill(rgbArray, width, height, p.x, p.y, alpha, rgbArray[p.y * width + p.x]);
+						floodFill(rgbArray, width, (int)(height / aspectRatioModifier), p.x, p.y, alpha, rgbArray[p.y * width + p.x]);
 					}
 				}
 			} catch (Exception e) {
@@ -1716,7 +1995,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 		if (isDrawBoundary()) {
 			for (int y = 0;y < height;y ++) {
 				int cartesianY = y - (height / 2);
-				int pixelBoundX = getPixelOutOfBoundsXForY(cartesianY, width / 2, height / 2, averageRadius);
+				int pixelBoundX = (int)(getPixelOutOfBoundsXForY((int)(cartesianY * aspectRatioModifier), width / 2, height / 2, averageRadius) / aspectRatioModifier);
 				int leftBound = (width / 2) - pixelBoundX;
 				int rightBound = pixelBoundX + (width / 2);
 				for (int x = 0;x < leftBound;x ++) {

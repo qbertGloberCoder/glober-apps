@@ -30,11 +30,20 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+
+import me.qbert.skywatch.Main;
 import me.qbert.skywatch.service.AbstractCelestialObjects;
 import me.qbert.skywatch.service.AzimuthalEquidistantNPPObjects;
 import me.qbert.skywatch.service.AzimuthalEquidistantSPPObjects;
 import me.qbert.skywatch.service.EquirectilinearObjects;
 import me.qbert.skywatch.service.GlobeObjects;
+import me.qbert.skywatch.service.MercatorObjects;
+import me.qbert.skywatch.service.StereoAzimuthalObjects;
+import me.qbert.skywatch.service.StereoGlobeObjects;
 import me.qbert.skywatch.service.AbstractCelestialObjects.MapCenterMode;
 import me.qbert.skywatch.ui.component.Canvas;
 import me.qbert.skywatch.util.AnimationTimer;
@@ -63,9 +72,13 @@ public class MainFrame extends JFrame implements KeyListener {
 	private JMenuBar menubar;
 	
 	private JCheckBoxMenuItem aeMapNProjection;
+	private JCheckBoxMenuItem aeMapNStereoProjection;
 	private JCheckBoxMenuItem aeMapSProjection;
 	private JCheckBoxMenuItem equirectilinearMapProjection;
+	private JCheckBoxMenuItem mercatorMapProjection;
 	private JCheckBoxMenuItem globeProjection;
+	private JCheckBoxMenuItem stereoProjection;
+	private JCheckBoxMenuItem stereoXProjection;
 	
 	private JMenu centerMapMenu;
 	private JCheckBoxMenuItem [] centerModes;
@@ -93,7 +106,9 @@ public class MainFrame extends JFrame implements KeyListener {
 
     private JCheckBoxMenuItem moonDayNightOffMenu;
     
+    private JCheckBoxMenuItem normalClockFaceMenu;
     private JCheckBoxMenuItem mickeyFaceMenu;
+    private JCheckBoxMenuItem sillyWalkFaceMenu;
     
     private JCheckBoxMenuItem justifyLeftMenu;
     private JCheckBoxMenuItem justifyCenterMenu;
@@ -116,7 +131,7 @@ public class MainFrame extends JFrame implements KeyListener {
     private AbstractCelestialObjects celestialObjects;
 //    private CelestialObjects celestialObjects;
     
-    private boolean mickeyFace = true;
+    private AbstractCelestialObjects.ClockFaces clockFace = AbstractCelestialObjects.ClockFaces.MICKEYMOUSE;
     
     private BufferedImage image = null;
     private boolean exportMode = false;
@@ -130,7 +145,12 @@ public class MainFrame extends JFrame implements KeyListener {
 	public MainFrame() {
 		super("Multi-transformation earth clock");
 		
-        //Creating the MenuBar and adding components
+		Logger logger = LogManager.getLogger(Main.class.getName());
+		
+		logger.trace("TRACE GOES HERE");
+		logger.log(Level.ALL, "Test log here");
+
+		//Creating the MenuBar and adding components
         menubar = new JMenuBar();
         JMenu m1 = new JMenu("File");
         menubar.add(m1);
@@ -147,6 +167,15 @@ public class MainFrame extends JFrame implements KeyListener {
 			public void actionPerformed(ActionEvent e) {
 				initProjection(0);
 				setProjection(0);
+			}
+		});
+    	aeMapNStereoProjection = new JCheckBoxMenuItem("AE map Stereo (North Pole)");
+    	m15.add(aeMapNStereoProjection);
+    	aeMapNStereoProjection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				initProjection(7);
+				setProjection(7);
 			}
 		});
     	aeMapSProjection = new JCheckBoxMenuItem("AE map (South Pole)");
@@ -167,6 +196,15 @@ public class MainFrame extends JFrame implements KeyListener {
 				setProjection(1);
 			}
 		});
+    	mercatorMapProjection = new JCheckBoxMenuItem("Mercator");
+    	m15.add(mercatorMapProjection);
+    	mercatorMapProjection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				initProjection(6);
+				setProjection(6);
+			}
+		});
     	globeProjection = new JCheckBoxMenuItem("Globe");
     	m15.add(globeProjection);
     	globeProjection.addActionListener(new ActionListener() {
@@ -174,6 +212,24 @@ public class MainFrame extends JFrame implements KeyListener {
 			public void actionPerformed(ActionEvent e) {
 				initProjection(3);
 				setProjection(3);
+			}
+		});
+    	stereoProjection = new JCheckBoxMenuItem("Stereo (far)");
+    	m15.add(stereoProjection);
+    	stereoProjection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				initProjection(4);
+				setProjection(4);
+			}
+		});
+    	stereoXProjection = new JCheckBoxMenuItem("Stereo (near)");
+    	m15.add(stereoXProjection);
+    	stereoXProjection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				initProjection(5);
+				setProjection(5);
 			}
 		});
         
@@ -385,9 +441,17 @@ public class MainFrame extends JFrame implements KeyListener {
         m2.add(twentyFourHourStyleMenu);
         twentyFourHourStyleMenu.setSelected(true);
         
+        normalClockFaceMenu = new JCheckBoxMenuItem("Normal clock face");
+        m2.add(normalClockFaceMenu);
+        normalClockFaceMenu.setSelected(false);
+        
         mickeyFaceMenu = new JCheckBoxMenuItem("Mickey Mouse face");
         m2.add(mickeyFaceMenu);
-        mickeyFaceMenu.setSelected(true);
+        mickeyFaceMenu.setSelected(false);
+        
+        sillyWalkFaceMenu = new JCheckBoxMenuItem("Silly Walk face");
+        m2.add(sillyWalkFaceMenu);
+        sillyWalkFaceMenu.setSelected(false);
         
         m2.add(new JSeparator());
         
@@ -577,14 +641,42 @@ public class MainFrame extends JFrame implements KeyListener {
 			}
 		});
         
+        normalClockFaceMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clockFace = AbstractCelestialObjects.ClockFaces.NEEDLEHANDS;
+				normalClockFaceMenu.setSelected(true);
+				mickeyFaceMenu.setSelected(false);
+				sillyWalkFaceMenu.setSelected(false);
+				celestialObjects.setClockFace(AbstractCelestialObjects.ClockFaces.NEEDLEHANDS);
+				redrawClock();
+				setClockFace(clockFace);
+			}
+		});
+        
         mickeyFaceMenu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mickeyFace = ! mickeyFace;
-				mickeyFaceMenu.setSelected(mickeyFace);
-				celestialObjects.setClockFace(mickeyFace);
+				clockFace = AbstractCelestialObjects.ClockFaces.MICKEYMOUSE;
+				normalClockFaceMenu.setSelected(false);
+				mickeyFaceMenu.setSelected(true);
+				sillyWalkFaceMenu.setSelected(false);
+				celestialObjects.setClockFace(AbstractCelestialObjects.ClockFaces.MICKEYMOUSE);
 				redrawClock();
-				setMickeyFace(mickeyFace);
+				setClockFace(clockFace);
+			}
+		});
+        
+        sillyWalkFaceMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clockFace = AbstractCelestialObjects.ClockFaces.SILLYWALKS;
+				normalClockFaceMenu.setSelected(false);
+				mickeyFaceMenu.setSelected(false);
+				sillyWalkFaceMenu.setSelected(true);
+				celestialObjects.setClockFace(AbstractCelestialObjects.ClockFaces.SILLYWALKS);
+				redrawClock();
+				setClockFace(clockFace);
 			}
 		});
         
@@ -718,9 +810,13 @@ public class MainFrame extends JFrame implements KeyListener {
         setVisible(true);
         
 		aeMapNProjection.setSelected(true);
-		aeMapSProjection.setSelected(true);
+		aeMapNStereoProjection.setSelected(false);
+		aeMapSProjection.setSelected(false);
+		mercatorMapProjection.setSelected(false);
 		equirectilinearMapProjection.setSelected(false);
 		globeProjection.setSelected(false);
+		stereoProjection.setSelected(false);
+		stereoXProjection.setSelected(false);
         initProjection(-1);
         
         if (timerRunning == false)
@@ -753,14 +849,29 @@ public class MainFrame extends JFrame implements KeyListener {
 		}
 
         try {
-        	if (projectionIndex == 0)
+        	if (projectionIndex == 0) {
         		celestialObjects = new AzimuthalEquidistantNPPObjects(canvas);
+        	}
+        	else if (projectionIndex == 7) {
+        		celestialObjects = new StereoAzimuthalObjects(canvas);
+        		((StereoAzimuthalObjects)celestialObjects).setStereoAngle(-8);
+        	}
         	else if (projectionIndex == 1)
         		celestialObjects = new EquirectilinearObjects(canvas);
+        	else if (projectionIndex == 6)
+        		celestialObjects = new MercatorObjects(canvas);
         	else if (projectionIndex == 2)
         		celestialObjects = new AzimuthalEquidistantSPPObjects(canvas);
         	else if (projectionIndex == 3)
         		celestialObjects = new GlobeObjects(canvas);
+        	else if (projectionIndex == 4) {
+        		celestialObjects = new StereoGlobeObjects(canvas);
+        		((StereoGlobeObjects)celestialObjects).setStereoAngle(1.5);
+        	}
+        	else if (projectionIndex == 5) {
+        		celestialObjects = new StereoGlobeObjects(canvas);
+        		((StereoGlobeObjects)celestialObjects).setStereoAngle(-1.5);
+        	}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -787,6 +898,10 @@ public class MainFrame extends JFrame implements KeyListener {
 
         if (projectionIndex == 0) {
 			aeMapNProjection.setSelected(true);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
 			aeMapSProjection.setSelected(false);
 			equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(false);
@@ -794,6 +909,10 @@ public class MainFrame extends JFrame implements KeyListener {
 			globeFullSize.setEnabled(false);
         } else if (projectionIndex == 1) {
         	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
 			aeMapSProjection.setSelected(false);
         	equirectilinearMapProjection.setSelected(true);
 			globeProjection.setSelected(false);
@@ -801,13 +920,76 @@ public class MainFrame extends JFrame implements KeyListener {
 			globeFullSize.setEnabled(false);
         } else if (projectionIndex == 2) {
         	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
 			aeMapSProjection.setSelected(true);
         	equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(false);
 			centerModes[0].setEnabled(false);
 			globeFullSize.setEnabled(false);
+        } else if (projectionIndex == 3) {
+        	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(true);
+			centerModes[0].setEnabled(true);
+			globeFullSize.setEnabled(true);
+        } else if (projectionIndex == 4) { // stereo
+        	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(true);
+			stereoXProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerModes[0].setEnabled(true);
+			globeFullSize.setEnabled(true);
+        } else if (projectionIndex == 5) { // stereo X
+        	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(true);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerModes[0].setEnabled(true);
+			globeFullSize.setEnabled(true);
+        } else if (projectionIndex == 6) { // meractor
+        	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(true);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerModes[0].setEnabled(true);
+			globeFullSize.setEnabled(true);
+        } else if (projectionIndex == 7) { // AE stereo
+        	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(true);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
+			aeMapSProjection.setSelected(false);
+        	equirectilinearMapProjection.setSelected(false);
+			globeProjection.setSelected(false);
+			centerModes[0].setEnabled(true);
+			globeFullSize.setEnabled(true);
         } else {
         	aeMapNProjection.setSelected(false);
+			aeMapNStereoProjection.setSelected(false);
+			mercatorMapProjection.setSelected(false);
+			stereoProjection.setSelected(false);
+			stereoXProjection.setSelected(false);
 			aeMapSProjection.setSelected(false);
         	equirectilinearMapProjection.setSelected(false);
 			globeProjection.setSelected(true);
@@ -975,12 +1157,19 @@ public class MainFrame extends JFrame implements KeyListener {
     	saveSettingsToProps();
 	}
 	
-	private boolean getMickeyFace(boolean defaultSelected) {
-		return stringToBoolean(props.getProperty("usemickeyface", (defaultSelected ? "1" : "0")));
+	private AbstractCelestialObjects.ClockFaces getClockFace(boolean defaultSelected) {
+		if (stringToBoolean(props.getProperty("usemickeyface", (defaultSelected ? "1" : "0"))) == true)
+			return AbstractCelestialObjects.ClockFaces.MICKEYMOUSE;
+		
+		if (stringToBoolean(props.getProperty("usesillywalkface", (defaultSelected ? "1" : "0"))) == true)
+			return AbstractCelestialObjects.ClockFaces.SILLYWALKS;
+		
+		return AbstractCelestialObjects.ClockFaces.NEEDLEHANDS;
 	}
 	
-	private void setMickeyFace(boolean selected) {
-    	props.setProperty("usemickeyface", (selected ? "1" : "0"));
+	private void setClockFace(AbstractCelestialObjects.ClockFaces clockFace) {
+    	props.setProperty("usemickeyface", ((clockFace == AbstractCelestialObjects.ClockFaces.MICKEYMOUSE) ? "1" : "0"));
+    	props.setProperty("usesillywalkface", ((clockFace == AbstractCelestialObjects.ClockFaces.SILLYWALKS) ? "1" : "0"));
     	saveSettingsToProps();
 	}
 	
@@ -1076,9 +1265,11 @@ public class MainFrame extends JFrame implements KeyListener {
 		celestialObjects.setMoonDayNightRendered(tempBoolean);
 		updateMoonDayNightsMenu();
 		
-		mickeyFace = getMickeyFace(true);
-        mickeyFaceMenu.setSelected(mickeyFace);
-        celestialObjects.setClockFace(mickeyFace);
+		clockFace = getClockFace(true);
+        normalClockFaceMenu.setSelected(clockFace == AbstractCelestialObjects.ClockFaces.NEEDLEHANDS);
+        mickeyFaceMenu.setSelected(clockFace == AbstractCelestialObjects.ClockFaces.MICKEYMOUSE);
+        sillyWalkFaceMenu.setSelected(clockFace == AbstractCelestialObjects.ClockFaces.SILLYWALKS);
+        celestialObjects.setClockFace(clockFace);
         
         celestialObjects.setSunPrecessionPathMode(getSunPrecessionPathMode("0"));
         celestialObjects.setMoonPrecessionPathMode(getMoonPrecessionPathMode("0"));
