@@ -23,6 +23,9 @@ public class GlobeTransform implements ProjectionTransformI {
 	private double zoomLevel = 1.0;
 	private boolean zoomedOut = true;
 
+	private double stereoVisionRotate = 0.0;
+	
+	private Double overscanLatLon;
 	
 	public double getZoomLevel() {
 		return zoomLevel;
@@ -44,12 +47,31 @@ public class GlobeTransform implements ProjectionTransformI {
 	}
 
 
+	public double getStereoVisionRotate() {
+		return stereoVisionRotate;
+	}
+
+
+	public void setStereoVisionRotate(double stereoVisionRotate) {
+		this.stereoVisionRotate = stereoVisionRotate;
+	}
+
+
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees) {
 		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, 1.0);
 	}
 	
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, boolean positiveZOnly) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, 1.0, positiveZOnly);
+	}
+	
 	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, overscan, false);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan, boolean positiveZOnly) {
 		double useLat = latitude;
 		double useLon = longitude - observerLongitude;
 		
@@ -80,18 +102,36 @@ public class GlobeTransform implements ProjectionTransformI {
 		ty = tr*Math.cos(ta + Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude()));
 		tz = tr*Math.sin(ta + Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude())); 
 		
+		if (stereoVisionRotate != 0.0) {
+			tr = Math.sqrt(tx*tx+tz*tz);
+			ta = Math.atan2(tz, tx);
+			
+			tx = tr*Math.cos(ta + Math.toRadians(stereoVisionRotate));
+			tz = tr*Math.sin(ta + Math.toRadians(stereoVisionRotate));
+		}
+
+		
 		boolean showPoint = true;
 		
 		if (Math.sqrt(tx*tx + ty*ty) > radius * 2)
 			showPoint = false;
 		
-		if (tz < 0.0) {
-			double rad = Math.sqrt(tx*tx + ty*ty);
-			double checkRadius = radius;
-			if (! zoomedOut)
-				checkRadius *= zoomLevel;
-			if (rad < checkRadius)
+/*		if (positiveZOnly) {
+			if (Math.sqrt(tx*tx + ty*ty) > radius*1.02)
 				showPoint = false;
+		} */
+		if (tz < 0.0) {
+			if (positiveZOnly) {
+				showPoint = false;
+			}
+			else {
+				double rad = Math.sqrt(tx*tx + ty*ty);
+				double checkRadius = radius;
+				if (! zoomedOut)
+					checkRadius *= zoomLevel;
+				if (rad < checkRadius)
+					showPoint = false;
+			}
 		}
 		
 //		if ((zoomedOut == true) && (tz > 0.0)) {
@@ -105,8 +145,43 @@ public class GlobeTransform implements ProjectionTransformI {
 		}
 
 		Double p = new Double(0.5 + tx, 0.5 - ty);
+
+		if ((positiveZOnly) && (Math.sqrt(tx*tx + ty*ty) <= radius)) {
+//			System.out.println("XYZ: " + tx + "," + ty + "," + tz + " stereo? " + stereoVisionRotate + ", radius? " + radius);
+			if (stereoVisionRotate != 0.0) {
+				tr = Math.sqrt(tx*tx+tz*tz);
+				ta = Math.atan2(tz, tx);
+				
+				tx = tr*Math.cos(ta - Math.toRadians(stereoVisionRotate));
+				tz = tr*Math.sin(ta - Math.toRadians(stereoVisionRotate));
+			}
+			
+			tz = Math.sqrt(radius*radius-tx*tx-ty*ty);
+
+//			System.out.println("XYZ: " + tx + "," + ty + "," + tz);
+			tr = Math.sqrt(ty*ty+tz*tz);
+			ta = Math.atan2(tz, ty);
+			
+			ty = tr*Math.cos(ta - Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude()));
+			tz = tr*Math.sin(ta - Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude())); 
+			
+//			System.out.println("XYZ: " + tx + "," + ty + "," + tz);
+
+			double computedLat = Math.toDegrees(Math.asin(ty/radius));
+			double computedLon = Math.toDegrees(Math.asin(tz/(radius * Math.cos(Math.toRadians(computedLat)))));
+			
+			computedLon = (90 - computedLon + extraDstRotationDegrees) + observerLongitude;
+			
+//			System.out.println("WE HAVE LAT/LON: " + computedLat + "," + computedLon);
+			
+			overscanLatLon = new Double(computedLat, computedLon);
+		} else
+			overscanLatLon = null;
 		
 		return p;
 	}
-
+	
+	public Double getOverscanLatLon() {
+		return overscanLatLon;
+	}
 }
