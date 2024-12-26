@@ -3,7 +3,13 @@ package me.qbert.skywatch;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+
 import me.qbert.skywatch.ui.MainFrame;
+import org.apache.log4j.xml.DOMConfigurator;  
 
 /*
 This program is free software: you can redistribute it and/or modify
@@ -22,6 +28,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public class Main {
 	public static void main(String[] args) {
+		Configurator.setLevel("me.qbert.skywatch", Level.WARN);
+		
 		if (System.getProperty("os.name").startsWith("Linux")) {
 			if ((args.length < 1) || (! "nogl".equals(args[0]))) {
 		    	System.out.println("setting up opengl");
