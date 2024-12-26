@@ -20,10 +20,11 @@ function redisplay() {
 }
 
 function minus(index) {
-	if (categories[index][1] > 0)
+	if ((categories[index][0].startsWith("//+-")) || (categories[index][1] > 0)) {
 		categories[index][1] --;
-	
-	redisplay();
+		
+		redisplay();
+	}
 }
 
 function plus(index) {
