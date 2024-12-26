@@ -93,12 +93,12 @@ public class StereoAzimuthalObjects extends AbstractCelestialObjects {
 		
     	// RIGHT side
 		List<RendererI> panelRenderers = rightPanel.getObjectRenderers();
-		System.out.println("?? PANEL renderers??? " + panelRenderers);
+		//System.out.println("?? PANEL renderers??? " + panelRenderers);
     	splitContainer.setRendererB(panelRenderers);
     	
     	// LEFT side
 		panelRenderers = leftPanel.getObjectRenderers();
-		System.out.println("?? PANEL renderers??? " + panelRenderers);
+		//System.out.println("?? PANEL renderers??? " + panelRenderers);
     	splitContainer.setRendererA(panelRenderers);
     	
     	localRenderers = new ArrayList<RendererI>();
@@ -110,7 +110,7 @@ public class StereoAzimuthalObjects extends AbstractCelestialObjects {
     	splitContainer.setRenderA(true);
     	splitContainer.setRenderB(true);
     	
-		System.out.println("?? SET Canvas renderers??? " + localRenderers);
+		//System.out.println("?? SET Canvas renderers??? " + localRenderers);
 
 //		leftPanel.updateSequenceGenerator(getSequenceGenerator());
 //		rightPanel.updateSequenceGenerator(getSequenceGenerator());
