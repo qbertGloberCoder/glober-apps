@@ -42,6 +42,8 @@ public abstract class AbstractFractionRenderer implements RendererI {
 	
 //	private boolean debug = false;
 	
+	private double aspectRatioModifier = 1.0;
+	
 	private AbsoluteCoordinateTransformation absoluteCoordinate = new AbsoluteCoordinateTransformation();
 	private FractionCoordinateTransformation fractionCoordinate = new FractionCoordinateTransformation();
 	
@@ -55,7 +57,7 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		double aspectRatio = 1.0;
 		
 		if (maintainAspectRatio) {
-			aspectRatio = getAspectRatio();
+			aspectRatio = getAspectRatio() * aspectRatioModifier;
 			if (aspectRatio <= 0)
 				aspectRatio = boundaryWidth / boundaryHeight;
 			
@@ -100,8 +102,17 @@ public abstract class AbstractFractionRenderer implements RendererI {
 		return debug;
 	} */
 	
+	
 	public int getShiftDirectionX() {
 		return shiftDirectionX;
+	}
+
+	public double getAspectRatioModifier() {
+		return aspectRatioModifier;
+	}
+
+	public void setAspectRatioModifier(double aspectRatioModifier) {
+		this.aspectRatioModifier = aspectRatioModifier;
 	}
 
 	public void setShiftDirectionX(int shiftDirectionX) {

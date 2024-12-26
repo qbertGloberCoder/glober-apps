@@ -86,5 +86,9 @@ public class EncapsulatingRenderer extends AbstractFractionRenderer {
 			}
 		}
 	}
+
+	public List<RendererI> getRenderers() {
+		return renderers;
+	}
 	
 }

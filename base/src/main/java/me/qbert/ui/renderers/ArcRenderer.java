@@ -130,4 +130,15 @@ public class ArcRenderer extends AbstractFractionRenderer {
 	public void setFill(boolean fill) {
 		this.fill = fill;
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("(Coordinate: " + coordinate.getX() + "," + coordinate.getY() + "\n");
+		sb.append("ArcSize: " + arcSize.getX() + "," + arcSize.getY() + "\n");
+		sb.append("startAngle: " + startAngle + "\n");
+		sb.append("arcAngle: " + arcAngle + ")\n");
+		
+		return sb.toString();
+	}
 }

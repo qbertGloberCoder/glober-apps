@@ -75,6 +75,31 @@ public class LineRenderer extends AbstractFractionRenderer {
 			lineSegments.add(linePair);
 		}
 	}
+	
+	public void addSegment(double x1, double y1, double x2, double y2) {
+		if (lineSegments == null)
+			lineSegments = new ArrayList<AbstractCoordinateTransformation[]>();
+		
+		AbstractCoordinateTransformation [] linePair = new AbstractCoordinateTransformation[2];
+		
+		if (coordinatesType == ABSOLUTE_COORDINATES) {
+			linePair[0] = new AbsoluteCoordinateTransformation();
+			linePair[1] = new AbsoluteCoordinateTransformation();
+		} else if (coordinatesType == FRACTIONAL_COORDINATES) {
+			linePair[0] = new FractionCoordinateTransformation();
+			linePair[1] = new FractionCoordinateTransformation();
+		}
+		
+		linePair[0].setX(x1);
+		linePair[0].setY(y1);
+		linePair[1].setX(x2);
+		linePair[1].setY(y2);
+		
+		lineSegments.add(linePair);
+	}
+	public void reinitialize() {
+		lineSegments = null;
+	}
 
 	@Override
 	public void renderComponent(Graphics2D g2d) {
