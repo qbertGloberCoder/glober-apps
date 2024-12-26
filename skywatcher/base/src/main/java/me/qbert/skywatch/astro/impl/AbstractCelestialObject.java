@@ -1,5 +1,8 @@
 package me.qbert.skywatch.astro.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.CelestialObjectBuilder;
 import me.qbert.skywatch.astro.ObservationTime;
@@ -26,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public abstract class AbstractCelestialObject extends GeoCalculator implements CelestialObject {
+	private static final Logger logger = LogManager.getLogger(AbstractCelestialObject.class.getName());
 	public abstract class AbstractCelestialObjectBuilder implements CelestialObjectBuilder {
 		private ObjectStateChangeListener stateChangeListener = null;
 		
@@ -70,9 +74,12 @@ public abstract class AbstractCelestialObject extends GeoCalculator implements C
 	}
 	
 	protected double modulus(double value, double max) {
+	    logger.trace("modulus(value = " + value + ", max=" + max + ")");
 		value = value % max;
+	    logger.trace("value = value % max >> " + value);
 		if (value < 0.0)
 			value += max;
+	    logger.trace("if (value < 0.0) value += max >> " + value);
 		return value;
 	}
 	

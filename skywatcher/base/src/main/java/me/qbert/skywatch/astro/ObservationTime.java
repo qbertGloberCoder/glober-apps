@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import me.qbert.skywatch.astro.impl.SolarObjects;
 import me.qbert.skywatch.exception.UninitializedObject;
 import me.qbert.skywatch.listeners.ObjectStateChangeListener;
 
@@ -24,6 +28,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class ObservationTime {
+	private static final Logger logger = LogManager.getLogger(ObservationTime.class.getName());
+	
 	private Calendar time = null;
 	
 	private double julianDate;
@@ -31,7 +37,7 @@ public class ObservationTime {
 	private double utcTime;
 	private double timezoneAdjust;
 	
-	private int timeBiasMillis = 0;
+	private long timeBiasMillis = 0;
 	
 	private ArrayList<ObjectStateChangeListener> listeners = new ArrayList<ObjectStateChangeListener>();
 	
@@ -47,7 +53,7 @@ public class ObservationTime {
 	public void setCurrentTime() throws UninitializedObject {
 		Calendar calendar = Calendar.getInstance();
 		
-		this.time.setTimeInMillis(calendar.getTimeInMillis() + (long)timeBiasMillis);
+		this.time.setTimeInMillis(calendar.getTimeInMillis() + timeBiasMillis);
 		recompute();
 	}
 	
@@ -111,11 +117,11 @@ public class ObservationTime {
 			listeners.add(stateChangeListener);
 	}
 	
-	public int getTimeBiasMillis() {
+	public long getTimeBiasMillis() {
 		return timeBiasMillis;
 	}
 
-	public void setTimeBiasMillis(int timeBiasMillis) {
+	public void setTimeBiasMillis(long timeBiasMillis) {
 		this.timeBiasMillis = timeBiasMillis;
 	}
 
@@ -133,13 +139,27 @@ public class ObservationTime {
 		double tzOffset = (double)(time.get(Calendar.ZONE_OFFSET) / 3600000.0);
 		timezoneAdjust = tzOffset + dstOffset;
 		
+		logger.trace("Recompte observation time:");
+		logger.trace("year >> " + year);
+		logger.trace("month >> " + month);
+		logger.trace("day >> " + day);
+		logger.trace("hour >> " + hour);
+		logger.trace("minute >> " + minute);
+		logger.trace("second >> " + second);
+		logger.trace("timezoneAdjust >> " + timezoneAdjust);
+
 		utcTime = (double)((hour*3600 + minute*60 + second)) / 86400.0;
+		logger.trace("UTC TIME = (double)((hour*3600 + minute*60 + second)) / 86400.0 >> " + utcTime);
 		double newJulianDate = julianDay(day, month, year, timezoneAdjust) + utcTime;
+		logger.trace("newJulianDate = julianDay(day, month, year, timezoneAdjust) + utcTime >> " + newJulianDate);
 		
 		if (julianDate != newJulianDate) {
 			julianDate = newJulianDate;
 			julianCentury = (julianDate-2451545.0)/36525.0;
 			
+			logger.trace("recompute for new Julian date >> " + julianDate);
+			logger.trace("julianCentury = (julianDate-2451545.0)/36525.0 >> " + julianCentury);
+
 			notifyListeners();
 		}
 	}
@@ -153,6 +173,7 @@ public class ObservationTime {
 	private double julianDay (int date, int month, int year, double timezoneOffset)
 	{
 	    if (month<=2) {month=month+12; year=year-1;}
+		logger.trace("julianDay = (int)(365.25*year) + (int)(30.6001*(month+1)) - 15 + 1720996.5 + date - timezoneOffset/24.0");
 	    return (int)(365.25*year) + (int)(30.6001*(month+1)) - 15 + 1720996.5 + date - timezoneOffset/24.0;
 	} 
 }

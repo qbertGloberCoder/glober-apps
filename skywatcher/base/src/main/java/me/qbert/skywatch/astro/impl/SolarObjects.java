@@ -2,8 +2,10 @@ package me.qbert.skywatch.astro.impl;
 
 import java.util.Calendar;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import me.qbert.skywatch.astro.impl.SolarObjects.SolarSystemCoordinate;
 import me.qbert.skywatch.model.GeoLocation;
@@ -200,16 +202,23 @@ public class SolarObjects extends AbstractCelestialObject {
 	private double abs_floor( double x )
 	{
 	    double r;
+	    logger.trace("abs_floor(x=" + x + ")");
 	    if (x >= 0.0) r = Math.floor(x);
 	    else          r = Math.ceil(x);
+	    logger.trace("if (x >= 0.0) r = Math.floor(x) else r = Math.ceil(x) >> " + r);
 	    return r;
 	}
 
 	private double mod2pi( double x )
 	{
+		logger.trace("mod2pi(x=" + x + ")");
+		
 	    double b = x/(2*Math.PI);
+	    logger.trace("b = x/(2*Math.PI) >> " + b);
 	    double a = (2*Math.PI)*(b - abs_floor(b));  
+	    logger.trace("a = (2*Math.PI)*(b - abs_floor(b)) >> " + a);
 	    if (a < 0) a = (2*Math.PI) + a;
+	    logger.trace("if (a < 0) a = (2*Math.PI) + a >> " + a);
 	    return a;
 	}
 	
@@ -218,6 +227,9 @@ public class SolarObjects extends AbstractCelestialObject {
 	private ObjectSettings mean_elements( int planetIndex, double julianDate )
 	{
 	    double century = julianDate/36525;                    // centuries since J2000
+	    
+	    logger.trace("mean_elements(planetIndex=" + planetIndex + ", julianDate=" + julianDate + ")");
+
 
 	    ObjectSettings planet = new ObjectSettings();
 	    
@@ -300,7 +312,17 @@ public class SolarObjects extends AbstractCelestialObject {
 	        return null;
 	    }
 	    
+	    logger.trace("planet.a >> " + planet.a);
+	    logger.trace("planet.e >> " + planet.e);
+	    logger.trace("planet.i >> " + planet.i);
+	    logger.trace("planet.O >> " + planet.O);
+	    logger.trace("planet.w >> " + planet.w);
+	    logger.trace("planet.L >> " + planet.L);
+
 	    planet.e *= ellipticOffset;
+	    
+	    logger.trace("eclipticOffset >> " + ellipticOffset);
+	    logger.trace("planet.e *= ellipticOffset >> " + planet.e);
 	    
 	    return planet;
 	}
@@ -309,20 +331,32 @@ public class SolarObjects extends AbstractCelestialObject {
 	{
 	    double V, E1;
 
+	    logger.trace("true_anomaly(M=" + M + ", e=" + e + ")");
+	    
 	    // initial approximation of eccentric anomaly
 	    double E = M + e*Math.sin(M)*(1.0 + e*Math.cos(M));
 
+	    logger.trace("E = M + e*Math.sin(M)*(1.0 + e*Math.cos(M)) >> " + E);
+	    
 	    do                                   // iterate to improve accuracy
 	    {
 	        E1 = E;
+	        logger.trace("(while) E1 >> " + E);
 	        E = E1 - (E1 - e*Math.sin(E1) - M)/(1 - e*Math.cos(E1));
+	        logger.trace("(while) E = E1 - (E1 - e*Math.sin(E1) - M)/(1 - e*Math.cos(E1)) >> " + E);
+	        
+	        logger.trace("(while (Math.abs( E - E1 ) >> " + (Math.abs( E - E1 )) + "> EPS >> " + EPS + ")");
 	    }
 	    while (Math.abs( E - E1 ) > EPS);
 
 	    // convert eccentric anomaly to true anomaly
 	    V = 2*Math.atan(Math.sqrt((1 + e)/(1 - e))*Math.tan(0.5*E));
+	    
+	    logger.trace("V = 2*Math.atan(Math.sqrt((1 + e)/(1 - e))*Math.tan(0.5*E)) >> " + V);
 
 	    if (V < 0) V = V + (2*Math.PI);      // modulo 2pi
+
+	    logger.trace("if (V < 0) V = V + (2*Math.PI) >> " + V);
 	    
 	    return V;
 	}
@@ -334,6 +368,8 @@ public class SolarObjects extends AbstractCelestialObject {
 	
 	private ObjectInformation get_coord( ObjectSettings planet, int planetIndex )
 	{
+	    logger.trace("get_coord(planet=[ (lots of values enumerated below) ], planetIndex=" + planetIndex + ")");
+
 	    double ap = planet.a;
 	    double ep = planet.e;
 	    double ip = planet.i;
@@ -348,25 +384,55 @@ public class SolarObjects extends AbstractCelestialObject {
 	    double pe = earth.w;
 	    double le = earth.L; 
 	    
+
+	    logger.trace("(planet values)");
+	    logger.trace("ap >> " + ap);
+	    logger.trace("ep >> " + ep);
+	    logger.trace("ip >> " + ip);
+	    logger.trace("op >> " + op);
+	    logger.trace("pp >> " + pp);
+	    logger.trace("lp >> " + lp);
+	    
+	    logger.trace("(earth values)");
+	    logger.trace("ae >> " + ae);
+	    logger.trace("ep >> " + ee);
+	    logger.trace("ip >> " + ie);
+	    logger.trace("op >> " + oe);
+	    logger.trace("pp >> " + pe);
+	    logger.trace("lp >> " + le);
+
 	    // position of Earth in its orbit
 	    double me = mod2pi(le - pe);
+	    logger.trace("me = mod2pi(le - pe) >> " + me);
 	    double ve = true_anomaly(me, ee);
+	    logger.trace("ve = true_anomaly(me, ee) >> " + ve);
 	    double re = ae*(1 - ee*ee)/(1 + ee*Math.cos(ve));
-	    
+	    logger.trace("re = ae*(1 - ee*ee)/(1 + ee*Math.cos(ve)) >> " + re);
+
 	    // heliocentric rectangular coordinates of Earth
 	    double xe = re*Math.cos(ve + pe);
+	    logger.trace("xe = re*Math.cos(ve + pe) >> " + xe);
 	    double ye = re*Math.sin(ve + pe);
+	    logger.trace("ye = re*Math.sin(ve + pe) >> " + ye);
 	    double ze = 0.0;
+	    logger.trace("ze = 0.0");
 	    
 	    // position of planet in its orbit
 	    double mp = mod2pi(lp - pp);
 	    double vp = true_anomaly(mp, planet.e);
 	    double rp = ap*(1 - ep*ep)/(1 + ep*Math.cos(vp));
+
+	    logger.trace("mp = mod2pi(lp - pp) >> " + mp);
+	    logger.trace("vp = true_anomaly(mp, planet.e) >> " + vp);
+	    logger.trace("rp = ap*(1 - ep*ep)/(1 + ep*Math.cos(vp)) >> " + rp);
 	    
 	    // heliocentric rectangular coordinates of planet
 	    double xh = rp*(Math.cos(op)*Math.cos(vp + pp - op) - Math.sin(op)*Math.sin(vp + pp - op)*Math.cos(ip));
+	    logger.trace("xh = rp*(Math.cos(op)*Math.cos(vp + pp - op) - Math.sin(op)*Math.sin(vp + pp - op)*Math.cos(ip)) >> " + xh);
 	    double yh = rp*(Math.sin(op)*Math.cos(vp + pp - op) + Math.cos(op)*Math.sin(vp + pp - op)*Math.cos(ip));
+	    logger.trace("yh = rp*(Math.sin(op)*Math.cos(vp + pp - op) + Math.cos(op)*Math.sin(vp + pp - op)*Math.cos(ip)) >> " + yh);
 	    double zh = rp*(Math.sin(vp + pp - op)*Math.sin(ip));
+	    logger.trace("zh = rp*(Math.sin(vp + pp - op)*Math.sin(ip)) >> " + zh);
 
 	    ObjectInformation object = new ObjectInformation();
 	    object.coordinate = new SolarSystemCoordinate();
@@ -375,6 +441,8 @@ public class SolarObjects extends AbstractCelestialObject {
 	    object.coordinate.x = xh;
 	    object.coordinate.y = yh;
 	    object.coordinate.z = zh;
+	    
+	    logger.trace("[xh, yh, zh] >> object.coordinate");
 	    
 	    if (planetIndex == 0)                          // earth --> compute sun
 	    {
@@ -385,24 +453,36 @@ public class SolarObjects extends AbstractCelestialObject {
 	    
 	    // convert to geocentric rectangular coordinates
 	    double xg = xh - xe;
+	    logger.trace("xg = xh - xe >> " + xg);
 	    double yg = yh - ye;
+	    logger.trace("yg = yh - ye >> " + yg);
 	    double zg = zh - ze;
+	    logger.trace("zg = zh - ze >> " + zg);
 	    
 	    // rotate around x axis from ecliptic to equatorial coords
 	    double ecl = 23.439281*RADS;            //value for J2000.0 frame
+	    logger.trace("ecl = 23.439281*RADS >> " + ecl);
 	    double xeq = xg;
+	    logger.trace("xeq = xg >> " + xeq);
 	    double yeq = yg*Math.cos(ecl) - zg*Math.sin(ecl);
+	    logger.trace("yeq = yg*Math.cos(ecl) - zg*Math.sin(ecl) >> " + yeq);
 	    double zeq = yg*Math.sin(ecl) + zg*Math.cos(ecl);
+	    logger.trace("zeq = yg*Math.sin(ecl) + zg*Math.cos(ecl) >> " + zeq);
 	    
 	    object.coordinateFromEarth.x = xeq;
 	    object.coordinateFromEarth.y = yeq;
 	    object.coordinateFromEarth.z = zeq;
 	    
+	    logger.trace("[xeq, yeq, zeq] >> object.coordinateFromEarth");
+	    
 	    
 	    // find the RA and DEC from the rectangular equatorial coords
 	    object.ra   = mod2pi(Math.atan2(yeq, xeq))*DEGS; 
+	    logger.trace("object.ra   = mod2pi(Math.atan2(yeq, xeq))*DEGS >> " + object.ra);
 	    object.dec  = Math.atan(zeq/Math.sqrt(xeq*xeq + yeq*yeq))*DEGS;
+	    logger.trace("object.dec  = Math.atan(zeq/Math.sqrt(xeq*xeq + yeq*yeq))*DEGS >> " + object.dec);
 	    object.rvec = Math.sqrt(xeq*xeq + yeq*yeq + zeq*zeq);
+	    logger.trace("object.rvec = Math.sqrt(xeq*xeq + yeq*yeq + zeq*zeq) >> " + object.rvec);
 	    
 	    return object;
 	}
@@ -438,14 +518,24 @@ public class SolarObjects extends AbstractCelestialObject {
 	    // compute day number for date/time
 	    double dn = julianDate - 2451545.0;
 	    
+	    logger.trace("");
+	    
 		double days = julianDate-2451545;
+	    logger.trace("days = julianDate-2451545 >> " + days);
 		double gmst = modulus(18.697374558+24.065709824419*days,24);
+	    logger.trace("gmst = modulus(18.697374558+24.065709824419*days,24) >> " + gmst);
 		double omega = 125.04-0.052954*julianDate;
+	    logger.trace("omega = 125.04-0.052954*julianDate >> " + omega);
 		double l = 280.47+0.98565*julianDate;
+	    logger.trace("l = 280.47+0.98565*julianDate >> " + l);
 		double e = 23.4393-0.0000004*julianDate;
+	    logger.trace("e = 23.4393-0.0000004*julianDate >> " + e);
 		double deltaW = -0.000319*Math.sin(Math.toRadians(omega))-0.000024*Math.sin(Math.toRadians(2*l));
+	    logger.trace("deltaW = -0.000319*Math.sin(Math.toRadians(omega))-0.000024*Math.sin(Math.toRadians(2*l)) >> " + deltaW);
 		double eqEq = deltaW*Math.cos(Math.toRadians(e));
+	    logger.trace("eqEq = deltaW*Math.cos(Math.toRadians(e)) >> " + eqEq);
 		double gast = gmst+eqEq;
+	    logger.trace("gast = gmst+eqEq >> " + gast);
 
 		/*
 Standard: Dec = -15.16163557934776, ra = -6.7195060638147766, oh lat = -15.16163557934776, oh lon = -68.28049393618522
@@ -464,6 +554,9 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 	    for (int p = 0; p < OBJECT_LIST.length; p++)  
 	    {
 	    	ObjectInformation obj;
+	    	
+	    	logger.trace("p >> " + p);
+	    	logger.trace("OBJECT_LIST[p] >> " + OBJECT_LIST[p]);
 	    	
 	    	if (p == 0)
 	    		obj = get_coord(earth, p);   
@@ -484,6 +577,10 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 		    calculatedDeclinations[p] = obj.dec;
 		    calculatedCelestialRightAscensions[p] = obj.ra;
 		    calculatedRightAscensions[p] = ((gast*15)-obj.ra)+location.getLongitude();
+		    
+		    logger.trace("calculatedDeclinations[p] = obj.dec >> " + calculatedDeclinations[p]); 
+		    logger.trace("calculatedCelestialRightAscensions[p] >> " + calculatedCelestialRightAscensions[p]); 
+		    logger.trace("calculatedRightAscensions[p] = ((gast*15)-obj.ra)+location.getLongitude() >> " + calculatedRightAscensions[p]); 
 
 	    	debug(OBJECT_LIST[p] + "  " + ha2str(obj.ra) + "  " + dec2str(obj.dec) + "  " + Double.toString(obj.rvec));
 	    }
@@ -500,6 +597,10 @@ solar calc (2): Dec = -16.529088456297796, ra = 31.71570876967337, oh lat = 343.
 	
 	public SolarSystemCoordinate[] getSolarSystemObjectCoordinates() {
 		return objectCoordinates;
+	}
+
+	public SolarSystemCoordinate[] getEarthObjectCoordinates() {
+		return objectCoordinatesFromEarth;
 	}
 
 	@Override

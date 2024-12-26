@@ -2,6 +2,9 @@ package me.qbert.skywatch.astro.impl;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import me.qbert.skywatch.astro.ObserverLocation;
 import me.qbert.skywatch.model.GeoLocation;
 import me.qbert.skywatch.model.ObjectDirectionAltAz;
@@ -23,6 +26,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 public class GeoCalculator {
+	private static final Logger logger = LogManager.getLogger(GeoCalculator.class.getName());
+	
 	public class FlatEarthPosition {
 		private ObjectDirectionRaDec gePosition;
 		
@@ -327,21 +332,32 @@ public class GeoCalculator {
 
 	
 	public ObjectDirectionAltAz raDeclinationToAltitudeAzimuth(ObjectDirectionRaDec objectRaDec, ObserverLocation location) {
+		logger.trace("RA/DEC (" + objectRaDec.getRightAscension() + "," + objectRaDec.getDeclination() + ") AND location (" +
+				location.getLatitude() + "," + location.getLongitude() + ") TO ALT/AZ");
 		double useLat = location.getLatitude();
+		logger.trace("useLat >> " + useLat);
 		while ((useLat > 89.999) && (useLat < 90.001))
 			useLat -= 0.0001;
+		logger.trace("(WHILE > 89.999 or < 90.001) >> " + useLat);
 		while ((useLat < -89.999) && (useLat > -90.001))
 			useLat += 0.0001;
+		logger.trace("(WHILE < -89.999 or > -90.001) >> " + useLat);
 		double latRad = Math.toRadians(useLat);
+		logger.trace("radians(useLat) >> " + latRad);
 		double raRad = Math.toRadians(objectRaDec.getRightAscension());
+		logger.trace("radians(raRad) >> " + raRad);
 		double decRad = Math.toRadians(objectRaDec.getDeclination());
+		logger.trace("(radians(decRad)) >> " + decRad);
 
 		double alt = Math.toDegrees(
 				Math.asin(Math.sin(latRad) * Math.sin(decRad) + Math.cos(latRad) * Math.cos(decRad) * Math.cos(raRad)));
+		logger.trace("alt = (Math.toDegrees( Math.asin(Math.sin(latRad) * Math.sin(decRad) + Math.cos(latRad) * Math.cos(decRad) * Math.cos(raRad)))) >> " + alt);
+		
 		double az = (Math.toDegrees(Math.atan2(-1 * Math.sin(raRad),
 				Math.tan(Math.toRadians(objectRaDec.getDeclination())) * Math.cos(Math.toRadians(useLat))
 						- Math.sin(Math.toRadians(useLat)) * Math.cos(raRad)))
 				+ 360.0) % 360.0;
+		logger.trace("az = (Math.toDegrees(Math.atan2(-1 * Math.sin(raRad), Math.tan(Math.toRadians(objectRaDec.getDeclination())) * Math.cos(Math.toRadians(useLat))- Math.sin(Math.toRadians(useLat)) * Math.cos(raRad))) + 360.0) % 360.0 >> " + az);
 
 		ObjectDirectionAltAz coord = new ObjectDirectionAltAz();
 		coord.setAltitude(alt);
