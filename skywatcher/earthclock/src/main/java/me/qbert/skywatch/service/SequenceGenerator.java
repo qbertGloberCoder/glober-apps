@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import me.qbert.skywatch.astro.CelestialObject;
 import me.qbert.skywatch.astro.ObservationTime;
 import me.qbert.skywatch.astro.ObserverLocation;
+import me.qbert.skywatch.astro.ObserverLocation3D;
 import me.qbert.skywatch.astro.TransactionalStateChangeListener;
 import me.qbert.skywatch.astro.impl.AbstractCelestialObject;
 import me.qbert.skywatch.astro.impl.MoonObject;
@@ -21,13 +22,20 @@ import me.qbert.skywatch.astro.impl.SunObject;
 import me.qbert.skywatch.astro.impl.SolarObjects.SolarSystemCoordinate;
 import me.qbert.skywatch.dao.StarsCoordinateDao;
 import me.qbert.skywatch.exception.UninitializedObject;
+import me.qbert.skywatch.model.BooleanState;
 import me.qbert.skywatch.model.CelestialAddress;
+import me.qbert.skywatch.model.CoordinateBias;
 import me.qbert.skywatch.model.StarCoordinate;
+import me.qbert.skywatch.service.sequence.AddLatLonBiasSequence;
 import me.qbert.skywatch.service.sequence.AltitudeAdvanceSequence;
 import me.qbert.skywatch.service.sequence.AnyAzimuthAdvanceSequence;
 import me.qbert.skywatch.service.sequence.AzimuthAdvanceSequence;
+import me.qbert.skywatch.service.sequence.BooleanStateSequence;
 import me.qbert.skywatch.service.sequence.SequenceJump;
 import me.qbert.skywatch.service.sequence.SequencePause;
+import me.qbert.skywatch.service.sequence.SetLatLonBiasSequence;
+import me.qbert.skywatch.service.sequence.SetObserverSequencee;
+import me.qbert.skywatch.service.sequence.SetUserObjectSequence;
 import me.qbert.skywatch.service.sequence.TimeAddSequence;
 import me.qbert.skywatch.service.sequence.TimeSetSequence;
 
@@ -54,6 +62,13 @@ public class SequenceGenerator {
 	private CelestialObject moon;
 	private AbstractCelestialObject solarObjects;
 	private List<CelestialObject> stars;
+	
+	private CoordinateBias latBias = new CoordinateBias(CoordinateBias.CoordinateMode.LATITUDE);
+	private CoordinateBias lonBias = new CoordinateBias(CoordinateBias.CoordinateMode.LONGITUDE);
+	
+	private BooleanState showPlanetTrails = new BooleanState();
+	
+	private boolean solarSystemSunCentric = true;
 
 	private int calendarField;
 	
@@ -64,6 +79,8 @@ public class SequenceGenerator {
 	private double ts;
 	
 	private double lastDstOffset = -9999999;
+	
+	private ArrayList<ObserverLocation3D> userObjectList = null;
 	
 	public SequenceGenerator() {
 		try {
@@ -101,6 +118,8 @@ public class SequenceGenerator {
 		sequenceScript = null;
 //		initSequencer();
 		
+		userObjectList = null;
+		
 		try {
 			advanceSequence(false);
 		} catch (UninitializedObject e) {
@@ -114,11 +133,20 @@ public class SequenceGenerator {
 		}
 	}
 	
+	public void reset() {
+		latBias.reset();
+		lonBias.reset();
+	}
+	
 	public void loadFromScript(File scriptFile) {
 		BufferedReader reader = null;
 		sequenceScript = new ArrayList<SequenceElementI>();
 		sequenceIndex = 0;
+		
+		userObjectList = null;
 
+		reset();
+		
 		Long l;
 		Integer i;
 		Double d;
@@ -130,7 +158,7 @@ public class SequenceGenerator {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
+				//System.out.println(line);
 				
 				if (line.startsWith("fulltime ")) {
 					l = convertHardTimeToUtMillis(line.replaceFirst("^fulltime  *", ""));
@@ -142,6 +170,134 @@ public class SequenceGenerator {
 					i = new Integer(line.replaceFirst("^addtime  *", ""));
 					SequenceElementI si = new TimeAddSequence(time, i);
 					sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("userobjs ")) {
+					if (line.equals("userobjs 0")) {
+						userObjectList = null;
+					}
+					else if (userObjectList == null)  {
+						i = new Integer(line.replaceFirst("^userobjs  *", ""));
+						if ((i > 0) && (i < 20)) {
+							userObjectList = new ArrayList<ObserverLocation3D>();
+							
+							for (int count = 0;count < i;count ++) {
+								userObjectList.add(new ObserverLocation3D());
+							}
+						}
+					}
+				}
+				
+				if (line.startsWith("setuserobj ")) {
+					if (userObjectList != null) {
+						String tmp = line.replaceFirst("^setuserobj  *", "");
+						
+						SequenceElementI si = null;
+	
+						try {
+							String [] elements = tmp.split(",");
+							
+							int objectIndex = Integer.parseInt(elements[0]);
+							if ((objectIndex > 0) && (objectIndex <= userObjectList.size())) {
+								double lat = Double.parseDouble(elements[1]);
+								double lon = Double.parseDouble(elements[2]);
+								double altitude = Double.parseDouble(elements[3]);
+								double diameter = Double.parseDouble(elements[4]);
+								
+								ObserverLocation3D obsLoc = userObjectList.get(objectIndex - 1);
+								
+								si = new SetUserObjectSequence(obsLoc, lat, lon, altitude, diameter);
+							}
+						} catch (NumberFormatException e) {
+							e.printStackTrace();
+						}
+						if (si != null)
+							sequenceScript.add(si);
+					}
+				}
+				
+				if (line.startsWith("setlatbias ")) {
+					String tmp = line.replaceFirst("^setlatbias  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							si = new SetLatLonBiasSequence(latBias, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("addlatbias ")) {
+					String tmp = line.replaceFirst("^addlatbias  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							si = new AddLatLonBiasSequence(latBias, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("setlonbias ")) {
+					String tmp = line.replaceFirst("^setlonbias  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							si = new SetLatLonBiasSequence(lonBias, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("addlonbias ")) {
+					String tmp = line.replaceFirst("^addlonbias  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							si = new AddLatLonBiasSequence(lonBias, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
 				}
 				
 				if (line.startsWith("nextalt ")) {
@@ -160,6 +316,28 @@ public class SequenceGenerator {
 						sequenceScript.add(si);
 				}
 				
+				
+				
+				
+				
+				if (line.startsWith("setobserver ")) {
+					String tmp = line.replaceFirst("^setobserver  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						double lat = Double.parseDouble(elements[0]);
+						double lon = Double.parseDouble(elements[1]);
+						si = new SetObserverSequencee(myLocation, lat, lon);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
 				if (line.startsWith("nextaz ")) {
 					String tmp = line.replaceFirst("^nextaz  *", "");
 					
@@ -171,6 +349,26 @@ public class SequenceGenerator {
 						d = new Double(tmp.replaceFirst("^moon  *", ""));
 						si = new AzimuthAdvanceSequence(moon, time, d);
 					}
+					
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("trails ")) {
+					String tmp = line.replaceFirst("^trails  *", "");
+					
+					SequenceElementI si = null;
+					
+					int objType = -1;
+					
+					if (tmp.startsWith("planets ")) {
+						tmp = tmp.replaceFirst("^planets  *", "");
+						objType = 1;
+					}
+					i = new Integer(tmp);
+					
+					if (objType == 1)
+						si = new BooleanStateSequence(showPlanetTrails, (i.intValue() == 1) ? true : false);
 					
 					if (si != null)
 						sequenceScript.add(si);
@@ -206,7 +404,7 @@ public class SequenceGenerator {
 				
 				if (line.startsWith("loop ")) {
 					i = new Integer(line.replaceFirst("^loop  *", ""));
-					System.out.println("??? loop to: " + (labelIndex - sequenceScript.size() - 1) + " and loop count: " + i);
+					//System.out.println("??? loop to: " + (labelIndex - sequenceScript.size() - 1) + " and loop count: " + i);
 					SequenceElementI si = new SequenceJump(labelIndex - sequenceScript.size() - 1, i);
 					sequenceScript.add(si);
 				}
@@ -230,6 +428,36 @@ public class SequenceGenerator {
 				}
 			}
 		}
+	}
+	
+	public int getUserObjectCount() {
+		if (userObjectList == null)
+			return 0;
+		
+		return userObjectList.size();
+	}
+	
+	public ObserverLocation3D getUserObject(int index) {
+		if (userObjectList == null)
+			return null;
+		
+		if ((index < 0) || (index >= userObjectList.size()))
+			return null;
+					
+		return userObjectList.get(index);
+	}
+	
+	public double getLatitudeBias(double latitude) {
+		double newLat = (latitude * latBias.getMultiplier()) + latBias.getOffset();
+		if (newLat > 89.999)
+			return 89.999;
+		if (newLat < -89.999)
+			return -89.999;
+		return newLat;
+	}
+	
+	public double getLongitudeBias(double longitude) {
+		return ((540.0 + (longitude * lonBias.getMultiplier()) + lonBias.getOffset()) % 360.0) - 180.0;
 	}
 	
 	public void initSequencer() {
@@ -273,7 +501,7 @@ public class SequenceGenerator {
 			return null;
 		
 		long l = hardTime.longValue();
-		if ((l > 20000000000000L) && (l < 20500000000000L)) {
+		if ((l > 19700101000000L) && (l < 20500000000000L)) {
 			int y = (int)(l / 10000000000L);
 			l = l % 10000000000L;
 			int m = (int)(l / 100000000L);
@@ -408,9 +636,20 @@ public class SequenceGenerator {
 		return solarObjects;
 	}
 	
+	public boolean isSolarSystemCentric() {
+		return solarSystemSunCentric;
+	}
+	
 	public SolarSystemCoordinate[] getSolarSystemObjectCoordinates() {
+//		if (! solarSystemSunCentric)
+//			((SolarObjects)solarObjects).getEarthObjectCoordinates();
+		
 		return ((SolarObjects)solarObjects).getSolarSystemObjectCoordinates();
 	}	
+	
+	public boolean isShowPlanetTrails() {
+		return showPlanetTrails.isState();
+	}
 	
 	public List<CelestialObject> getStars() {
 		return stars;
