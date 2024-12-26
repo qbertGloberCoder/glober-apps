@@ -42,12 +42,20 @@ public class GeoLocation {
 	}
 	
 	public void setGeoLocation(double latitude, double longitude) {
+		setGeoLocation(latitude, longitude, false);
+	}
+	
+	protected boolean setGeoLocation(double latitude, double longitude, boolean deferChangeSetting) {
 		if ((this.latitude != latitude) || (this.longitude != longitude)) {
 			this.latitude = latitude;
 			this.longitude = longitude;
+			if (deferChangeSetting)
+				return true;
+			
 			settingsChanged();
 		}
 		
+		return false;
 	}
 	
 	protected void settingsChanged() {}
