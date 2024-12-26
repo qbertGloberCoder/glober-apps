@@ -27,6 +27,11 @@ public class EquirectilinearTransform implements ProjectionTransformI {
 	
 	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, overscan, false);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan, boolean positiveZOnly) {
 		// 85 pixels per 15 degree markers; image width is 2058
 		// 360/15*85
 		//

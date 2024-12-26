@@ -34,6 +34,11 @@ public class AzimuthalEquidistantNPTransform implements ProjectionTransformI {
 	
 	@Override
 	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan) {
+		return transform(latitude, longitude, observerLatitude, observerLongitude, extraDstRotationDegrees, overscan, false);
+	}
+	
+	@Override
+	public Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan, boolean positiveZOnly) {
 		double angle = Math.toRadians(longitude - observerLongitude - 90.0 - extraDstRotationDegrees);
 		double radius = (90.0 - latitude) / 180.0 * 0.5;
 		

@@ -19,4 +19,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 public interface ProjectionTransformI {
 	public Point2D.Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan);
+	public Point2D.Double transform(double latitude, double longitude, double observerLatitude, double observerLongitude, double extraDstRotationDegrees, double overscan, boolean positiveZOnly);
 }
