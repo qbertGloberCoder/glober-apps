@@ -17,5 +17,6 @@
     <modules>
 	<module>base</module>
 	<module>skywatcher</module>
+	<module>foucault_pendulum</module>
     </modules>
 </project>
