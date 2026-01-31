@@ -23,6 +23,12 @@ public class PendulumStatistics {
 	private SwingVector forwardNadir = new SwingVector();
 	private SwingVector returnApex = new SwingVector();
 	private SwingVector returnNadir = new SwingVector();
+
+	private SwingVector lastForwardApex = new SwingVector();
+	private SwingVector lastForwardNadir = new SwingVector();
+	private SwingVector lastReturnApex = new SwingVector();
+	private SwingVector lastReturnNadir = new SwingVector();
+
 	private double swingCorrection;
 	private double simulationSeconds;
 
@@ -55,6 +61,12 @@ public class PendulumStatistics {
 	}
 
 	public void setForwardApex(double radius, double azimuth) {
+		forwardApex.setLastUpdate(true);
+		forwardNadir.setLastUpdate(false);
+		returnApex.setLastUpdate(false);
+		returnNadir.setLastUpdate(false);
+
+		lastForwardApex = forwardApex.copy();
 		forwardApex.setRadius(radius);
 		forwardApex.setAzimuth(azimuth);
 	}
@@ -64,6 +76,12 @@ public class PendulumStatistics {
 	}
 
 	public void setForwardNadir(double radius, double azimuth) {
+		forwardApex.setLastUpdate(false);
+		forwardNadir.setLastUpdate(true);
+		returnApex.setLastUpdate(false);
+		returnNadir.setLastUpdate(false);
+
+		lastForwardNadir = forwardNadir.copy();
 		forwardNadir.setRadius(radius);
 		forwardNadir.setAzimuth(azimuth);
 	}
@@ -73,6 +91,12 @@ public class PendulumStatistics {
 	}
 
 	public void setReturnApex(double radius, double azimuth) {
+		forwardApex.setLastUpdate(false);
+		forwardNadir.setLastUpdate(false);
+		returnApex.setLastUpdate(true);
+		returnNadir.setLastUpdate(false);
+
+		lastReturnApex = returnApex.copy();
 		returnApex.setRadius(radius);
 		returnApex.setAzimuth(azimuth);
 	}
@@ -82,8 +106,30 @@ public class PendulumStatistics {
 	}
 
 	public void setReturnNadir(double radius, double azimuth) {
+		forwardApex.setLastUpdate(false);
+		forwardNadir.setLastUpdate(false);
+		returnApex.setLastUpdate(false);
+		returnNadir.setLastUpdate(true);
+
+		lastReturnNadir = returnNadir.copy();
 		returnNadir.setRadius(radius);
 		returnNadir.setAzimuth(azimuth);
+	}
+
+	public SwingVector getLastForwardApex() {
+		return lastForwardApex;
+	}
+
+	public SwingVector getLastForwardNadir() {
+		return lastForwardNadir;
+	}
+
+	public SwingVector getLastReturnApex() {
+		return lastReturnApex;
+	}
+
+	public SwingVector getLastReturnNadir() {
+		return lastReturnNadir;
 	}
 
 	public double getSwingCorrection() {
@@ -112,6 +158,12 @@ public class PendulumStatistics {
 		newCopy.forwardNadir = forwardNadir.copy();
 		newCopy.returnApex = returnApex.copy();
 		newCopy.returnNadir = returnNadir.copy();
+		
+		newCopy.lastForwardApex = lastForwardApex.copy();
+		newCopy.lastForwardNadir = lastForwardNadir.copy();
+		newCopy.lastReturnApex = lastReturnApex.copy();
+		newCopy.lastReturnNadir = lastReturnNadir.copy();
+		
 		newCopy.swingCorrection = swingCorrection;
 		newCopy.simulationSeconds = simulationSeconds;
 		

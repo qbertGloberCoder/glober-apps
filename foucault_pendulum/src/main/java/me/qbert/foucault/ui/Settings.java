@@ -1,5 +1,6 @@
 package me.qbert.foucault.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.FocusEvent;
@@ -58,6 +59,9 @@ public class Settings extends JFrame {
 	private JTextField dragCoefficientField = null;
 	private JTextField rotateSecondsField = null;
 	private JTextField gravityField = null;
+	private JTextField minStepTimeField = null;
+	private JTextField midStepTimeField = null;
+	private JTextField maxStepTimeField = null;
 
 	
 	private JCheckBox dragCheck;
@@ -71,8 +75,7 @@ public class Settings extends JFrame {
 	private JLabel returnNadir;
 	private JLabel swingCorrection;
 	private JLabel simulationTime;
-    
-
+	
 	public Settings(PendulumSceneFX mainClass) {
 		super("Pendulum Controls");
 		this.mainClass = mainClass;
@@ -246,16 +249,61 @@ public class Settings extends JFrame {
 			public void focusGained(FocusEvent e) {
 			}
 		});
+        
+        minStepTimeField = createTextField("Minimum Step time", c, String.format("%.12f", mainClass.getMinTimeStep()));
+        minStepTimeField.addActionListener(e -> {
+        	setMinStepTime();
+        });
+        minStepTimeField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				setMinStepTime();
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+        
+        midStepTimeField = createTextField("Mid Step time", c, String.format("%.12f", mainClass.getMidTimeStep()));
+        midStepTimeField.addActionListener(e -> {
+        	setMidStepTime();
+        });
+        midStepTimeField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				setMidStepTime();
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+        
+        maxStepTimeField = createTextField("Maximum Step time", c, String.format("%.12f", mainClass.getMaxTimeStep()));
+        maxStepTimeField.addActionListener(e -> {
+        	setMaxStepTime();
+        });
+        maxStepTimeField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				setMaxStepTime();
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
     }
     
     private void createDisplayLabels(GridBagConstraints c) {
         precessionRate = createInfoBox("Precession rate", c);
         pendulumTime = createInfoBox("Time to complete 360°", c);
         computedLatitude = createInfoBox("Computed latitude", c);
+        forwardNadir = createInfoBox("Forward nadir radius/azimuth", c);
         forwardApex = createInfoBox("Forward apex radius/azimuth", c);
         returnNadir = createInfoBox("Return nadir radius/azimuth", c);
         returnApex = createInfoBox("Return apex radius/azimuth", c);
-        forwardNadir = createInfoBox("Forward nadir radius/azimuth", c);
         swingCorrection = createInfoBox("Swing stability coefficient", c);
         simulationTime = createInfoBox("Simulation time", c);
     }
@@ -487,6 +535,55 @@ public class Settings extends JFrame {
     		gravityField.setText(Double.toString(mainClass.getGravity()));
     	}
     }
+    
+    private void setMinStepTime() {
+    	double val = stringToDouble(minStepTimeField.getText(), mainClass.getMinTimeStep());
+    	
+    	if (val >= mainClass.getMidTimeStep())
+    		val = mainClass.getMinTimeStep();
+    	
+		if (val != mainClass.getMinTimeStep()) {
+			mainClass.setMinTimeStep(val);
+		}
+		else
+			minStepTimeField.setText(String.format("%.12f", val));
+    }
+    
+    private void setMidStepTime() {
+    	double val = stringToDouble(midStepTimeField.getText(), mainClass.getMidTimeStep());
+    	
+    	if ((val >= mainClass.getMaxTimeStep()) || (val <= mainClass.getMinTimeStep()))
+    		val = mainClass.getMidTimeStep();
+    	
+		if (val != mainClass.getMidTimeStep()) {
+			mainClass.setMidTimeStep(val);
+		}
+		else
+			midStepTimeField.setText(String.format("%.12f", val));
+    }
+    
+    private void setMaxStepTime() {
+    	double val = stringToDouble(maxStepTimeField.getText(), mainClass.getMaxTimeStep());
+    	
+    	if (val <= mainClass.getMidTimeStep())
+    		val = mainClass.getMaxTimeStep();
+    	
+		if (val != mainClass.getMaxTimeStep()) {
+			mainClass.setMaxTimeStep(val);
+		}
+		else
+			maxStepTimeField.setText(String.format("%.12f", val));
+    }
+    
+    private double stringToDouble(String str, double fallbackValue) {
+    	try {
+    		Double gravity = Double.valueOf(str);
+    		return gravity.doubleValue();
+    			
+    	} catch (Exception ex) {
+    		return fallbackValue;
+    	}
+	}
 
     private static final double HOURS_PER_DAY   = 24.0;
     private static final double DAYS_PER_YEAR   = 365.2425;
@@ -551,42 +648,24 @@ public class Settings extends JFrame {
 			}
 		}
 
-		SwingVector swingVector = statistics.getForwardApex();
 		if (forwardApex != null) {
-			double number = swingVector.getRadius();
-			double azimuth = Math.toDegrees(swingVector.getAzimuth());
-			azimuth = ((450 - azimuth) % 360);
-			forwardApex.setText(Double.toString(number) + ", " + Double.toString(azimuth));
+			forwardApex.setText(swingVectorToString(statistics.getForwardApex(), statistics.getLastForwardApex()));
+			forwardApex.setForeground(statistics.getForwardApex().isLastUpdate() ? Color.RED : Color.BLACK);
 		}
 
-		swingVector = statistics.getForwardNadir();
 		if (forwardNadir != null) {
-			double number = swingVector.getRadius();
-			double azimuth = Math.toDegrees(swingVector.getAzimuth());
-			azimuth = ((450 - azimuth) % 360);
-			if (number == 0.0)
-				forwardNadir.setText(Double.toString(number) + "/-");
-			else
-				forwardNadir.setText(Double.toString(number) + "/" + Double.toString(azimuth));
+			forwardNadir.setText(swingVectorToString(statistics.getForwardNadir(), statistics.getLastForwardNadir()));
+			forwardNadir.setForeground(statistics.getForwardNadir().isLastUpdate() ? Color.RED : Color.BLACK);
 		}
 
-		swingVector = statistics.getReturnApex();
 		if (returnApex != null) {
-			double number = swingVector.getRadius();
-			double azimuth = Math.toDegrees(swingVector.getAzimuth());
-			azimuth = ((450 - azimuth) % 360);
-			returnApex.setText(Double.toString(number) + ", " + Double.toString(azimuth));
+			returnApex.setText(swingVectorToString(statistics.getReturnApex(), statistics.getLastReturnApex()));
+			returnApex.setForeground(statistics.getReturnApex().isLastUpdate() ? Color.RED : Color.BLACK);
 		}
 
-		swingVector = statistics.getReturnNadir();
 		if (returnNadir != null) {
-			double number = swingVector.getRadius();
-			double azimuth = Math.toDegrees(swingVector.getAzimuth());
-			azimuth = ((450 - azimuth) % 360);
-			if (number == 0.0)
-				returnNadir.setText(Double.toString(number) + "/-");
-			else
-				returnNadir.setText(Double.toString(number) + "/" + Double.toString(azimuth));
+			returnNadir.setText(swingVectorToString(statistics.getReturnNadir(), statistics.getLastReturnNadir()));
+			returnNadir.setForeground(statistics.getReturnNadir().isLastUpdate() ? Color.RED : Color.BLACK);
 		}
 
 		if (swingCorrection != null) {
@@ -607,5 +686,26 @@ public class Settings extends JFrame {
 			else
 				simulationTime.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 		}
+	}
+	
+	private String swingVectorToString(SwingVector swingVector, SwingVector previousVector) {
+		String retStr = "";
+		
+		double number = swingVector.getRadius();
+		double azimuth = Math.toDegrees(swingVector.getAzimuth());
+		azimuth = ((450 - azimuth) % 360);
+		if (number == 0.0)
+			retStr = Double.toString(number) + " / -";
+		else
+			retStr = Double.toString(number) + " / " + Double.toString(Math.round(azimuth * 10000.0) / 10000.0);
+		
+		if (previousVector != null) {
+			number = swingVector.getRadius() - previousVector.getRadius();
+			azimuth = Math.toDegrees(swingVector.getAzimuth() - previousVector.getAzimuth());
+			azimuth = ((540 - azimuth) % 360) - 180;
+			retStr = retStr + "   delta: " + Double.toString(number) + " / " + Double.toString(azimuth);
+		}
+		
+		return retStr;
 	}
 }

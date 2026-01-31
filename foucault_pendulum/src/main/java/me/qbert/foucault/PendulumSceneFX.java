@@ -474,6 +474,9 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     }
     
     public void setMaxSwingDiameter(double diameter) {
+    	if (newSwingDiameter == diameter)
+    		return;
+    	
     	pendulumModel.setRunMode(false);
     	newSwingDiameter = diameter;
     	updateSimulator = true;
@@ -484,6 +487,9 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     }
     
     public void setInitialAzimuth(double azimuth) {
+    	if (this.initialAzimuth == azimuth)
+    		return;
+    	
     	pendulumModel.setRunMode(false);
     	initialAzimuth = azimuth;
     	updateSimulator = true;
@@ -493,6 +499,30 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	return initialAzimuth;
     }
     
+	public double getMinTimeStep() {
+		return pendulumModel.getMinTimeStep();
+	}
+
+	public void setMinTimeStep(double minTimeStep) {
+		pendulumModel.setMinTimeStep(minTimeStep);
+	}
+
+	public double getMidTimeStep() {
+		return pendulumModel.getMidTimeStep();
+	}
+
+	public void setMidTimeStep(double midTimeStep) {
+		pendulumModel.setMidTimeStep(midTimeStep);
+	}
+
+	public double getMaxTimeStep() {
+		return pendulumModel.getMaxTimeStep();
+	}
+
+	public void setMaxTimeStep(double maxTimeStep) {
+		pendulumModel.setMaxTimeStep(maxTimeStep);
+	}
+
     private void updateCameraPosition() {
         double cameraX = cameraDistance * Math.cos(Math.toRadians(cameraAltitude)) * Math.cos(Math.toRadians(cameraAzimuth));
         double cameraY = cameraDistance * Math.sin(Math.toRadians(cameraAltitude)) - tableHeight;

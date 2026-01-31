@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 public class SwingVector {
 	private double radius;
 	private double azimuth;
+	private boolean lastUpdate;
+	
 	public double getRadius() {
 		return radius;
 	}
@@ -30,10 +32,17 @@ public class SwingVector {
 	public void setAzimuth(double azimuth) {
 		this.azimuth = azimuth;
 	}
+	public boolean isLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(boolean lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 	public SwingVector copy() {
 		SwingVector newVector = new SwingVector();
 		newVector.radius = radius;
 		newVector.azimuth = azimuth;
+		newVector.lastUpdate = lastUpdate;
 		return newVector;
 	}
 }

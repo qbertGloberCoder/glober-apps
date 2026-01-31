@@ -47,9 +47,9 @@ public class Pendulum {
 	private double gz = -metersPerSecondSquared;
 	
 	private double swingCorrectionSteps = 320000;
-	private static double minTimeStep = 0.0000001;
-	private static double midTimeStep = 0.00001;
-	private static double maxTimeStep = 0.0001;
+	private double minTimeStep = 0.000001;
+	private double midTimeStep = 0.00001;
+	private double maxTimeStep = 0.0001;
 	private double timeStep = minTimeStep;
 	private double animationTime = 0.0;
 	private int frameCount = 0;
@@ -175,6 +175,30 @@ public class Pendulum {
 			applyDrag = false;
 	}
 	
+	public double getMinTimeStep() {
+		return minTimeStep;
+	}
+
+	public void setMinTimeStep(double minTimeStep) {
+		this.minTimeStep = minTimeStep;
+	}
+
+	public double getMidTimeStep() {
+		return midTimeStep;
+	}
+
+	public void setMidTimeStep(double midTimeStep) {
+		this.midTimeStep = midTimeStep;
+	}
+
+	public double getMaxTimeStep() {
+		return maxTimeStep;
+	}
+
+	public void setMaxTimeStep(double maxTimeStep) {
+		this.maxTimeStep = maxTimeStep;
+	}
+
 	private void resetPendulum() {
 		desiredStartAngleRads = Math.toRadians(desiredStartAngle);
 		returnAngle = desiredStartAngleRads;
@@ -308,9 +332,19 @@ public class Pendulum {
 		    double gtyNew = gy - gDotRnew*rhatYn;
 		    double gtzNew = gz - gDotRnew*rhatZn;
 
-		    double axNew = gtxNew - 2.0*(omegaY*vzHalf - omegaZ*vyHalf);
-		    double ayNew = gtyNew - 2.0*(omegaZ*vxHalf - omegaX*vzHalf);
-		    double azNew = gtzNew - 2.0*(omegaX*vyHalf - omegaY*vxHalf);
+		    double axNew;
+		    double ayNew;
+		    double azNew;
+		    
+		    if (precessionActive) {
+		    	axNew = gtxNew - 2.0*(omegaY*vzHalf - omegaZ*vyHalf);
+		    	ayNew = gtyNew - 2.0*(omegaZ*vxHalf - omegaX*vzHalf);
+		    	azNew = gtzNew - 2.0*(omegaX*vyHalf - omegaY*vxHalf);
+		    } else {
+		    	axNew = gtxNew;
+		    	ayNew = gtyNew;
+		    	azNew = gtzNew;
+		    }
 		    
 		    /* complete the velocity calculation */
 		    vx = vxHalf + 0.5*axNew*timeStep;
@@ -456,11 +490,6 @@ public class Pendulum {
 		
 		if (statisticsUpdateListener != null)
 			statisticsUpdateListener.statisticsUpdated(this, statistics.copy());
-/*		if (returnApex)
-			System.out.println("R: " + angle);
-		else
-			System.out.println("F: " + angle); */
-		
 //		System.out.println("?? " + x + ", " + y + ", " + z);
 	}
 	
@@ -474,7 +503,7 @@ public class Pendulum {
 		
 		if (statisticsUpdateListener != null)
 			statisticsUpdateListener.statisticsUpdated(this, statistics.copy());
-		
+
 /*		if (forwardNadir) {
 			System.out.println(
 					"For.Ap. = " + statistics.getForwardApex().getRadius() + "/" + statistics.getForwardApex().getAzimuth() +
