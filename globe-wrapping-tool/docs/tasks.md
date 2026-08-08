@@ -761,3 +761,21 @@ affect how this file itself is written going forward:
   `git commit` inside `glober-apps` as part of the migration. Stage the files and leave them for
   the user's own `git diff` review and manual content-scrubbing pass before anything is committed
   to that repository's history.
+
+---
+
+## Post-migration follow-on: `groupId` changed to `me.qbert.tools`
+
+After the migration into `glober-apps` landed, `pom.xml`'s `<groupId>` was changed again, from
+`me.qbert` (set during the earlier "package renamed" follow-on, back when this project was still
+standalone) to **`me.qbert.tools`** — `glober-apps`'s own convention for generic, non-`skywatch`-
+specific standalone tool modules, distinct from the reactor's `me.qbert.skywatch` and from the
+other one-off groupIds (`me.qbert.cbtools`, `me.qbert.simulators`) used by
+`colorblind_tools/colortransformer` and `foucault_pendulum`. Any future generic tool module added
+to `glober-apps` should use this same `me.qbert.tools` groupId rather than inventing a new one.
+
+The Java package root (`me.qbert.globewrapping`) was **not** renamed to match — nothing outside
+`pom.xml` depends on the groupId and package root being identical, and this project's package
+namespacing decision (see the "package renamed" follow-on above) is independent of where the
+module now happens to live. Docs updated to match: this module's own `CLAUDE.md` and
+`glober-apps/CLAUDE.md`'s module-overview section.
