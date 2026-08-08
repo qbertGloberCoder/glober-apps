@@ -5,7 +5,10 @@
 **/.settings
 **/bin
 **/.DS_Store
+**/.claude
+**/CLAUDE.md
 skywatcher/earthclock/script*.txt
 skywatcher/earthclock/clocks/
 skywatcher/earthclock/projections/
 skywatcher/earthclock/settings.properties
+globe-wrapping-tool/samples/*/images/*

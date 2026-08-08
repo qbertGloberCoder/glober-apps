@@ -1,0 +1,54 @@
+# globe-wrapping-tool.yaml — calibration profiles for the current satellite roster
+#
+# Loaded automatically from the current working directory when `unwrap` is run without
+# --config, or point at this file explicitly with `--config <path>` (see CLAUDE.md's
+# "CLI usage" section). Profiles here override the built-in defaults (goes8/himawari)
+# of the same alias name; new aliases like these four are simply added.
+#
+# sub_lat/sub_lon: real orbital sub-satellite points (well-established, not measured here).
+# distance: standard GEO altitude above the surface, km, for all four.
+# nadir_x/nadir_y/radius_x/radius_y: measured directly from the actual sample images in
+# samples/*/images/*1200* (connected-component / circle-fit disc-boundary detection —
+# see tasks.md's resume note for method). All four independently converged on the same
+# "disc nearly fills the frame, centered, ~0.497-0.4993 radius" crop convention, which
+# also matches the old goes8/himawari reference values in globe-unwrapper-requirements.md
+# section 4 almost exactly -- a good cross-check that these numbers are trustworthy, not
+# a fluke. Still: treat as a good starting point, not gospel -- if `unwrap` output looks
+# even slightly off-center for a given source, nudge these per the requirements doc's own
+# "empirically tedious/iterative" calibration process, or via --override for one-off tuning.
+
+goes19:
+  sub_lat: 0.0
+  sub_lon: -75.2
+  distance: 35786
+  nadir_x: 0.4993
+  nadir_y: 0.4993
+  radius_x: 0.4993
+  radius_y: 0.4993
+
+goes18:
+  sub_lat: 0.0
+  sub_lon: -137.2
+  distance: 35786
+  nadir_x: 0.4993
+  nadir_y: 0.4993
+  radius_x: 0.4993
+  radius_y: 0.4993
+
+himawari9:
+  sub_lat: 0.0
+  sub_lon: 140.7
+  distance: 35786
+  nadir_x: 0.498
+  nadir_y: 0.500
+  radius_x: 0.496
+  radius_y: 0.496
+
+meteosat0:
+  sub_lat: 0.0
+  sub_lon: 0.0
+  distance: 35786
+  nadir_x: 0.4993
+  nadir_y: 0.4993
+  radius_x: 0.4993
+  radius_y: 0.4993
