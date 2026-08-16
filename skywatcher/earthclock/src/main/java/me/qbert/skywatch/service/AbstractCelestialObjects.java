@@ -196,7 +196,9 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	private boolean railwayStyleClock = true;
 	private boolean twentyFourHourClock = true;
 	private boolean renderSunGPGreatCircleRoute = true;
+	private boolean renderSunHeadings = true;
 	private boolean renderMoonGPGreatCircleRoute = true;
+	private boolean renderMoonHeadings = true;
 	private int fillLevel;
 	
 	private int shiftDirection = 0;
@@ -402,7 +404,7 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         
         observerContourLinesContainerRenderer = new BoundaryContainerRenderer();
 //      observerContourLinesContainerRenderer.setMaintainAspectRatio(true);
-      
+        
         backgroundRenderer.add(sunContourLinesContainerRenderer);
         backgroundRenderer.add(moonContourLinesContainerRenderer);
         backgroundRenderer.add(observerContourLinesContainerRenderer);
@@ -921,6 +923,14 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 		return moonContourLinesContainerRenderer.isRenderComponent();
 	}
 	
+	public void setObserverRenderContourLines(boolean contourLines) {
+		observerContourLinesContainerRenderer.setRenderComponent(contourLines);
+	}
+	
+	public boolean isObserverRenderContourLines() {
+		return observerContourLinesContainerRenderer.isRenderComponent();
+	}
+	
 	public void setDayNightRendered(boolean rendered) {
 		sunDayNightRenderer.setRenderComponent(rendered);
 		sunDayNightLatitude = -99999.99;
@@ -1078,12 +1088,26 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
 	protected abstract void setClockLHA(double localHourAngle);
 	protected abstract boolean showObjectsAsPins();
 
+	protected double getExtraViewLatRotate() {
+		return sequenceGenerator.getViewRotateLatitude();
+	}
+	
+	protected double getExtraViewLonRotate() {
+		return sequenceGenerator.getViewRotateLongitude();
+	}
+	
+	protected double getExtraViewZRotate() {
+		return sequenceGenerator.getExtraViewZRotate();
+	}
+	
 	protected double getViewRotationAngle() {
 		
 		if ((centerMode == MapCenterMode.OBSERVER_LAT_LON) || (centerMode == MapCenterMode.OBSERVER_LON)) {
 			rotateToCoordinate(((centerMode == MapCenterMode.OBSERVER_LAT_LON) ? sequenceGenerator.getMyLocation().getLatitude() : 0.0),
-					sequenceGenerator.getMyLocation().getLongitude());
-			return sequenceGenerator.getMyLocation().getLongitude();
+//					sequenceGenerator.getMyLocation().getLongitude()
+					sequenceGenerator.getLongitudeBias(sequenceGenerator.getMyLocation().getLongitude())
+					);
+			return sequenceGenerator.getLongitudeBias(sequenceGenerator.getMyLocation().getLongitude()); //sequenceGenerator.getMyLocation().getLongitude();
 		}
 		
 		if (centerMode == MapCenterMode.SUN) {
@@ -1223,10 +1247,11 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
     		sunAzimuthRenderer.setText("Azimuth: " + altitudeAzimuth.getAzimuth());
             
     		ArrayList<GeoLocation> pathToObject = null;
-    		if (renderSunGPGreatCircleRoute) {
-    			if (altitudeAzimuth.getAltitude() >= 0) {
+    		if ((renderSunHeadings) || (renderSunGPGreatCircleRoute)) {
+    			if ((renderSunGPGreatCircleRoute) && (altitudeAzimuth.getAltitude() >= 0)) {
 	    			pathToObject = GeoCalculator.divideGreatCircle(sequenceGenerator.getMyLocation(), subObjectPoint, 360);
-	    			pathToObject.add(pathToObject.get(0));
+	    			if (getProjection().equals("ae-north"))
+	    				pathToObject.add(pathToObject.get(0));
 	    			showUserObjects = true;
     			} else {
     				pathToObject = new ArrayList<GeoLocation>();
@@ -1236,11 +1261,13 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
     				geoLoc = new GeoLocation();
     				geoLoc.setGeoLocation(subObjectPoint.getLatitude(), subObjectPoint.getLongitude());
     				pathToObject.add(geoLoc);
+	    			showUserObjects = true;
     			}
     		}
+    		
     		setLineRendererPathBetweenTwoPoints(userGESunSightLine, pathToObject);
     		
-    		if (renderSunGPGreatCircleRoute)
+    		if ((getProjection().equals("ae-north")) && (renderSunHeadings))
     			setSunAzimuthLine(sequenceGenerator.getMyLocation(), altitudeAzimuth.getAltitude(), altitudeAzimuth.getAzimuth());
     		
     		for (int i = 0;i < planetRenderers.length;i ++) {
@@ -1408,9 +1435,13 @@ public abstract class AbstractCelestialObjects implements ImageTransformerI, Arc
         		sequenceGenerator.getSolarSystemObjectCoordinates(), sequenceGenerator.isSolarSystemCentric(),
         		sequenceGenerator.isShowPlanetTrails());
 
+        postUpdate();
+        
         if (repaintCanavas)
         	repaintRequest();
 	}
+	
+	protected abstract void postUpdate();
 	
 	protected abstract void repaintRequest();
 	

@@ -252,4 +252,8 @@ public class MercatorObjects extends AbstractCelestialObjects {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected void postUpdate() {
+	}
 }

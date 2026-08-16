@@ -239,4 +239,9 @@ public class SwitchableProjectionObjects extends AbstractCelestialObjects {
 	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
 		return activeProjection.getExtraTextRenderers();
 	}
+
+	@Override
+	protected void postUpdate() {
+		activeProjection.postUpdate();
+	}
 }

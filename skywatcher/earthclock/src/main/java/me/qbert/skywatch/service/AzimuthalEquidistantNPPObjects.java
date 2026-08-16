@@ -425,4 +425,8 @@ public class AzimuthalEquidistantNPPObjects extends AbstractCelestialObjects {
 	protected List<RendererI> getObjectRenderers() {
 		return fullRenderers;
 	}
+
+	@Override
+	protected void postUpdate() {
+	}
 }

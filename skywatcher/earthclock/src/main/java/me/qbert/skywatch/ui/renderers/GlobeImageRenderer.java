@@ -35,9 +35,15 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	private boolean leaveUnwrapped = false;
 	
 	private double circumferenceSizeFraction = 1.0;
+	
+	private double extraLatRotate = 0.0;
+	private double extraLonRotate = 0.0;
+	private double zRotate = 0.0;
 
 	private double stereoVisionRotate = 0.0;
 	private double lastStereoVision = 0.0;
+	private double lastExtraRotate = 0.0;
+	private double lastZRotate = 0.0;
 	
 	public GlobeImageRenderer(BufferedImage equirectinearImage) {
 		this.equirectinearImage = equirectinearImage;
@@ -73,6 +79,30 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 			wrapToCoordinates(lastLat, lastLon);
 	}
 
+	public double getExtraLatRotate() {
+		return extraLatRotate;
+	}
+
+	public void setExtraLatRotate(double extraLatRotate) {
+		this.extraLatRotate = extraLatRotate;
+	}
+
+	public double getExtraLonRotate() {
+		return extraLonRotate;
+	}
+
+	public void setExtraLonRotate(double extraLonRotate) {
+		this.extraLonRotate = extraLonRotate;
+	}
+
+	public double getzRotate() {
+		return zRotate;
+	}
+
+	public void setzRotate(double zRotate) {
+		this.zRotate = zRotate;
+	}
+
 	public double getStereoVisionRotate() {
 		return stereoVisionRotate;
 	}
@@ -87,13 +117,18 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	}
 
 
+	public void wrapToCoordinates() {
+		wrapToCoordinates(lastLat, lastLon);
+	}
+	
 	public void wrapToCoordinates(double latitude, double longitude) {
 		if (leaveUnwrapped)
 			return;
 
-		if ((lastBi != null) && (latitude == lastLat) && (longitude == lastLon) && (zoomedOut == lastZoom) && (zoomLevel == lastZoomLevel) && (lastStereoVision == stereoVisionRotate))
-			return;
+//		System.out.println("?? zrotate?? " + zRotate + " COMPARED TO: " + lastZRotate);
 		
+		if ((lastBi != null) && (latitude == lastLat) && (lastZRotate == zRotate) && (lastExtraRotate == extraLatRotate) && (longitude == lastLon) && (zoomedOut == lastZoom) && (zoomLevel == lastZoomLevel) && (lastStereoVision == stereoVisionRotate))
+			return;
 		
 		int outWidth = Math.max((int)getBoundaryWidth(), 1024);
 		int outHeight = Math.max((int)getBoundaryHeight(), 1024);
@@ -112,9 +147,10 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    int borderBottom = commonBorder;
 	    
 	    
-	    double latRad = Math.toRadians(latitude);
+	    double latRad = Math.toRadians(latitude + extraLatRotate);
 	    double lonRad = Math.toRadians(longitude);
-	    double stereoRad = Math.toRadians(stereoVisionRotate);
+	    double stereoRad = Math.toRadians(extraLonRotate + stereoVisionRotate);
+	    double zRotateRad = Math.toRadians(zRotate);
 
 		double pixelsPerDegreeX = (double)((inWidth - borderLeft - borderRight) - 2) / 360.0;
 		double pixelsPerDegreeY = (double)((inHeight - borderTop - borderBottom) - 2) / 180.0;
@@ -151,12 +187,20 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    		double tr;
 	    		double ta;
 
-	    		if (stereoVisionRotate != 0.0) {
+	    		if (extraLonRotate + stereoVisionRotate != 0.0) {
 		    		tr = Math.sqrt(tx*tx+tz*tz);
 		    		ta = Math.atan2(tz, tx);
 	    			
 	    			tx = tr*Math.cos(ta-stereoRad);
 	    			tz = tr*Math.sin(ta-stereoRad);
+	    		} 
+
+	    		if (zRotate != 0.0) {
+		    		tr = Math.sqrt(tx*tx+ty*ty);
+		    		ta = Math.atan2(ty, tx);
+	    			
+	    			tx = tr*Math.cos(ta-zRotateRad);
+	    			ty = tr*Math.sin(ta-zRotateRad);
 	    		} 
 
 	    		tr = Math.sqrt(ty*ty+tz*tz);
@@ -195,6 +239,8 @@ public class GlobeImageRenderer extends AbstractImageRenderer {
 	    lastZoom = zoomedOut;
 	    lastZoomLevel = zoomLevel;
 	    lastStereoVision = stereoVisionRotate;
+	    lastExtraRotate = extraLatRotate;
+	    lastZRotate = zRotate;
 	    
 	    setOriginalImage(lastBi);
 	}

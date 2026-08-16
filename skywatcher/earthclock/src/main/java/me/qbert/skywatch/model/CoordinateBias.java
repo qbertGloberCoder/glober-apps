@@ -54,13 +54,21 @@ public class CoordinateBias {
 	
 	public void setOffset(double offset) {
 		double limit = 360.0;
-		if (mode == CoordinateMode.LATITUDE)
+		if (mode == CoordinateMode.LATITUDE) {
 			limit = 90;
-		if (offset < -limit)
-			offset = -limit;
-		else if (offset > limit)
-			offset = limit;
-		else
-			this.offset = offset;
+			if (offset < -limit)
+				offset = -limit;
+			else if (offset > limit)
+				offset = limit;
+			else
+				this.offset = offset;
+		} else {
+			if (offset < -limit)
+				this.offset = offset + limit;
+			else if (offset > limit)
+				this.offset = offset - limit;
+			else
+				this.offset = offset;
+		}
 	}
 }

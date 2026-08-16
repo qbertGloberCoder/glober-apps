@@ -25,6 +25,10 @@ public class GlobeTransform implements ProjectionTransformI {
 
 	private double stereoVisionRotate = 0.0;
 	
+	private double extraLatRotate = 0.0;
+	private double extraLonRotate = 0.0;
+	private double zRotate = 0.0;
+	
 	private Double overscanLatLon;
 	
 	public double getZoomLevel() {
@@ -54,6 +58,36 @@ public class GlobeTransform implements ProjectionTransformI {
 
 	public void setStereoVisionRotate(double stereoVisionRotate) {
 		this.stereoVisionRotate = stereoVisionRotate;
+	}
+
+
+	public double getExtraLatRotate() {
+		return extraLatRotate;
+	}
+
+
+	public void setExtraLatRotate(double extraLatRotate) {
+		this.extraLatRotate = extraLatRotate;
+	}
+
+
+	public double getExtraLonRotate() {
+		return extraLonRotate;
+	}
+
+
+	public void setExtraLonRotate(double extraLonRotate) {
+		this.extraLonRotate = extraLonRotate;
+	}
+
+
+	public double getzRotate() {
+		return zRotate;
+	}
+
+
+	public void setzRotate(double zRotate) {
+		this.zRotate = zRotate;
 	}
 
 
@@ -99,15 +133,24 @@ public class GlobeTransform implements ProjectionTransformI {
 		tr = Math.sqrt(ty*ty+tz*tz);
 		ta = Math.atan2(tz, ty);
 		
-		ty = tr*Math.cos(ta + Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude()));
-		tz = tr*Math.sin(ta + Math.toRadians(observerLatitude)); //getSequenceGenerator().getMyLocation().getLatitude())); 
+		ty = tr*Math.cos(ta + Math.toRadians(observerLatitude + extraLatRotate)); //getSequenceGenerator().getMyLocation().getLatitude()));
+		tz = tr*Math.sin(ta + Math.toRadians(observerLatitude + extraLatRotate)); //getSequenceGenerator().getMyLocation().getLatitude())); 
 		
-		if (stereoVisionRotate != 0.0) {
+		if (extraLonRotate + stereoVisionRotate != 0.0) {
 			tr = Math.sqrt(tx*tx+tz*tz);
 			ta = Math.atan2(tz, tx);
 			
-			tx = tr*Math.cos(ta + Math.toRadians(stereoVisionRotate));
-			tz = tr*Math.sin(ta + Math.toRadians(stereoVisionRotate));
+			tx = tr*Math.cos(ta + Math.toRadians(extraLonRotate + stereoVisionRotate));
+			tz = tr*Math.sin(ta + Math.toRadians(extraLonRotate + stereoVisionRotate));
+		}
+
+		
+		if (zRotate != 0.0) {
+			tr = Math.sqrt(tx*tx+ty*ty);
+			ta = Math.atan2(ty, tx);
+			
+			tx = tr*Math.cos(ta + Math.toRadians(zRotate));
+			ty = tr*Math.sin(ta + Math.toRadians(zRotate));
 		}
 
 		

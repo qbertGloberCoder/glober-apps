@@ -57,6 +57,8 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	
 	private List<RendererI> fullRenderers;
 	
+//	private double extraLatRotate = 0; //-76.5;
+	
 	public GlobeObjects(Canvas canvas) throws Exception {
 		super(canvas);
 	}
@@ -81,6 +83,8 @@ public class GlobeObjects extends AbstractCelestialObjects {
 		transform = new GlobeTransform();
 		transform.setZoomLevel(circumferenceSizeFraction);
 		init();
+		
+		setExtraRotate();
 	}
 
 	@Override
@@ -271,7 +275,27 @@ public class GlobeObjects extends AbstractCelestialObjects {
 		return updateLocation(latitude, longitude, observerLongitude, renderFullCircumferenceSize, overscan, false);
 	}
 	
+	private void setExtraRotate() {
+		double extraLatRotate = getExtraViewLatRotate();
+		double extraLonRotate = getExtraViewLonRotate();
+		double zRotate = getExtraViewZRotate();
+//		System.out.println("??? zRotate??" + zRotate);
+		if (transform != null) {
+			transform.setExtraLatRotate(extraLatRotate);
+			transform.setExtraLonRotate(extraLonRotate);
+			transform.setzRotate(zRotate);
+		}
+		if (globeImageRenderer != null) {
+			globeImageRenderer.setExtraLatRotate(extraLatRotate);
+			globeImageRenderer.setExtraLonRotate(extraLonRotate);
+			globeImageRenderer.setzRotate(zRotate);
+			globeImageRenderer.wrapToCoordinates();
+		}
+	}
+	
 	public Double updateLocation(double latitude, double longitude, double observerLongitude, boolean renderFullCircumferenceSize, double overscan, boolean positiveZOnly) {
+		setExtraRotate();
+		
 		if ((renderFullCircumferenceSize) && (circumferenceSizeFraction < 0.95))
 			transform.setZoomedOut(false);
 		Double rval = transform.transform(latitude, longitude, mapCenterLatitude, getViewRotationAngle(), observerLongitude, overscan, positiveZOnly);
@@ -366,6 +390,11 @@ public class GlobeObjects extends AbstractCelestialObjects {
 	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void postUpdate() {
+		setExtraRotate();
 	}
 }
 

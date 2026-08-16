@@ -193,6 +193,8 @@ public class AzimuthalEquidistantSPPObjects extends AbstractCelestialObjects {
 	
 	@Override
 	protected ArrayList<UserObjectSettings> getUserArcRenderObjects() throws Exception {
+		arcRenderers = new ArcRenderer[2];
+		
 		arcRenderers[0] = createUserObject();
 		arcRenderers[1] = createUserObject();
 		arcRenderers[1].setX(0.75);
@@ -217,5 +219,9 @@ public class AzimuthalEquidistantSPPObjects extends AbstractCelestialObjects {
 	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void postUpdate() {
 	}
 }

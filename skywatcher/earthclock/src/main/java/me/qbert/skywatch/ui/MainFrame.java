@@ -96,6 +96,7 @@ public class MainFrame extends JFrame implements KeyListener {
 	private JCheckBoxMenuItem renderMoonGPGreatCircleRouteMenu;
 	private JCheckBoxMenuItem sunZenithAnglesMenu;
 	private JCheckBoxMenuItem moonZenithAnglesMenu;
+	private JCheckBoxMenuItem observerZenithAnglesMenu;
 	private JCheckBoxMenuItem [] sunPaths;
 	private JCheckBoxMenuItem [] moonPaths;
 	private JCheckBoxMenuItem [] speedSettings;
@@ -459,6 +460,8 @@ public class MainFrame extends JFrame implements KeyListener {
         m2.add(sunZenithAnglesMenu);
         moonZenithAnglesMenu = new JCheckBoxMenuItem("Moon zenith angles");
         m2.add(moonZenithAnglesMenu);
+        observerZenithAnglesMenu = new JCheckBoxMenuItem("Observer zenith angles");
+        m2.add(observerZenithAnglesMenu);
         renderSunGPGreatCircleRouteMenu = new JCheckBoxMenuItem("Sun GP great circle routes");
         m2.add(renderSunGPGreatCircleRouteMenu);
         renderMoonGPGreatCircleRouteMenu = new JCheckBoxMenuItem("Moon GP great circle routes");
@@ -638,6 +641,16 @@ public class MainFrame extends JFrame implements KeyListener {
 				moonZenithAnglesMenu.setSelected(celestialObjects.isMoonRenderContourLines());
 				redrawClock();
 				setMoonZenithAngles(celestialObjects.isMoonRenderContourLines());
+			}
+		});
+        
+        observerZenithAnglesMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				celestialObjects.setObserverRenderContourLines(! celestialObjects.isObserverRenderContourLines());
+				observerZenithAnglesMenu.setSelected(celestialObjects.isObserverRenderContourLines());
+				redrawClock();
+//				setMoonZenithAngles(celestialObjects.isMoonRenderContourLines());
 			}
 		});
         

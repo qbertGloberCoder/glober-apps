@@ -425,6 +425,12 @@ public class StereoGlobeObjects extends AbstractCelestialObjects {
 		leftPanel.setRenderMoonGPGreatCircleRoute(renderMoonGPGreatCircleRoute);
 		rightPanel.setRenderMoonGPGreatCircleRoute(renderMoonGPGreatCircleRoute);
 	}
+	
+	@Override
+	public void setObserverRenderContourLines(boolean contourLines) {
+		leftPanel.setObserverRenderContourLines(contourLines);
+		rightPanel.setObserverRenderContourLines(contourLines);
+	}
 
 	@Override
 	protected Point2D.Double getMoonShadowCoordinate(MapCenterMode centerMode, GeoLocation subSunPoint, GeoLocation subMoonPoint) {
@@ -446,5 +452,11 @@ public class StereoGlobeObjects extends AbstractCelestialObjects {
 	protected ArrayList<TextRenderer> getExtraTextRenderers() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void postUpdate() {
+		leftPanel.postUpdate();
+		rightPanel.postUpdate();
 	}
 }

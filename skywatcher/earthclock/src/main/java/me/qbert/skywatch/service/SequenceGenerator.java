@@ -65,7 +65,12 @@ public class SequenceGenerator {
 	
 	private CoordinateBias latBias = new CoordinateBias(CoordinateBias.CoordinateMode.LATITUDE);
 	private CoordinateBias lonBias = new CoordinateBias(CoordinateBias.CoordinateMode.LONGITUDE);
-	
+
+	private CoordinateBias viewRotateLat = new CoordinateBias(CoordinateBias.CoordinateMode.LATITUDE);
+	private CoordinateBias viewRotateLon = new CoordinateBias(CoordinateBias.CoordinateMode.LONGITUDE);
+
+	private CoordinateBias viewRotateZ = new CoordinateBias(CoordinateBias.CoordinateMode.LONGITUDE);
+
 	private BooleanState showPlanetTrails = new BooleanState();
 	
 	private boolean solarSystemSunCentric = true;
@@ -136,6 +141,11 @@ public class SequenceGenerator {
 	public void reset() {
 		latBias.reset();
 		lonBias.reset();
+		
+		viewRotateLat.reset();
+		viewRotateLon.reset();
+		
+		viewRotateZ.reset();
 	}
 	
 	public void loadFromScript(File scriptFile) {
@@ -293,6 +303,134 @@ public class SequenceGenerator {
 							
 							si = new AddLatLonBiasSequence(lonBias, bias, offset);
 						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("setrotatelat ")) {
+					String tmp = line.replaceFirst("^setrotatelat  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							//System.out.println("?? Rotate Lat? " + bias + ", " + offset);
+							
+							si = new SetLatLonBiasSequence(viewRotateLat, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("addrotatelat ")) {
+					String tmp = line.replaceFirst("^addrotatelat  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							//System.out.println("?? Rotate Lat? " + bias + ", " + offset);
+							
+							si = new AddLatLonBiasSequence(viewRotateLat, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("setrotatelon ")) {
+					String tmp = line.replaceFirst("^setrotatelon  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							//System.out.println("?? Rotate Lon? " + bias + ", " + offset);
+							
+							si = new SetLatLonBiasSequence(viewRotateLon, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("addrotatelon ")) {
+					String tmp = line.replaceFirst("^addrotatelon  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						String [] elements = tmp.split(",");
+						
+						if (elements.length == 2) {
+							double bias = Double.parseDouble(elements[0]);
+							double offset = Double.parseDouble(elements[1]);
+							
+							//System.out.println("?? Rotate Lon? " + bias + ", " + offset);
+							
+							si = new AddLatLonBiasSequence(viewRotateLon, bias, offset);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("setrotatez ")) {
+					String tmp = line.replaceFirst("^setrotatez  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						double offset = Double.parseDouble(tmp);
+						
+						//System.out.println("?? Rotate Z? " + offset);
+						
+						si = new SetLatLonBiasSequence(viewRotateZ, 1.0, offset);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					if (si != null)
+						sequenceScript.add(si);
+				}
+				
+				if (line.startsWith("addrotatez ")) {
+					String tmp = line.replaceFirst("^addrotatez  *", "");
+					
+					SequenceElementI si = null;
+
+					try {
+						double offset = Double.parseDouble(tmp);
+						
+						//System.out.println("?? Rotate Z? " + offset);
+						
+						si = new AddLatLonBiasSequence(viewRotateZ, 1.0, offset);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
@@ -458,6 +596,23 @@ public class SequenceGenerator {
 	
 	public double getLongitudeBias(double longitude) {
 		return ((540.0 + (longitude * lonBias.getMultiplier()) + lonBias.getOffset()) % 360.0) - 180.0;
+	}
+	
+	public double getViewRotateLatitude() {
+		double newLat = viewRotateLat.getOffset();
+		if (newLat > 89.999)
+			return 89.999;
+		if (newLat < -89.999)
+			return -89.999;
+		return newLat;
+	}
+	
+	public double getViewRotateLongitude() {
+		return ((540.0 + viewRotateLon.getOffset()) % 360.0) - 180.0;
+	}
+	
+	public double getExtraViewZRotate() {
+		return ((540.0 + viewRotateZ.getOffset()) % 360.0) - 180.0;
 	}
 	
 	public void initSequencer() {
