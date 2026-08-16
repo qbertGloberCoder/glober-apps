@@ -34,10 +34,12 @@ public class SunObject extends AbstractCelestialObject {
 		}
 	}
 	private double hourAngle;
-	
+
 	private double rightAscension;
 	private double declination;
-	
+	private double solarNoonFraction;
+	private double apparentEclipticLongitude;
+
 	// Not entirely happy with this design
 	private SunObject() {
 	}
@@ -78,6 +80,7 @@ public class SunObject extends AbstractCelestialObject {
 		double sunRadVector = (1.000001018*(1-eccentricEarthOrbit*eccentricEarthOrbit))/(1+eccentricEarthOrbit*Math.cos(Math.toRadians(sunTrueAnomoloy)));
 		// P2
 		double sunAppLong = sunTrueLong-0.00569-0.00478*Math.sin(Math.toRadians(125.04-1934.136*julianCentury));
+		this.apparentEclipticLongitude = sunAppLong;
 
 		// Q2
 		double meanObliqEcliptic = 23+(26+((21.448-julianCentury*(46.815+julianCentury*(0.00059-julianCentury*0.001813))))/60)/60;
@@ -97,6 +100,7 @@ public class SunObject extends AbstractCelestialObject {
 		double haSunrise = Math.toDegrees(Math.acos(Math.cos(Math.toRadians(90.833))/(Math.cos(Math.toRadians(location.getLatitude()))*Math.cos(Math.toRadians(sunDeclination)))-Math.tan(Math.toRadians(location.getLatitude()))*Math.tan(Math.toRadians(sunDeclination))));
 		// X2
 		double solarNoon = (720-4*location.getLongitude()-eqOfTime+observationTime.getTimezoneAdjust()*60)/1440;
+		this.solarNoonFraction = solarNoon;
 		// Y2
 		double sunrise = solarNoon-haSunrise*4/1440;
 		// Z2
@@ -153,5 +157,21 @@ public class SunObject extends AbstractCelestialObject {
 	@Override
 	public GeoLocation getEarthPositionOverhead() {
 		return makeGeoLocation(declination, location.getLongitude() - hourAngle);
+	}
+
+	// Local solar noon, as a fraction of the day (0.0-1.0, e.g. 0.5 = 12:00:00) - already computed by
+	// recompute() (the "X2" NOAA solar-calculations step) but not previously exposed. Added for
+	// camera-viewing's OSD "nominal local solar noon" field [spec §8] rather than duplicating this
+	// same equation-of-time formula in a second module.
+	public double getSolarNoonFraction() {
+		return solarNoonFraction;
+	}
+
+	// Geocentric apparent ecliptic longitude of date, in degrees - the "P2" NOAA step, already
+	// computed by recompute() but not previously exposed. Added for camera-viewing's moon-phase
+	// computation (elongation = moon ecliptic longitude - sun ecliptic longitude), which needs both
+	// bodies' ecliptic longitude in the same frame rather than RA/Dec.
+	public double getApparentEclipticLongitudeDegrees() {
+		return apparentEclipticLongitude;
 	}
 }

@@ -165,4 +165,16 @@ public class MoonObject extends AbstractCelestialObject {
 	public GeoLocation getEarthPositionOverhead() {
 		return makeGeoLocation(delta_deg, location.getLongitude() - alpha_hour);
 	}
+
+	// Geocentric ecliptic longitude of date, in degrees - the "L" value computed by recompute().
+	// Added as an explicitly, correctly-named accessor rather than relying on
+	// getCelestialSphereLocation()'s "right ascension" field, which - despite its name - is actually
+	// assigned this same ecliptic-longitude value (`rightAscension = L`, above), not the true
+	// atan2-derived equatorial RA computed a few lines earlier in the same method. That pre-existing
+	// naming inconsistency is left as-is (a separate, deliberate fix would be needed to correct it
+	// without risking existing callers); this getter just gives new code an unambiguous way to reach
+	// the same already-computed value under its actual name.
+	public double getEclipticLongitudeDegrees() {
+		return rightAscension;
+	}
 }
