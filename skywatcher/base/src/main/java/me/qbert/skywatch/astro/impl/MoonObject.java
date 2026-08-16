@@ -48,6 +48,11 @@ public class MoonObject extends AbstractCelestialObject {
 	private double alpha_hour;
 	private double delta_deg;
 	
+	private double X;
+	private double Y;
+	private double Z;
+	private double R;
+
 	private double rightAscension;
 	
 	// Not entirely happy with this design
@@ -130,10 +135,10 @@ public class MoonObject extends AbstractCelestialObject {
 		//obliquity of ecliptic:
 		double eps = 23.0 + 26.0/60.0 + 21.448/3600.0 - (46.8150*T+ 0.00059*T*T- 0.001813*T*T*T)/3600;
 
-		double X = Math.cos(Math.toRadians(B))*Math.cos(Math.toRadians(L));
-		double Y = Math.cos(Math.toRadians(eps))*Math.cos(Math.toRadians(B))*Math.sin(Math.toRadians(L)) - Math.sin(Math.toRadians(eps))*Math.sin(Math.toRadians(B));
-		double Z = Math.sin(Math.toRadians(eps))*Math.cos(Math.toRadians(B))*Math.sin(Math.toRadians(L)) + Math.cos(Math.toRadians(eps))*Math.sin(Math.toRadians(B));
-		double R = Math.sqrt(1-Z*Z);
+		X = Math.cos(Math.toRadians(B))*Math.cos(Math.toRadians(L));
+		Y = Math.cos(Math.toRadians(eps))*Math.cos(Math.toRadians(B))*Math.sin(Math.toRadians(L)) - Math.sin(Math.toRadians(eps))*Math.sin(Math.toRadians(B));
+		Z = Math.sin(Math.toRadians(eps))*Math.cos(Math.toRadians(B))*Math.sin(Math.toRadians(L)) + Math.cos(Math.toRadians(eps))*Math.sin(Math.toRadians(B));
+		R = Math.sqrt(1-Z*Z);
 
 		double delta = (180/Math.PI)*Math.atan(Z/R); // in degrees
 
@@ -176,5 +181,21 @@ public class MoonObject extends AbstractCelestialObject {
 	// the same already-computed value under its actual name.
 	public double getEclipticLongitudeDegrees() {
 		return rightAscension;
+	}
+
+	public double getX() {
+		return X;
+	}
+
+	public double getY() {
+		return Y;
+	}
+
+	public double getZ() {
+		return Z;
+	}
+
+	public double getR() {
+		return R;
 	}
 }
