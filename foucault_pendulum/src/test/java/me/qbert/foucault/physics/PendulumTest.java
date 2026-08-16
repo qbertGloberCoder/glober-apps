@@ -23,7 +23,7 @@ public class PendulumTest {
     	pendulumModel.setLatitude(0.0);
     	pendulumModel.setPrecessionRate(1.0/30.0);
     	pendulumModel.setPendulumLength(150.0);
-    	pendulumModel.setRunMode(true);
+    	pendulumModel.setRunning(true);
 
 		double bobX = pendulumModel.getX();
 		double bobY = pendulumModel.getY();
