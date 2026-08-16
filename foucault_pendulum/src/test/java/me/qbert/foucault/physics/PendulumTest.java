@@ -20,7 +20,7 @@ public class PendulumTest {
 	public static void main(String[] args) {
 		Pendulum pendulumModel = new Pendulum();
 		
-    	pendulumModel.setLatitude(45.0);
+    	pendulumModel.setLatitude(0.0);
     	pendulumModel.setPrecessionRate(1.0/30.0);
     	pendulumModel.setPendulumLength(150.0);
     	pendulumModel.setRunMode(true);
@@ -29,7 +29,7 @@ public class PendulumTest {
 		double bobY = pendulumModel.getY();
 		double bobZ = pendulumModel.getZ();
         System.out.println("??? " + bobX + ", " + bobY + ", " + bobZ);
-    	for (int i = 0;i < 10;i ++) {
+    	for (int i = 0;i < 5;i ++) {
 //    		pendulumModel.stepToNextFrame();
     		pendulumModel.stepOnce();
 

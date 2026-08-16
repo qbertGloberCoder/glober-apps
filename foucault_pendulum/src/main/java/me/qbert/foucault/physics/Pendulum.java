@@ -31,7 +31,8 @@ public class Pendulum {
 	private double desiredStartAngleRads = Math.toRadians(desiredStartAngle);
 	private double returnAngle = desiredStartAngleRads;
 
-	private boolean runMode = false;
+	private boolean running = false;
+	private boolean stepMode = true;
 	
 	private double x = 0.0;
 	private double y = desiredApexRadius;
@@ -69,7 +70,7 @@ public class Pendulum {
 	private double lastReturnApexTime = -1;
 	private double lastForwardApexAngle = desiredStartAngleRads;
 	private double lastReturnApexAngle = Math.PI + desiredStartAngleRads;
-	private double lastNadirRadius = 0.0;
+	private double lastNadirRadius = desiredStartAngleRads*2;
 	private double lastNadirAngle = desiredStartAngleRads;
 	
 	private double apexRadius = desiredApexRadius;
@@ -85,13 +86,13 @@ public class Pendulum {
 	public void setLatitude(double latitude) {
 		location.setLatitude(latitude);
 		precessionRate.reinit();
-		runMode = false;
+		running = false;
 	}
 	
 	public void setPrecessionRate(double secondsPerRotation) {
 		statistics.setSiderealTime(secondsPerRotation / 3600.0);
 		precessionRate.setOmega(2*Math.PI/ secondsPerRotation);
-		runMode = false;
+		running = false;
 	}
 	
 	public double getPrecessionRate() {
@@ -116,7 +117,7 @@ public class Pendulum {
 
 	public void setPendulumLength(double pendulumLength) {
 		this.pendulumLength = pendulumLength;
-		runMode = false;
+		running = false;
 		resetPendulum();
 	}
 	
@@ -124,17 +125,26 @@ public class Pendulum {
 		this.desiredApexRadius = apexRadius;
 		returnAngle = desiredStartAngle = (450.0 - startAzimuth) % 360.0;
 		
-		runMode = false;
+		running = false;
 		
 		resetPendulum();
 	}
 	
-	public boolean isRunMode() {
-		return runMode;
+	public boolean isRunning() {
+		return running;
 	}
-	
-	public void setRunMode(boolean runMode) {
-		this.runMode = runMode;
+
+	public void setRunning(boolean running) {
+		this.running = running;
+		statistics.setRunning(running);
+	}
+
+	public boolean isStepMode() {
+		return stepMode;
+	}
+
+	public void setStepMode(boolean stepMode) {
+		this.stepMode = stepMode;
 	}
 
 	public void setGravity(double metersPerSecondSquared) {
@@ -213,7 +223,7 @@ public class Pendulum {
 		lastReturnApexTime = -1;
 		lastForwardApexAngle = desiredStartAngleRads;
 		lastReturnApexAngle = Math.PI + desiredStartAngleRads;
-		lastNadirRadius = 0.0;
+		lastNadirRadius = desiredStartAngleRads*2;
 		lastNadirAngle = desiredStartAngleRads;
 		
 		x = desiredApexRadius * Math.cos(Math.toRadians(desiredStartAngle));
@@ -255,7 +265,7 @@ public class Pendulum {
 	}
 	
 	public void stepToTime(double time) {
-		if (! runMode)
+		if (! running)
 			return;
 		
 		double omegaX = precessionRate.getOmegaX();
@@ -479,6 +489,9 @@ public class Pendulum {
 	}
 	
 	protected void apexDetected(double angle, boolean returnApex) {
+		running = !stepMode;
+		statistics.setRunning(running);
+		
 		statistics.getLastApexPosition().updatePosition(x,y,z);
 		if (returnApex)
 			statistics.setReturnApex(apexRadius, angle);
@@ -494,6 +507,9 @@ public class Pendulum {
 	}
 	
 	protected void nadirDetected(double radius, double angle, boolean forwardNadir) {
+		running = !stepMode;
+		statistics.setRunning(running);
+		
 		if (forwardNadir)
 			statistics.setForwardNadir(radius, angle);
 		else

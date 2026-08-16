@@ -31,6 +31,8 @@ public class PendulumStatistics {
 
 	private double swingCorrection;
 	private double simulationSeconds;
+	
+	private boolean running;
 
 	public WeightPosition getLastApexPosition() {
 		return lastApexPosition;
@@ -148,6 +150,14 @@ public class PendulumStatistics {
 		this.simulationSeconds = simulationSeconds;
 	}
 
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
 	public PendulumStatistics copy() {
 		PendulumStatistics newCopy = new PendulumStatistics();
 		
@@ -166,6 +176,7 @@ public class PendulumStatistics {
 		
 		newCopy.swingCorrection = swingCorrection;
 		newCopy.simulationSeconds = simulationSeconds;
+		newCopy.running = running;
 		
 		return newCopy;
 	}

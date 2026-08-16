@@ -99,7 +99,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	pendulumModel.setApplyDrag(updateDrag);
     	pendulumModel.setDragCoefficent(newDragCoefficient);
     	
-    	pendulumModel.setRunMode(true);
+    	pendulumModel.setRunning(true);
     	pendulumModel.setStatisticsUpdateListener(this);
     	
         Group root = new Group();
@@ -249,7 +249,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
                 if (now - lastFrame < frameInterval) return;
                 lastFrame = now;
                 
-                if (! pendulumModel.isRunMode()) {
+                if (! pendulumModel.isRunning()) {
                 	if (updateSimulator) {
                 		while (inkLayer.getChildren().size() > 0) {
                             inkLayer.getChildren().remove(0);
@@ -274,7 +274,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
                     	pendulumModel.setStableSwing(updateStableSwing);
                     	pendulumModel.setApplyDrag(updateDrag);
                     	pendulumModel.setDragCoefficent(newDragCoefficient);
-                    	pendulumModel.setRunMode(true);
+                    	pendulumModel.setRunning(true);
                     	
                     	updateSimulator = false;
                 	}
@@ -373,7 +373,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.latitude == latitude)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	
     	this.latitude = latitude;
     	updateSimulator = true;
@@ -387,7 +387,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.pendulumLength == length)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	
     	this.pendulumLength = length;
     	updateSimulator = true;
@@ -401,7 +401,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.updateRotation == seconds)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	updateRotation = seconds;
     	updateSimulator = true;
     }
@@ -414,7 +414,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.updateGravity == gravity)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	updateGravity = gravity;
     	updateSimulator = true;
     }
@@ -442,7 +442,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (updateStableSwing == active)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	updateStableSwing = active;
     	updateSimulator = true;
     }
@@ -455,7 +455,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (updateDrag == active)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	updateDrag = active;
     	updateSimulator = true;
     }
@@ -464,7 +464,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.newDragCoefficient == coefficient)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	newDragCoefficient = coefficient;
     	updateSimulator = true;
     }
@@ -477,7 +477,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (newSwingDiameter == diameter)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	newSwingDiameter = diameter;
     	updateSimulator = true;
     }
@@ -490,7 +490,7 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
     	if (this.initialAzimuth == azimuth)
     		return;
     	
-    	pendulumModel.setRunMode(false);
+    	pendulumModel.setRunning(false);
     	initialAzimuth = azimuth;
     	updateSimulator = true;
     }
@@ -523,6 +523,22 @@ public class PendulumSceneFX extends Application implements PendulumStatisticsUp
 		pendulumModel.setMaxTimeStep(maxTimeStep);
 	}
 
+	public boolean isStepMode() {
+		return pendulumModel.isStepMode();
+	}
+	
+	public void setStepMode(boolean stepMode) {
+		pendulumModel.setStepMode(stepMode);
+	}
+	
+	public boolean isRunning() {
+		return pendulumModel.isRunning();
+	}
+	
+	public void setRunning(boolean runMode) {
+		pendulumModel.setRunning(runMode);
+	}
+	
     private void updateCameraPosition() {
         double cameraX = cameraDistance * Math.cos(Math.toRadians(cameraAltitude)) * Math.cos(Math.toRadians(cameraAzimuth));
         double cameraY = cameraDistance * Math.sin(Math.toRadians(cameraAltitude)) - tableHeight;

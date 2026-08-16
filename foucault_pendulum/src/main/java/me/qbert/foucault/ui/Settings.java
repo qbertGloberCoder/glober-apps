@@ -45,6 +45,8 @@ public class Settings extends JFrame {
 	private List<CelestialObjectProfile> celestialProfiles;
 	
 	// various controls
+	private JCheckBox stepModeCheck = null;
+	private JCheckBox runningCheck = null;
 	private JComboBox<String> profileSelector = null;	
 	private JSlider viewAngle = null;
 	private JSlider viewAltitude = null;
@@ -116,6 +118,16 @@ public class Settings extends JFrame {
     
     // main create methods
     private void createInputs(GridBagConstraints c) {
+        stepModeCheck = createCheckBox("Step Mode", c, mainClass.isStepMode());
+        stepModeCheck.addActionListener(e -> {
+        	setStepMode();
+        });
+        
+        runningCheck = createCheckBox("Run", c, mainClass.isRunning());
+        runningCheck.addActionListener(e -> {
+        	setRunning();
+        });
+        
         initProfileSelector(c);
         
         int startAngle = ((630 - mainClass.getCameraAngle()) % 360) - 180;
@@ -392,6 +404,14 @@ public class Settings extends JFrame {
     }
 
     // The various settings update routines
+    private void setStepMode() {
+    	mainClass.setStepMode(stepModeCheck.isSelected());
+    }
+    
+    private void setRunning() {
+    	mainClass.setRunning(runningCheck.isSelected());
+    }
+    
     private void setProfile() {
     	int selectIndex = profileSelector.getSelectedIndex();
     	if (selectIndex > 0) {
@@ -625,6 +645,10 @@ public class Settings extends JFrame {
 
 	public void updateStatistics(PendulumStatistics statistics) {
 		double precession = statistics.getPrecessionRate();
+		
+		if (runningCheck != null) {
+			runningCheck.setSelected(statistics.isRunning());
+		}
 		
 		if (precessionRate != null) {
 			double precessionDegrees = Math.toDegrees(precession) * 3600.0;
